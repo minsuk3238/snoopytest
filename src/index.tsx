@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.jsx"; // 우리가 만든 App.jsx를 불러옵니다.
+import App from "./App"; // .jsx 없이 깔끔하게!
 
 const rootElement = document.getElementById("root")!;
 const root = ReactDOM.createRoot(rootElement);
