@@ -16,13 +16,35 @@ import {
   Sparkles,
   RotateCcw,
   AlertCircle,
-  Star,
+  Star, // <--- 🚨 앱 강제 종료 방지용 별 아이콘
 } from "lucide-react";
 
 // =====================================================================
 // 🔑 [중요] 정답 QR코드 설정 (테스트용)
 // =====================================================================
 const VALID_QR_CODE = "snoopy_garden_quest";
+
+// =====================================================================
+// 📸 [핵심] 카메라 권한 1회 승인 및 세션 유지 매니저
+// =====================================================================
+let globalCameraStream = null;
+
+const requestCameraPermissionOnce = async () => {
+  // 이미 스트림이 살아있다면 다시 묻지 않고 패스
+  if (globalCameraStream && globalCameraStream.active) return true;
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "environment" },
+    });
+    globalCameraStream = stream;
+    // 카메라 권한은 얻어두되, 평소에는 렌즈를 꺼두어(enabled = false) 배터리 소모를 막습니다.
+    globalCameraStream.getTracks().forEach((track) => (track.enabled = false));
+    return true;
+  } catch (err) {
+    console.error("초기 카메라 권한 거부됨:", err);
+    return false; // 거부하더라도 앱 진행은 막지 않습니다.
+  }
+};
 
 // === [모바일 100% 호환 실제 카메라 QR 스캐너] ===
 const QRScanner = ({ onScan, onError }) => {
@@ -58,22 +80,19 @@ const QRScanner = ({ onScan, onError }) => {
     }
   }, []);
 
-  // 카메라 권한 요청 및 스트리밍 시작
+  // 카메라 스트리밍 시작 (1회 승인된 글로벌 스트림 재사용)
   useEffect(() => {
     if (!isJsQRLoaded) return;
-    let stream = null;
     let animationFrameId;
     let lastScanTime = 0; // 중복 스캔 방지 타이머
 
     const startCamera = async () => {
-      try {
-        // 스마트폰 후면 카메라 우선 요청
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: "environment" },
-        });
-      } catch (err) {
+      // 만약 전역 스트림이 죽었거나 없으면 다시 요청 (오류 대비)
+      if (!globalCameraStream || !globalCameraStream.active) {
         try {
-          stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          globalCameraStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "environment" },
+          });
         } catch (fallbackErr) {
           console.error("카메라 권한 거부", fallbackErr);
           setCamError(true);
@@ -82,8 +101,13 @@ const QRScanner = ({ onScan, onError }) => {
         }
       }
 
-      if (videoRef.current && stream) {
-        videoRef.current.srcObject = stream;
+      if (globalCameraStream && videoRef.current) {
+        // [중요] 비활성화 해둔 카메라 트랙을 다시 깨웁니다! (승인 창이 다시 뜨지 않음)
+        globalCameraStream
+          .getTracks()
+          .forEach((track) => (track.enabled = true));
+
+        videoRef.current.srcObject = globalCameraStream;
         videoRef.current.setAttribute("playsinline", "true");
         videoRef.current.setAttribute("autoplay", "true");
         videoRef.current.setAttribute("muted", "true");
@@ -115,9 +139,7 @@ const QRScanner = ({ onScan, onError }) => {
             imageData.data,
             imageData.width,
             imageData.height,
-            {
-              inversionAttempts: "dontInvert",
-            }
+            { inversionAttempts: "dontInvert" }
           );
 
           if (code && code.data) {
@@ -135,8 +157,11 @@ const QRScanner = ({ onScan, onError }) => {
     startCamera();
 
     return () => {
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
+      // [중요] 화면을 벗어날 때 stop()으로 카메라를 죽이지 않고 enabled=false로 잠재웁니다.
+      if (globalCameraStream) {
+        globalCameraStream
+          .getTracks()
+          .forEach((track) => (track.enabled = false));
       }
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
@@ -252,7 +277,7 @@ const exploreTail = [
   },
 ];
 
-// === [전체 5대 테마 데이터] ===
+// === [전체 4대 테마 데이터] ===
 const themeData = [
   {
     id: "explore",
@@ -739,61 +764,11 @@ const themeData = [
       },
     ],
   },
-  {
-    id: "photo",
-    title: "좌충우돌 루시의 하루",
-    type: "포토/체험형",
-    character: "루시 (& 슈뢰더)",
-    color: "pink",
-    completion: {
-      title: "당당한 루시의 기록",
-      dialogues: [
-        {
-          speaker: "루시",
-          text: "세상의 모든 고민은 나한테 가져와! (심리 상담 5센트)",
-        },
-        {
-          speaker: "루시",
-          text: "오늘 네가 찍은 사진들 중 최고는 바로 나랑 찍은 거겠지?",
-        },
-      ],
-    },
-    path: [
-      {
-        type: "location",
-        name: "소설왕 스누피 광장",
-        hint: "누워있는 루시",
-        img: "",
-        sceneDesc: "[사진 설명: 광장에 당당하게 누워있는 루시입니다.]",
-        text: "세상의 중심은 바로 나야!",
-        source: "- 루시 (1950년대)",
-      },
-      {
-        type: "location",
-        name: "야외무대",
-        hint: "피아노 곁",
-        img: "",
-        sceneDesc: "[사진 설명: 피아노를 치는 슈뢰더를 바라보는 루시입니다.]",
-        text: "베토벤이 뭐가 그렇게 중요해? 지금 네 앞에 이렇게 예쁜 내가 있는데!",
-        source: "- 루시 (1956.01.24.)",
-      },
-      {
-        type: "location",
-        name: "하귤밭 상담부스",
-        hint: "5센트 상담소",
-        img: "",
-        sceneDesc: "[사진 설명: 루시의 5센트 심리 상담소 부스입니다.]",
-        text: "심리 상담은 5센트야! 선불로 내면 다 들어주지.",
-        source: "- 루시 (1959.03.27.)",
-      },
-    ],
-  },
 ];
 
 // 로컬 스토리지 키 값 설정
-const STORAGE_KEY_STATE = "sgq_ultimate_state";
+const STORAGE_KEY_STATE = "sgq_ultimate_stable_state";
 
-// 초기 접속 시 저장된 데이터 불러오기
 const getInitialState = () => {
   try {
     const saved = localStorage.getItem(STORAGE_KEY_STATE);
@@ -826,30 +801,6 @@ export default function App() {
   // QR 스캔 에러 피드백 상태
   const [qrErrorMsg, setQrErrorMsg] = useState("");
   const [showResetModal, setShowResetModal] = useState(false);
-
-  // 버튼 다중 클릭 방지 및 로딩 텍스트 표시를 위한 상태
-  const [isRequestingCamera, setIsRequestingCamera] = useState(false);
-
-  // =====================================================================
-  // 🚨 [수정됨] 스플래시 화면에서 최초 1회 카메라 권한을 요청하는 함수
-  // =====================================================================
-  const requestCameraPermission = async () => {
-    setIsRequestingCamera(true);
-    try {
-      // 1. 카메라 권한을 선제적으로 요청합니다. (브라우저가 권한 팝업을 띄움)
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      // 2. 권한을 얻어내면, 배터리 소모 방지를 위해 카메라 트랙을 즉시 종료합니다.
-      stream.getTracks().forEach((track) => track.stop());
-    } catch (err) {
-      console.warn("초기 카메라 권한 요청 거부/실패:", err);
-      // 권한을 거부하더라도 일단 앱 진입을 막지 않고 다음 화면으로 넘깁니다.
-      // 나중에 실제 QR 화면에 가면 Scanner가 다시 시도하고 에러 메시지를 띄웁니다.
-    } finally {
-      setIsRequestingCamera(false);
-      // 3. 권한 프로세스가 끝나면 메인(intro) 화면으로 이동합니다.
-      setStep("intro");
-    }
-  };
 
   const activeTheme = themeData.find((t) => t.id === activeThemeId) || null;
 
@@ -905,13 +856,19 @@ export default function App() {
     }
   };
 
-  // 패스 로직에서 확실하게 이동 처리
-  const handleQRSkip = () => {
-    setQrErrorMsg("");
-    setStep("scene");
+  // 패스 로직에서 확실하게 이동 처리 (폼 제출 방지 등 오작동 차단)
+  const handleQRSkip = (e) => {
+    if (e) e.preventDefault();
+    try {
+      setQrErrorMsg("");
+      setStep("scene");
+    } catch (err) {
+      console.error("QR Skip 방어막 에러:", err);
+    }
   };
 
-  const handleGetStamp = () => {
+  const handleGetStamp = (e) => {
+    if (e) e.preventDefault();
     const nextProgress = progress + 1;
 
     setThemeStates((prev) => ({
@@ -996,7 +953,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-stone-100 flex items-center justify-center p-4 font-sans text-stone-800 relative">
-      <div className="max-w-md w-full bg-white rounded-3xl shadow-xl overflow-hidden relative flex flex-col h-[750px]">
+      <div className="max-w-md w-full bg-white rounded-3xl shadow-xl overflow-hidden relative flex flex-col h-[750px] max-h-[100dvh]">
         {/* 커스텀 초기화 경고 모달창 */}
         {showResetModal && (
           <div className="absolute inset-0 z-50 bg-stone-900/60 flex items-center justify-center p-6 animate-fade-in">
@@ -1014,12 +971,14 @@ export default function App() {
               </p>
               <div className="flex gap-3">
                 <button
+                  type="button"
                   onClick={() => setShowResetModal(false)}
                   className="flex-1 py-3 rounded-xl font-bold bg-stone-100 text-stone-600 hover:bg-stone-200 transition-colors"
                 >
                   취소
                 </button>
                 <button
+                  type="button"
                   onClick={handleResetConfirm}
                   className="flex-1 py-3 rounded-xl font-bold bg-red-500 text-white hover:bg-red-600 transition-colors"
                 >
@@ -1038,6 +997,7 @@ export default function App() {
             </h1>
             {activeTheme && step !== "intro" && step !== "grandClear" && (
               <button
+                type="button"
                 onClick={resetQuest}
                 className="text-[10px] text-stone-400 border border-stone-700 px-2 py-1 rounded hover:bg-stone-800 transition"
               >
@@ -1046,6 +1006,7 @@ export default function App() {
             )}
             {!activeTheme && step === "intro" && (
               <button
+                type="button"
                 onClick={() => setShowResetModal(true)}
                 className="text-[10px] text-stone-400 border border-stone-700 px-2 py-1 rounded hover:bg-stone-800 transition"
               >
@@ -1073,18 +1034,19 @@ export default function App() {
                   위대한 모험의 시작
                 </p>
 
-                {/* 🚨 [수정됨] 클릭 시 카메라 권한을 요청하는 함수 연결 */}
                 <button
-                  onClick={requestCameraPermission}
-                  disabled={isRequestingCamera}
-                  className="group relative w-full max-w-[240px] bg-white text-stone-900 font-black py-4 rounded-full shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] hover:bg-emerald-50 hover:text-emerald-700 transition-all active:scale-95 flex items-center justify-center gap-2 overflow-hidden disabled:opacity-80 disabled:cursor-not-allowed"
+                  type="button"
+                  onClick={async () => {
+                    // [신규] 처음 앱을 시작할 때 카메라 권한을 1회 요청합니다.
+                    await requestCameraPermissionOnce();
+                    setStep("intro");
+                  }}
+                  className="group relative w-full max-w-[240px] bg-white text-stone-900 font-black py-4 rounded-full shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] hover:bg-emerald-50 hover:text-emerald-700 transition-all active:scale-95 flex items-center justify-center gap-2 overflow-hidden"
                 >
                   <span className="relative z-10 tracking-widest text-sm">
-                    {isRequestingCamera ? "권한 확인 중..." : "PRESS TO START"}
+                    PRESS TO START
                   </span>
-                  {!isRequestingCamera && (
-                    <ChevronRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
-                  )}
+                  <ChevronRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
                   <div className="absolute inset-0 bg-emerald-100 opacity-0 group-hover:opacity-20 transition-opacity"></div>
                 </button>
               </div>
@@ -1157,6 +1119,7 @@ export default function App() {
                   const isCompleted = completedThemes.includes(theme.id);
                   return (
                     <button
+                      type="button"
                       key={theme.id}
                       onClick={() => handleStartTheme(theme)}
                       className={`w-full text-left bg-white rounded-2xl p-5 border-2 shadow-sm transition-all relative overflow-hidden
@@ -1263,7 +1226,7 @@ export default function App() {
                                 : "text-stone-500 text-sm"
                             }`}
                           >
-                            {isFuture ? "???" : loc.name}
+                            {isFuture ? "???" : loc?.name}
                           </p>
                         </div>
                       </div>
@@ -1279,8 +1242,9 @@ export default function App() {
                       {activePath[progress].title}
                     </p>
                     <div className="flex flex-col gap-2">
-                      {activePath[progress].options.map((opt, i) => (
+                      {activePath[progress]?.options?.map((opt, i) => (
                         <button
+                          type="button"
                           key={i}
                           onClick={() => handleMakeChoice(opt.route)}
                           className="bg-white border border-blue-200 text-left p-4 rounded-xl flex items-center justify-between text-xs font-bold hover:border-blue-500 transition-all shadow-sm group"
@@ -1300,12 +1264,13 @@ export default function App() {
                   </div>
                 ) : (
                   <button
+                    type="button"
                     onClick={() => {
                       handleScanQR(); // 매번 스캔 화면 띄우기
                     }}
                     className="w-full bg-stone-900 text-white font-bold py-5 rounded-2xl shadow-xl tracking-widest text-sm hover:bg-stone-800 transition"
                   >
-                    [{activePath[progress]?.name}] 도착 후 QR 스캔
+                    [{activePath[progress]?.name || "목적지"}] 도착 후 QR 스캔
                   </button>
                 )}
               </div>
@@ -1328,7 +1293,7 @@ export default function App() {
               <div className="mb-6 z-10 shrink-0 mt-4">
                 <h2 className="text-xl font-bold mb-2">SCAN QR CODE</h2>
                 <p className="text-stone-400 text-xs bg-stone-800 px-4 py-1.5 rounded-full inline-block">
-                  HINT: {activePath[progress].hint}
+                  HINT: {activePath[progress]?.hint || "장소를 찾아주세요"}
                 </p>
               </div>
 
@@ -1365,12 +1330,14 @@ export default function App() {
               {/* 하단 패스 및 돌아가기 버튼 */}
               <div className="flex flex-col gap-3 w-full z-10 shrink-0">
                 <button
+                  type="button"
                   onClick={handleQRSkip}
                   className="w-full bg-stone-800 hover:bg-stone-700 text-emerald-400 font-bold py-4 rounded-2xl text-sm transition-colors flex items-center justify-center gap-2 border border-stone-700 shadow-md"
                 >
                   <CheckCircle className="w-4 h-4" /> QR코드 패스하기 (테스트용)
                 </button>
                 <button
+                  type="button"
                   onClick={() => setStep("journey")}
                   className="w-full bg-transparent border border-stone-700 text-stone-400 font-bold py-4 rounded-2xl text-sm hover:bg-stone-800 hover:text-white transition-colors"
                 >
@@ -1386,18 +1353,19 @@ export default function App() {
               <div className="flex-1 overflow-y-auto custom-scrollbar pr-1 pb-2">
                 <div className="bg-white rounded-2xl p-5 shadow-sm border border-stone-200 mb-6">
                   <span className="font-bold text-emerald-600 text-[10px] flex items-center gap-1 mb-4 uppercase tracking-wider">
-                    <MapPin className="w-3 h-3" /> {activePath[progress].name}
+                    <MapPin className="w-3 h-3" />{" "}
+                    {activePath[progress]?.name || "목적지"}
                   </span>
 
                   <div className="w-full h-44 bg-stone-100 rounded-xl mb-5 flex items-center justify-center text-stone-300 relative border border-dashed border-stone-200">
                     <ImageIcon className="w-10 h-10 opacity-30" />
                   </div>
 
-                  {/* 요청하신 사진 설명 부분은 그대로 보존되어 있습니다 */}
                   <div className="bg-stone-50 p-3 rounded-lg border border-stone-100 mb-5 flex items-start gap-2">
                     <Camera className="w-4 h-4 text-stone-400 shrink-0 mt-0.5" />
                     <p className="text-[11px] text-stone-500 italic break-keep leading-relaxed">
-                      {activePath[progress].sceneDesc}
+                      {activePath[progress]?.sceneDesc ||
+                        "현장 풍경을 확인하세요."}
                     </p>
                   </div>
 
@@ -1405,11 +1373,14 @@ export default function App() {
                     <Quote className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-emerald-900 font-bold text-sm leading-relaxed break-keep">
-                        "{activePath[progress].text}"
+                        "
+                        {activePath[progress]?.text ||
+                          "위대한 탐험의 순간입니다!"}
+                        "
                       </p>
-                      {activePath[progress].source && (
+                      {activePath[progress]?.source && (
                         <span className="text-[10px] font-normal text-emerald-600 mt-2 block">
-                          {activePath[progress].source}
+                          {activePath[progress]?.source}
                         </span>
                       )}
                     </div>
@@ -1419,6 +1390,7 @@ export default function App() {
 
               <div className="shrink-0 pt-2">
                 <button
+                  type="button"
                   onClick={handleGetStamp}
                   className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-5 rounded-2xl shadow-lg text-sm tracking-widest transition-transform active:scale-95 flex items-center justify-center gap-2"
                 >
@@ -1443,10 +1415,10 @@ export default function App() {
 
               <div className="w-full bg-white rounded-2xl border border-stone-200 p-5 mb-10 text-left shadow-sm shrink-0">
                 <p className="text-center text-[10px] font-black text-stone-400 mb-5 border-b pb-3 uppercase tracking-[0.2em]">
-                  {activeTheme.completion.title}
+                  {activeTheme.completion?.title}
                 </p>
                 <div className="space-y-4">
-                  {activeTheme.completion.dialogues.map((dialogue, idx) => (
+                  {activeTheme.completion?.dialogues?.map((dialogue, idx) => (
                     <div
                       key={idx}
                       className={`flex flex-col ${
@@ -1474,6 +1446,7 @@ export default function App() {
 
               {completedThemes.length === themeData.length ? (
                 <button
+                  type="button"
                   onClick={() => setStep("grandClear")}
                   className="w-full shrink-0 flex flex-col items-center justify-center gap-1 bg-yellow-500 hover:bg-yellow-400 text-yellow-900 font-black py-4 px-2 rounded-2xl tracking-wider text-[13px] sm:text-sm shadow-[0_0_20px_rgba(234,179,8,0.4)] animate-bounce transition-colors mt-4 break-keep leading-relaxed"
                 >
@@ -1482,6 +1455,7 @@ export default function App() {
                 </button>
               ) : (
                 <button
+                  type="button"
                   onClick={resetQuest}
                   className="w-full shrink-0 bg-stone-900 hover:bg-stone-800 text-white font-black py-5 rounded-2xl tracking-widest text-sm shadow-xl transition-colors"
                 >
@@ -1578,6 +1552,7 @@ export default function App() {
                 </div>
 
                 <button
+                  type="button"
                   onClick={resetQuest}
                   className="w-full bg-yellow-500 hover:bg-yellow-400 text-yellow-900 font-black py-5 rounded-2xl tracking-widest text-sm shadow-[0_0_20px_rgba(234,179,8,0.3)] transition-colors mt-4"
                 >
