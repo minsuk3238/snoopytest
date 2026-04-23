@@ -16,7 +16,7 @@ import {
   Sparkles,
   RotateCcw,
   AlertCircle,
-  Star, // <--- 🚨 앱 강제 종료 방지용 별 아이콘
+  Star,
 } from "lucide-react";
 
 // =====================================================================
@@ -252,7 +252,7 @@ const exploreTail = [
   },
 ];
 
-// === [전체 4대 테마 데이터] ===
+// === [전체 5대 테마 데이터] ===
 const themeData = [
   {
     id: "explore",
@@ -739,6 +739,55 @@ const themeData = [
       },
     ],
   },
+  {
+    id: "photo",
+    title: "좌충우돌 루시의 하루",
+    type: "포토/체험형",
+    character: "루시 (& 슈뢰더)",
+    color: "pink",
+    completion: {
+      title: "당당한 루시의 기록",
+      dialogues: [
+        {
+          speaker: "루시",
+          text: "세상의 모든 고민은 나한테 가져와! (심리 상담 5센트)",
+        },
+        {
+          speaker: "루시",
+          text: "오늘 네가 찍은 사진들 중 최고는 바로 나랑 찍은 거겠지?",
+        },
+      ],
+    },
+    path: [
+      {
+        type: "location",
+        name: "소설왕 스누피 광장",
+        hint: "누워있는 루시",
+        img: "",
+        sceneDesc: "[사진 설명: 광장에 당당하게 누워있는 루시입니다.]",
+        text: "세상의 중심은 바로 나야!",
+        source: "- 루시 (1950년대)",
+      },
+      {
+        type: "location",
+        name: "야외무대",
+        hint: "피아노 곁",
+        img: "",
+        sceneDesc: "[사진 설명: 피아노를 치는 슈뢰더를 바라보는 루시입니다.]",
+        text: "베토벤이 뭐가 그렇게 중요해? 지금 네 앞에 이렇게 예쁜 내가 있는데!",
+        source: "- 루시 (1956.01.24.)",
+      },
+      {
+        type: "location",
+        name: "하귤밭 상담부스",
+        hint: "5센트 상담소",
+        img: "",
+        sceneDesc: "[사진 설명: 루시의 5센트 심리 상담소 부스입니다.]",
+        text: "심리 상담은 5센트야! 선불로 내면 다 들어주지.",
+        source: "- 루시 (1959.03.27.)",
+      },
+    ],
+  },
 ];
 
 // 로컬 스토리지 키 값 설정
@@ -776,8 +825,31 @@ export default function App() {
 
   // QR 스캔 에러 피드백 상태
   const [qrErrorMsg, setQrErrorMsg] = useState("");
-
   const [showResetModal, setShowResetModal] = useState(false);
+
+  // 버튼 다중 클릭 방지 및 로딩 텍스트 표시를 위한 상태
+  const [isRequestingCamera, setIsRequestingCamera] = useState(false);
+
+  // =====================================================================
+  // 🚨 [수정됨] 스플래시 화면에서 최초 1회 카메라 권한을 요청하는 함수
+  // =====================================================================
+  const requestCameraPermission = async () => {
+    setIsRequestingCamera(true);
+    try {
+      // 1. 카메라 권한을 선제적으로 요청합니다. (브라우저가 권한 팝업을 띄움)
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      // 2. 권한을 얻어내면, 배터리 소모 방지를 위해 카메라 트랙을 즉시 종료합니다.
+      stream.getTracks().forEach((track) => track.stop());
+    } catch (err) {
+      console.warn("초기 카메라 권한 요청 거부/실패:", err);
+      // 권한을 거부하더라도 일단 앱 진입을 막지 않고 다음 화면으로 넘깁니다.
+      // 나중에 실제 QR 화면에 가면 Scanner가 다시 시도하고 에러 메시지를 띄웁니다.
+    } finally {
+      setIsRequestingCamera(false);
+      // 3. 권한 프로세스가 끝나면 메인(intro) 화면으로 이동합니다.
+      setStep("intro");
+    }
+  };
 
   const activeTheme = themeData.find((t) => t.id === activeThemeId) || null;
 
@@ -1001,14 +1073,18 @@ export default function App() {
                   위대한 모험의 시작
                 </p>
 
+                {/* 🚨 [수정됨] 클릭 시 카메라 권한을 요청하는 함수 연결 */}
                 <button
-                  onClick={() => setStep("intro")}
-                  className="group relative w-full max-w-[240px] bg-white text-stone-900 font-black py-4 rounded-full shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] hover:bg-emerald-50 hover:text-emerald-700 transition-all active:scale-95 flex items-center justify-center gap-2 overflow-hidden"
+                  onClick={requestCameraPermission}
+                  disabled={isRequestingCamera}
+                  className="group relative w-full max-w-[240px] bg-white text-stone-900 font-black py-4 rounded-full shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] hover:bg-emerald-50 hover:text-emerald-700 transition-all active:scale-95 flex items-center justify-center gap-2 overflow-hidden disabled:opacity-80 disabled:cursor-not-allowed"
                 >
                   <span className="relative z-10 tracking-widest text-sm">
-                    PRESS TO START
+                    {isRequestingCamera ? "권한 확인 중..." : "PRESS TO START"}
                   </span>
-                  <ChevronRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
+                  {!isRequestingCamera && (
+                    <ChevronRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
+                  )}
                   <div className="absolute inset-0 bg-emerald-100 opacity-0 group-hover:opacity-20 transition-opacity"></div>
                 </button>
               </div>
@@ -1317,6 +1393,7 @@ export default function App() {
                     <ImageIcon className="w-10 h-10 opacity-30" />
                   </div>
 
+                  {/* 요청하신 사진 설명 부분은 그대로 보존되어 있습니다 */}
                   <div className="bg-stone-50 p-3 rounded-lg border border-stone-100 mb-5 flex items-start gap-2">
                     <Camera className="w-4 h-4 text-stone-400 shrink-0 mt-0.5" />
                     <p className="text-[11px] text-stone-500 italic break-keep leading-relaxed">
