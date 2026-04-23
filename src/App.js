@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   MapPin,
   CheckCircle,
@@ -16,6 +16,140 @@ import {
   Sparkles,
   RotateCcw,
 } from "lucide-react";
+
+// === [커스텀 QR 스캐너 컴포넌트 (설치 필요 없음!)] ===
+const QRScanner = ({ onScan, onError }) => {
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const [isJsQRLoaded, setIsJsQRLoaded] = useState(false);
+  const [camError, setCamError] = useState(false);
+  const onScanRef = useRef(onScan);
+  const onErrorRef = useRef(onError);
+
+  useEffect(() => {
+    onScanRef.current = onScan;
+    onErrorRef.current = onError;
+  }, [onScan, onError]);
+
+  // 1. QR 해독용 자바스크립트 엔진(jsQR)을 실시간으로 불러옵니다.
+  useEffect(() => {
+    const scriptId = "jsqr-script";
+    let script = document.getElementById(scriptId);
+    if (!script) {
+      script = document.createElement("script");
+      script.id = scriptId;
+      script.src = "https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js";
+      script.onload = () => setIsJsQRLoaded(true);
+      document.body.appendChild(script);
+    } else {
+      setIsJsQRLoaded(true);
+    }
+  }, []);
+
+  // 2. 카메라 권한 요청 및 비디오 스트리밍
+  useEffect(() => {
+    if (!isJsQRLoaded) return;
+    let stream = null;
+    let animationFrameId;
+
+    const startCamera = async () => {
+      try {
+        // 스마트폰 후면 카메라 우선 요청
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" },
+        });
+      } catch (err) {
+        try {
+          // 후면 카메라가 없거나 오류 시, 사용 가능한 아무 카메라나 요청 (PC 웹캠 등)
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        } catch (fallbackErr) {
+          console.error("카메라 권한 거부 또는 기기 없음", fallbackErr);
+          setCamError(true);
+          if (onErrorRef.current) onErrorRef.current(fallbackErr);
+          return;
+        }
+      }
+
+      if (videoRef.current && stream) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.setAttribute("playsinline", true); // iOS 사파리 필수 속성
+        videoRef.current.play();
+        requestAnimationFrame(tick);
+      }
+    };
+
+    // 3. 매 프레임마다 화면을 캡처하여 QR코드가 있는지 검사
+    const tick = () => {
+      if (
+        videoRef.current &&
+        videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA
+      ) {
+        const canvas = canvasRef.current;
+        const video = videoRef.current;
+        canvas.height = video.videoHeight;
+        canvas.width = video.videoWidth;
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        if (window.jsQR) {
+          const code = window.jsQR(
+            imageData.data,
+            imageData.width,
+            imageData.height,
+            {
+              inversionAttempts: "dontInvert",
+            }
+          );
+
+          // QR이 인식되면 결과 전달 후 스캔 중지
+          if (code && code.data) {
+            if (onScanRef.current) onScanRef.current(code.data);
+            return;
+          }
+        }
+      }
+      animationFrameId = requestAnimationFrame(tick);
+    };
+
+    startCamera();
+
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+  }, [isJsQRLoaded]);
+
+  return (
+    <div className="w-full h-full relative bg-stone-900 flex items-center justify-center">
+      <video ref={videoRef} className="w-full h-full object-cover" />
+      <canvas ref={canvasRef} className="hidden" />
+      {camError && (
+        <div className="absolute text-red-400 text-[11px] font-bold text-center px-4 z-20 bg-stone-900/90 py-3 rounded-xl break-keep w-3/4 shadow-lg border border-red-500/30">
+          카메라 권한이 없거나
+          <br />
+          기기를 찾을 수 없습니다.
+          <br />
+          <br />
+          <span className="text-stone-400 font-normal">
+            아래 'QR코드 패스하기' 버튼을
+            <br />
+            이용해 주세요.
+          </span>
+        </div>
+      )}
+      {!isJsQRLoaded && !camError && (
+        <div className="absolute text-emerald-400 text-xs font-bold animate-pulse z-20">
+          카메라 로딩 중...
+        </div>
+      )}
+    </div>
+  );
+};
 
 // === [코스 1: 탐험형 공통 후반부 합류 동선] ===
 const exploreTail = [
@@ -741,7 +875,7 @@ export default function App() {
                 초기화 경고
               </h3>
               <p className="text-sm text-stone-500 mb-6 break-keep leading-relaxed">
-                모든 퀘스트 진행 상황과 모은 스탬프가 삭제됩니다.
+                모든 퀘스트 진행 상황과 모은 리워드가 삭제됩니다.
                 <br />
                 정말 처음부터 다시 시작하시겠습니까?
               </p>
@@ -763,8 +897,8 @@ export default function App() {
           </div>
         )}
 
-        {/* Header */}
-        {step !== "splash" && (
+        {/* Header (고정) */}
+        {step !== "splash" && step !== "qr" && (
           <div className="bg-stone-900 p-4 text-center text-white relative flex justify-between items-center z-10 shrink-0">
             <h1 className="text-lg font-bold tracking-tighter">
               SNOOPY GARDEN QUEST
@@ -788,14 +922,10 @@ export default function App() {
           </div>
         )}
 
-        <div className="flex-1 overflow-y-auto bg-stone-50 flex flex-col relative">
-          {/* Step 0: 스플래시 (초기 시작 화면) */}
+        <div className="flex-1 overflow-hidden bg-stone-50 flex flex-col relative">
+          {/* Step 0: 스플래시 */}
           {step === "splash" && (
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-stone-900 text-white overflow-hidden">
-              <div className="absolute inset-0 z-0 opacity-40">
-                {/* <img src="여기에_배경이미지_URL을_넣으세요.jpg" alt="배경 이미지" className="w-full h-full object-cover" /> */}
-              </div>
-
               <div className="z-10 flex flex-col items-center text-center px-6 w-full animate-fade-in">
                 <div className="w-20 h-20 bg-emerald-500 rounded-3xl rotate-12 flex items-center justify-center mb-8 shadow-[0_0_30px_rgba(16,185,129,0.5)]">
                   <Map className="w-10 h-10 text-white -rotate-12" />
@@ -821,7 +951,6 @@ export default function App() {
                   <div className="absolute inset-0 bg-emerald-100 opacity-0 group-hover:opacity-20 transition-opacity"></div>
                 </button>
               </div>
-
               <div className="absolute bottom-8 text-[9px] text-stone-500 tracking-widest font-bold">
                 TAP TO BEGIN YOUR ADVENTURE
               </div>
@@ -830,7 +959,7 @@ export default function App() {
 
           {/* Step 1: 메인 화면 */}
           {step === "intro" && (
-            <div className="p-6 animate-fade-in pb-12 flex-1">
+            <div className="p-6 animate-fade-in pb-12 flex-1 overflow-y-auto custom-scrollbar">
               {completedThemes.length === themeData.length ? (
                 <div
                   onClick={() => setStep("grandClear")}
@@ -875,7 +1004,7 @@ export default function App() {
                         : "bg-emerald-100 border-emerald-200 text-emerald-600"
                     }`}
                   >
-                    <Award className="w-3 h-3" /> STAMPS{" "}
+                    <Award className="w-3 h-3" /> REWARDS{" "}
                     {completedThemes.length}/{themeData.length}
                   </div>
                 </div>
@@ -936,18 +1065,18 @@ export default function App() {
             </div>
           )}
 
-          {/* Step 2: 진행 지도 (???) */}
+          {/* Step 2: 진행 지도 */}
           {step === "journey" && activeTheme && (
-            <div className="p-6 animate-fade-in flex flex-col flex-1 h-full">
-              <div className="mb-4">
+            <div className="p-6 animate-fade-in flex flex-col flex-1 h-full overflow-hidden">
+              <div className="mb-4 shrink-0">
                 <span className="px-3 py-1 bg-stone-200 text-stone-700 rounded-full text-xs font-bold mb-1 inline-block">
                   {activeTheme.type}
                 </span>
                 <h2 className="text-xl font-black">{activeTheme.title}</h2>
               </div>
 
-              <div className="flex-1 bg-white rounded-2xl p-5 border border-stone-200 shadow-sm overflow-hidden mb-4">
-                <div className="relative pl-10 space-y-6 max-h-[380px] overflow-y-auto pr-2 custom-scrollbar">
+              <div className="flex-1 bg-white rounded-2xl p-5 border border-stone-200 shadow-sm overflow-y-auto custom-scrollbar mb-4">
+                <div className="relative pl-10 space-y-6 pr-2">
                   <div className="absolute top-2 bottom-4 left-[21px] w-0.5 bg-stone-200"></div>
                   {activePath.map((loc, idx) => {
                     const isCompleted = idx < progress;
@@ -1006,123 +1135,155 @@ export default function App() {
                 </div>
               </div>
 
-              {activePath[progress]?.type === "choice" ? (
-                <div className="bg-blue-50 p-4 rounded-xl border border-blue-200 shadow-md">
-                  <p className="text-center font-bold text-blue-900 mb-4 text-sm">
-                    {activePath[progress].title}
-                  </p>
-                  <div className="flex flex-col gap-2">
-                    {activePath[progress].options.map((opt, i) => (
-                      <button
-                        key={i}
-                        onClick={() => handleMakeChoice(opt.route)}
-                        className="bg-white border border-blue-200 text-left p-4 rounded-xl flex items-center justify-between text-xs font-bold hover:border-blue-500 transition-all shadow-sm group"
-                      >
-                        <div className="flex-1">
-                          <span className="text-blue-900 group-hover:text-blue-600">
-                            {opt.label}
-                          </span>
-                          <span className="block font-normal text-stone-400 mt-0.5">
-                            {opt.desc}
-                          </span>
-                        </div>
-                        <ChevronRight className="w-4 h-4 text-blue-300" />
-                      </button>
-                    ))}
+              <div className="shrink-0">
+                {activePath[progress]?.type === "choice" ? (
+                  <div className="bg-blue-50 p-4 rounded-xl border border-blue-200 shadow-md">
+                    <p className="text-center font-bold text-blue-900 mb-4 text-sm">
+                      {activePath[progress].title}
+                    </p>
+                    <div className="flex flex-col gap-2">
+                      {activePath[progress].options.map((opt, i) => (
+                        <button
+                          key={i}
+                          onClick={() => handleMakeChoice(opt.route)}
+                          className="bg-white border border-blue-200 text-left p-4 rounded-xl flex items-center justify-between text-xs font-bold hover:border-blue-500 transition-all shadow-sm group"
+                        >
+                          <div className="flex-1">
+                            <span className="text-blue-900 group-hover:text-blue-600">
+                              {opt.label}
+                            </span>
+                            <span className="block font-normal text-stone-400 mt-0.5">
+                              {opt.desc}
+                            </span>
+                          </div>
+                          <ChevronRight className="w-4 h-4 text-blue-300" />
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <button
-                  onClick={handleScanQR}
-                  className="w-full bg-stone-900 text-white font-bold py-5 rounded-2xl shadow-xl mt-auto tracking-widest text-sm hover:bg-stone-800 transition"
-                >
-                  [{activePath[progress]?.name}] 도착 후 QR 스캔
-                </button>
-              )}
+                ) : (
+                  <button
+                    onClick={handleScanQR}
+                    className="w-full bg-stone-900 text-white font-bold py-5 rounded-2xl shadow-xl tracking-widest text-sm hover:bg-stone-800 transition"
+                  >
+                    [{activePath[progress]?.name}] 도착 후 QR 스캔
+                  </button>
+                )}
+              </div>
             </div>
           )}
 
-          {/* Step 3: QR 스캔 */}
+          {/* Step 3: 실제 카메라 QR 스캔 화면 */}
           {step === "qr" && (
-            <div className="p-6 flex-1 flex flex-col items-center justify-center text-center bg-stone-900 text-white h-full">
-              <div className="mb-10">
+            <div className="p-6 flex-1 flex flex-col items-center justify-center text-center bg-stone-900 text-white h-full relative animate-fade-in">
+              <div className="mb-6 z-10 shrink-0 mt-4">
                 <h2 className="text-xl font-bold mb-2">SCAN QR CODE</h2>
                 <p className="text-stone-400 text-xs bg-stone-800 px-4 py-1.5 rounded-full inline-block">
                   HINT: {activePath[progress].hint}
                 </p>
               </div>
-              <div
-                className="relative w-64 h-64 bg-black rounded-3xl overflow-hidden mb-12 flex items-center justify-center border-2 border-stone-600 cursor-pointer shadow-[0_0_60px_rgba(16,185,129,0.1)] hover:border-emerald-500 transition-colors"
-                onClick={handleQRSuccess}
-              >
-                <ScanLine className="w-20 h-20 text-emerald-400 animate-pulse" />
-                <div className="absolute top-4 left-4 w-8 h-8 border-t-4 border-l-4 border-emerald-500 rounded-tl-lg"></div>
-                <div className="absolute top-4 right-4 w-8 h-8 border-t-4 border-r-4 border-emerald-500 rounded-tr-lg"></div>
-                <div className="absolute bottom-4 left-4 w-8 h-8 border-b-4 border-l-4 border-emerald-500 rounded-bl-lg"></div>
-                <div className="absolute bottom-4 right-4 w-8 h-8 border-b-4 border-r-4 border-emerald-500 rounded-br-lg"></div>
-                <p className="absolute bottom-6 text-stone-500 text-[10px] font-black uppercase tracking-widest">
-                  Tap to Scan
-                </p>
+
+              {/* 커스텀 카메라 스캐너 영역 */}
+              <div className="w-full max-w-sm aspect-square bg-black rounded-3xl overflow-hidden mb-8 border-2 border-stone-600 shadow-[0_0_60px_rgba(16,185,129,0.15)] relative shrink-0">
+                <QRScanner
+                  onScan={(result) => {
+                    if (result) {
+                      // 여기서는 어떤 큐알이든 찍히면 바로 성공처리(handleQRSuccess)합니다.
+                      // 만약 스누피가든 QR만 통과시키고 싶다면:
+                      // if(result.includes("snoopygarden")) { handleQRSuccess(); }
+                      handleQRSuccess();
+                    }
+                  }}
+                  onError={(error) => {
+                    console.error("Camera Error:", error);
+                  }}
+                />
+
+                {/* 스캔 가이드라인 UI (장식용) */}
+                <div className="absolute inset-0 pointer-events-none border-[30px] border-stone-900/60 flex items-center justify-center z-10">
+                  <ScanLine className="w-16 h-16 text-emerald-400/50 animate-pulse" />
+                </div>
+              </div>
+
+              {/* 하단 패스 및 돌아가기 버튼 */}
+              <div className="flex flex-col gap-3 w-full z-10 shrink-0">
+                <button
+                  onClick={handleQRSuccess}
+                  className="w-full bg-stone-800 hover:bg-stone-700 text-emerald-400 font-bold py-4 rounded-2xl text-sm transition-colors flex items-center justify-center gap-2 border border-stone-700 shadow-md"
+                >
+                  <CheckCircle className="w-4 h-4" /> QR코드 패스하기 (테스트용)
+                </button>
+                <button
+                  onClick={() => setStep("journey")}
+                  className="w-full bg-transparent border border-stone-700 text-stone-400 font-bold py-4 rounded-2xl text-sm hover:bg-stone-800 hover:text-white transition-colors"
+                >
+                  지도 화면으로 돌아가기
+                </button>
               </div>
             </div>
           )}
 
           {/* Step 4: 장면 확인 및 스탬프 */}
           {step === "scene" && (
-            <div className="p-6 flex-1 flex flex-col animate-fade-in h-full overflow-y-auto">
-              <div className="bg-white rounded-2xl p-5 shadow-sm border border-stone-200 mb-6">
-                <span className="font-bold text-emerald-600 text-[10px] flex items-center gap-1 mb-4 uppercase tracking-wider">
-                  <MapPin className="w-3 h-3" /> {activePath[progress].name}
-                </span>
+            <div className="p-6 flex-1 flex flex-col animate-fade-in h-full overflow-hidden">
+              <div className="flex-1 overflow-y-auto custom-scrollbar pr-1 pb-2">
+                <div className="bg-white rounded-2xl p-5 shadow-sm border border-stone-200 mb-6">
+                  <span className="font-bold text-emerald-600 text-[10px] flex items-center gap-1 mb-4 uppercase tracking-wider">
+                    <MapPin className="w-3 h-3" /> {activePath[progress].name}
+                  </span>
 
-                <div className="w-full h-44 bg-stone-100 rounded-xl mb-5 flex items-center justify-center text-stone-300 relative border border-dashed border-stone-200">
-                  <ImageIcon className="w-10 h-10 opacity-30" />
-                </div>
+                  <div className="w-full h-44 bg-stone-100 rounded-xl mb-5 flex items-center justify-center text-stone-300 relative border border-dashed border-stone-200">
+                    <ImageIcon className="w-10 h-10 opacity-30" />
+                  </div>
 
-                <div className="bg-stone-50 p-3 rounded-lg border border-stone-100 mb-5 flex items-start gap-2">
-                  <Camera className="w-4 h-4 text-stone-400 shrink-0 mt-0.5" />
-                  <p className="text-[11px] text-stone-500 italic break-keep leading-relaxed">
-                    {activePath[progress].sceneDesc}
-                  </p>
-                </div>
-
-                <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-100 flex items-start gap-3 shadow-sm">
-                  <Quote className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-emerald-900 font-bold text-sm leading-relaxed break-keep">
-                      "{activePath[progress].text}"
+                  <div className="bg-stone-50 p-3 rounded-lg border border-stone-100 mb-5 flex items-start gap-2">
+                    <Camera className="w-4 h-4 text-stone-400 shrink-0 mt-0.5" />
+                    <p className="text-[11px] text-stone-500 italic break-keep leading-relaxed">
+                      {activePath[progress].sceneDesc}
                     </p>
-                    {activePath[progress].source && (
-                      <span className="block text-[10px] font-normal text-emerald-600 mt-2">
-                        {activePath[progress].source}
-                      </span>
-                    )}
+                  </div>
+
+                  <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-100 flex items-start gap-3 shadow-sm">
+                    <Quote className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-emerald-900 font-bold text-sm leading-relaxed break-keep">
+                        "{activePath[progress].text}"
+                      </p>
+                      {activePath[progress].source && (
+                        <span className="block text-[10px] font-normal text-emerald-600 mt-2">
+                          {activePath[progress].source}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-              <button
-                onClick={handleGetStamp}
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-5 rounded-2xl shadow-lg mt-auto text-sm tracking-widest transition-transform active:scale-95"
-              >
-                GET STAMP!
-              </button>
+
+              <div className="shrink-0 pt-2">
+                <button
+                  onClick={handleGetStamp}
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-5 rounded-2xl shadow-lg text-sm tracking-widest transition-transform active:scale-95"
+                >
+                  GET REWARD!
+                </button>
+              </div>
             </div>
           )}
 
-          {/* Step 5: 1개 테마 완주 화면 */}
+          {/* Step 5 & 6 (기존과 동일) */}
           {step === "complete" && activeTheme && (
-            <div className="p-6 flex-1 flex flex-col items-center justify-center animate-fade-in h-full overflow-y-auto">
-              <div className="w-28 h-28 bg-emerald-100 rounded-full flex items-center justify-center mb-8 relative shadow-inner">
+            <div className="p-6 flex-1 flex flex-col items-center justify-center animate-fade-in h-full overflow-y-auto custom-scrollbar">
+              <div className="w-28 h-28 bg-emerald-100 rounded-full flex items-center justify-center mb-8 relative shadow-inner shrink-0">
                 <CheckCircle className="w-16 h-16 text-emerald-600" />
                 <div className="absolute -top-1 -right-1 bg-yellow-400 text-yellow-900 text-[10px] font-black px-3 py-1 rounded-full rotate-12 shadow-md">
                   QUEST CLEAR!
                 </div>
               </div>
-              <h2 className="text-2xl font-black text-stone-800 mb-2">
+              <h2 className="text-2xl font-black text-stone-800 mb-2 shrink-0">
                 코스 완주 성공!
               </h2>
 
-              <div className="w-full bg-white rounded-2xl border border-stone-200 p-5 mb-10 text-left shadow-sm">
+              <div className="w-full bg-white rounded-2xl border border-stone-200 p-5 mb-10 text-left shadow-sm shrink-0">
                 <p className="text-center text-[10px] font-black text-stone-400 mb-5 border-b pb-3 uppercase tracking-[0.2em]">
                   {activeTheme.completion.title}
                 </p>
@@ -1151,7 +1312,7 @@ export default function App() {
               {completedThemes.length === themeData.length ? (
                 <button
                   onClick={() => setStep("grandClear")}
-                  className="w-full flex flex-col items-center justify-center gap-1 bg-yellow-500 hover:bg-yellow-400 text-yellow-900 font-black py-4 px-2 rounded-2xl tracking-wider text-[13px] sm:text-sm shadow-[0_0_20px_rgba(234,179,8,0.4)] animate-bounce transition-colors mt-4 break-keep leading-relaxed"
+                  className="w-full shrink-0 flex flex-col items-center justify-center gap-1 bg-yellow-500 hover:bg-yellow-400 text-yellow-900 font-black py-4 px-2 rounded-2xl tracking-wider text-[13px] sm:text-sm shadow-[0_0_20px_rgba(234,179,8,0.4)] animate-bounce transition-colors mt-4 break-keep leading-relaxed"
                 >
                   <span>✨ 비글 스카우트 대장 스누피가</span>
                   <span>당신을 찾고 있어요! ✨</span>
@@ -1159,7 +1320,7 @@ export default function App() {
               ) : (
                 <button
                   onClick={resetQuest}
-                  className="w-full bg-stone-900 hover:bg-stone-800 text-white font-black py-5 rounded-2xl tracking-widest text-sm shadow-xl transition-colors"
+                  className="w-full shrink-0 bg-stone-900 hover:bg-stone-800 text-white font-black py-5 rounded-2xl tracking-widest text-sm shadow-xl transition-colors"
                 >
                   BACK TO LIST
                 </button>
@@ -1167,11 +1328,9 @@ export default function App() {
             </div>
           )}
 
-          {/* Step 6: 4개 테마 올 클리어 (Grand Master) 화면 */}
           {step === "grandClear" && (
-            <div className="p-6 flex-1 flex flex-col items-center animate-fade-in h-full bg-stone-900 text-white overflow-y-auto overflow-x-hidden relative">
+            <div className="p-6 flex-1 flex flex-col items-center animate-fade-in h-full bg-stone-900 text-white overflow-y-auto overflow-x-hidden relative custom-scrollbar">
               {renderConfetti()}
-
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-yellow-500/20 via-stone-900 to-stone-900 z-0 pointer-events-none"></div>
 
               <div className="z-10 flex flex-col items-center w-full text-center my-auto py-8">
