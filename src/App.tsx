@@ -19,39 +19,166 @@ import {
   AlertCircle,
 } from "lucide-react";
 
+// =====================================================================
+// 🔑 [중요] 정답 QR코드 설정
+// =====================================================================
 const VALID_QR_CODE = "snoopy_garden_quest";
 
+// === [모바일 100% 호환 실제 카메라 QR 스캐너] ===
 const QRScanner = ({ onScan, onError }) => {
-  const [isSimulating, setIsSimulating] = useState(true);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const [isJsQRLoaded, setIsJsQRLoaded] = useState(false);
+  const [camError, setCamError] = useState(false);
+  const onScanRef = useRef(onScan);
+  const onErrorRef = useRef(onError);
 
-  // 미리보기(웹) 환경에서는 실제 카메라 대신 가짜 버튼으로 스캔을 시뮬레이션합니다.
+  useEffect(() => {
+    onScanRef.current = onScan;
+    onErrorRef.current = onError;
+  }, [onScan, onError]);
+
+  // jsQR 라이브러리 로드
+  useEffect(() => {
+    if (window.jsQR) {
+      setIsJsQRLoaded(true);
+      return;
+    }
+    const scriptId = "jsqr-script";
+    let script = document.getElementById(scriptId);
+    if (!script) {
+      script = document.createElement("script");
+      script.id = scriptId;
+      script.src = "https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js";
+      script.onload = () => setIsJsQRLoaded(true);
+      script.onerror = () => setCamError(true);
+      document.body.appendChild(script);
+    } else {
+      setIsJsQRLoaded(true);
+    }
+  }, []);
+
+  // 카메라 권한 요청 및 스트리밍 시작
+  useEffect(() => {
+    if (!isJsQRLoaded) return;
+    let stream = null;
+    let animationFrameId;
+    let lastScanTime = 0; // 중복 스캔 방지 타이머
+
+    const startCamera = async () => {
+      try {
+        // 스마트폰 후면 카메라 우선 요청
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" },
+        });
+      } catch (err) {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        } catch (fallbackErr) {
+          console.error("카메라 권한 거부", fallbackErr);
+          setCamError(true);
+          if (onErrorRef.current) onErrorRef.current(fallbackErr);
+          return;
+        }
+      }
+
+      if (videoRef.current && stream) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.setAttribute("playsinline", "true");
+        videoRef.current.setAttribute("autoplay", "true");
+        videoRef.current.setAttribute("muted", "true");
+
+        try {
+          await videoRef.current.play();
+          requestAnimationFrame(tick);
+        } catch (e) {
+          console.error("비디오 자동재생 실패", e);
+        }
+      }
+    };
+
+    const tick = () => {
+      if (
+        videoRef.current &&
+        videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA
+      ) {
+        const canvas = canvasRef.current;
+        const video = videoRef.current;
+        canvas.height = video.videoHeight;
+        canvas.width = video.videoWidth;
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        if (window.jsQR) {
+          const code = window.jsQR(
+            imageData.data,
+            imageData.width,
+            imageData.height,
+            {
+              inversionAttempts: "dontInvert",
+            }
+          );
+
+          if (code && code.data) {
+            const now = Date.now();
+            if (now - lastScanTime > 2000) {
+              lastScanTime = now;
+              if (onScanRef.current) onScanRef.current(code.data);
+            }
+          }
+        }
+      }
+      animationFrameId = requestAnimationFrame(tick);
+    };
+
+    startCamera();
+
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+  }, [isJsQRLoaded]);
+
   return (
-    <div className="w-full h-full relative bg-stone-900 flex flex-col items-center justify-center p-4">
-      <div className="absolute inset-0 pointer-events-none border-[30px] border-stone-900/60 flex items-center justify-center z-10">
-        <ScanLine className={`w-16 h-16 text-emerald-400 animate-pulse`} />
-      </div>
+    <div className="w-full h-full relative bg-stone-900 flex items-center justify-center overflow-hidden">
+      <video
+        ref={videoRef}
+        className="absolute inset-0 w-full h-full object-cover"
+        autoPlay
+        playsInline
+        muted
+      />
+      <canvas ref={canvasRef} className="hidden" />
 
-      <div className="z-20 flex flex-col gap-3 w-full max-w-[200px]">
-        <p className="text-stone-400 text-xs mb-2">미리보기 가상 스캐너</p>
-
-        <button
-          onClick={() => onScan(VALID_QR_CODE)}
-          className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-xl text-sm transition-colors shadow-lg"
-        >
-          ✅ 정답 QR코드 스캔하기
-        </button>
-
-        <button
-          onClick={() => onScan("wrong_qr_code")}
-          className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-xl text-sm transition-colors shadow-lg"
-        >
-          ❌ 틀린 QR코드 스캔하기
-        </button>
-      </div>
+      {camError && (
+        <div className="absolute text-red-400 text-[11px] font-bold text-center px-4 z-20 bg-stone-900/90 py-3 rounded-xl break-keep w-3/4 shadow-lg border border-red-500/30">
+          카메라 권한이 없거나
+          <br />
+          접근이 차단되었습니다.
+          <br />
+          <br />
+          <span className="text-stone-400 font-normal">
+            아래 '패스하기' 버튼을
+            <br />
+            이용해 주세요.
+          </span>
+        </div>
+      )}
+      {!isJsQRLoaded && !camError && (
+        <div className="absolute text-emerald-400 text-xs font-bold animate-pulse z-20 bg-stone-900/80 px-4 py-2 rounded-lg">
+          카메라 로딩 중...
+        </div>
+      )}
     </div>
   );
 };
 
+// === [코스 1: 탐험형 공통 후반부 합류 동선] ===
 const exploreTail = [
   {
     type: "location",
@@ -91,6 +218,7 @@ const exploreTail = [
   },
 ];
 
+// === [전체 4대 테마 데이터] ===
 const themeData = [
   {
     id: "explore",
@@ -514,7 +642,7 @@ const themeData = [
   },
 ];
 
-const STORAGE_KEY = "snoopy_quest_state_sim";
+const STORAGE_KEY = "snoopy_quest_state_final";
 
 const getInitialState = () => {
   try {
@@ -664,7 +792,7 @@ export default function App() {
 
   const handleResetAll = () => {
     if (
-      window.confirm("모든 퀘스트 진행 상황과 스탬프를 초기화하시겠습니까?")
+      window.confirm("모든 퀘스트 진행 상황과 리워드를 초기화하시겠습니까?")
     ) {
       localStorage.removeItem(STORAGE_KEY);
       setActiveThemeId(null);
@@ -814,7 +942,7 @@ export default function App() {
                         : "bg-emerald-100 border-emerald-200 text-emerald-600"
                     }`}
                   >
-                    <Award className="w-3 h-3" /> STAMPS{" "}
+                    <Award className="w-3 h-3" /> REWARDS{" "}
                     {completedThemes.length}/{themeData.length}
                   </div>
                 </div>
@@ -1036,7 +1164,7 @@ export default function App() {
             </div>
           )}
 
-          {/* Step 3: QR 스캔 (시뮬레이터 모드) */}
+          {/* Step 3: QR 스캔 (실제 카메라 구동) */}
           {step === "qr" && (
             <div className="p-6 flex-1 flex flex-col items-center justify-center text-center bg-stone-900 text-white h-full relative animate-fade-in">
               {qrErrorMsg && (
@@ -1065,8 +1193,22 @@ export default function App() {
                     : "border-stone-600"
                 }`}
               >
-                {/* 브라우저 미리보기를 위한 가상 스캐너 컴포넌트 */}
-                <QRScanner onScan={handleQRSuccess} onError={console.error} />
+                <QRScanner
+                  onScan={(result) => {
+                    if (result) handleQRSuccess(result);
+                  }}
+                  onError={(error) => {
+                    console.error("Camera Error:", error);
+                  }}
+                />
+
+                <div className="absolute inset-0 pointer-events-none border-[30px] border-stone-900/60 flex items-center justify-center z-10">
+                  <ScanLine
+                    className={`w-16 h-16 ${
+                      qrErrorMsg ? "text-red-400" : "text-emerald-400"
+                    } animate-pulse`}
+                  />
+                </div>
               </div>
 
               <div className="flex flex-col gap-3 w-full z-10 shrink-0">
@@ -1123,7 +1265,7 @@ export default function App() {
                 onClick={handleGetStamp}
                 className="w-full mt-auto bg-emerald-600 text-white font-black py-4 rounded-xl shadow-lg hover:bg-emerald-700 flex justify-center items-center gap-2 transform active:scale-95 transition-transform shrink-0"
               >
-                <CheckCircle className="w-6 h-6" /> 스탬프 찍고 다음으로
+                <CheckCircle className="w-6 h-6" /> 리워드 획득하고 다음으로
               </button>
             </div>
           )}
@@ -1247,10 +1389,10 @@ export default function App() {
                       <Quote className="w-4 h-4 text-stone-500 shrink-0 mt-0.5" />
                       <div>
                         <p className="text-stone-200 font-bold text-[13px] leading-relaxed break-keep">
-                          "우리가 이렇게 진심인데 어떻게 질 수 있겠어?"
+                          "내가 마침내 해냈어!"
                         </p>
                         <span className="block text-[10px] font-normal text-stone-500 mt-2">
-                          - 찰리 브라운 (1959.10.15.)
+                          - 찰리 브라운 (1965.03.30.)
                         </span>
                       </div>
                     </div>
@@ -1258,10 +1400,10 @@ export default function App() {
                       <Quote className="w-4 h-4 text-stone-500 shrink-0 mt-0.5" />
                       <div>
                         <p className="text-stone-200 font-bold text-[13px] leading-relaxed break-keep">
-                          "너도 가끔은 꽤 훌륭한 구석이 있구나!"
+                          "너도 가끔은 쓸모가 있구나, 찰리 브라운!"
                         </p>
                         <span className="block text-[10px] font-normal text-stone-500 mt-2">
-                          - 루시 (1955.03.22.)
+                          - 루시 (1959.03.27.)
                         </span>
                       </div>
                     </div>
