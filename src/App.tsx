@@ -16,7 +16,8 @@ import {
   Sparkles,
   RotateCcw,
   AlertCircle,
-  Star // <--- 🚨 앱 강제 종료 방지용 별 아이콘
+  Star,
+  X, // 팝업 닫기 아이콘 추가
 } from "lucide-react";
 
 // =====================================================================
@@ -40,7 +41,7 @@ const requestCameraPermissionOnce = async () => {
     return true;
   } catch (err) {
     console.error("초기 카메라 권한 거부됨:", err);
-    return false; 
+    return false;
   }
 };
 
@@ -80,7 +81,7 @@ const QRScanner = ({ onScan, onError }) => {
   useEffect(() => {
     if (!isJsQRLoaded) return;
     let animationFrameId;
-    let lastScanTime = 0; 
+    let lastScanTime = 0;
 
     const startCamera = async () => {
       if (!globalCameraStream || !globalCameraStream.active) {
@@ -97,7 +98,9 @@ const QRScanner = ({ onScan, onError }) => {
       }
 
       if (globalCameraStream && videoRef.current) {
-        globalCameraStream.getTracks().forEach((track) => (track.enabled = true));
+        globalCameraStream
+          .getTracks()
+          .forEach((track) => (track.enabled = true));
 
         videoRef.current.srcObject = globalCameraStream;
         videoRef.current.setAttribute("playsinline", "true");
@@ -150,7 +153,9 @@ const QRScanner = ({ onScan, onError }) => {
 
     return () => {
       if (globalCameraStream) {
-        globalCameraStream.getTracks().forEach((track) => (track.enabled = false));
+        globalCameraStream
+          .getTracks()
+          .forEach((track) => (track.enabled = false));
       }
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
@@ -193,14 +198,13 @@ const QRScanner = ({ onScan, onError }) => {
 };
 
 // === [코스 1: 탐험형 공통 후반부 합류 동선] ===
+// 힌트 이미지를 별도로 두지 않고 img를 공통으로 사용합니다.
 const exploreTail = [
   {
     type: "location",
     name: "스누피 파고라",
     hint: "파고라 바닥 그림자",
     img: "/images/explore_pagora.jpg",
-    sceneDesc:
-      "[사진 설명: 오후 햇빛을 받아 바닥에 스누피 모양 그림자가 예쁘게 드리워진 파고라 구조물입니다.]",
     text: "나는 내 모습이 참 맘에 들어...",
     source: "- 스누피 (1971.01.27.)",
   },
@@ -209,8 +213,6 @@ const exploreTail = [
     name: "정낭 조쿨",
     hint: "제주 전통 대문 앞",
     img: "/images/explore_jeongnang.jpg",
-    sceneDesc:
-      "[사진 설명: 제주의 전통 대문인 정낭에 기대어 선글라스를 끼고 멋지게 포즈를 취한 스누피입니다.]",
     text: "조 쿨(Joe Cool)은 그냥 서성거리며 멋있어 보일 뿐이지.",
     source: "- 조 쿨 스누피 (1971.05.27.)",
   },
@@ -219,8 +221,6 @@ const exploreTail = [
     name: "엽란 스누피",
     hint: "엽란 식물 사이",
     img: "/images/explore_yeobran.jpg",
-    sceneDesc:
-      "[사진 설명: 커다란 엽란 잎사귀들 사이로 얼굴을 빼꼼 내민 귀여운 스누피입니다.]",
     text: "정글 탐험 중이다! 옆집 고양이가 나타나지 않길...",
     source: "- 비글 스카우트 대장 스누피 (1974.05.18.)",
   },
@@ -229,8 +229,6 @@ const exploreTail = [
     name: "우드스탁 분수대",
     hint: "분수대 물줄기 앞",
     img: "/images/explore_fountain.jpg",
-    sceneDesc:
-      "[사진 설명: 시원한 물줄기가 뿜어져 나오는 분수대 위에서 물놀이를 즐기는 우드스탁입니다.]",
     text: "이건 새 목욕탕(Bird bath)이 아니라고!",
     source: "- 스누피 (1968.04.16.)",
   },
@@ -239,8 +237,6 @@ const exploreTail = [
     name: "골퍼 스누피",
     hint: "골프채를 든 스누피 동상",
     img: "/images/explore_golfer.jpg",
-    sceneDesc:
-      "[사진 설명: 골프 모자를 쓰고 멋지게 스윙 자세를 취하는 스누피 동상입니다.]",
     text: "골프에서 가장 중요한 건 멋진 모자를 쓰는 거지.",
     source: "- 스누피 (1988.05.06.)",
   },
@@ -249,8 +245,6 @@ const exploreTail = [
     name: "오두막 스누피",
     hint: "작은 나무 오두막",
     img: "/images/explore_cabin.jpg",
-    sceneDesc:
-      "[사진 설명: 아늑하고 작은 나무 오두막 위에 올라가 편안하게 쉬고 있는 네 발 달린 스누피입니다.]",
     text: "역시 개로 사는 것의 가장 좋은 점은 마음 편히 쉴 수 있다는 거야.",
     source: "- 스누피 (1958.07.11.)",
   },
@@ -259,8 +253,6 @@ const exploreTail = [
     name: "애기동백원",
     hint: "동백꽃 정원",
     img: "/images/explore_camellia.jpg",
-    sceneDesc:
-      "[사진 설명: 붉은 애기동백꽃이 만발한 정원에서 나비와 함께 평화롭게 놀고 있는 스누피입니다.]",
     text: "위대한 비글 스카우트 대장은 숲의 모든 생물과 친구가 되지.",
     source: "- 비글 스카우트 대장 스누피 (1974.05.13.)",
   },
@@ -295,8 +287,6 @@ const themeData = [
         name: "소설왕 스누피 광장",
         hint: "타자기 앞",
         img: "/images/explore_square.jpg",
-        sceneDesc:
-          "[사진 설명: 타자기 앞에 앉아 탐험 일지를 시작하는 스누피의 모습입니다.]",
         text: "'어둡고 폭풍우 치는 밤이었다...'",
         source: "- 소설가 스누피 (1965.07.12.)",
       },
@@ -305,8 +295,6 @@ const themeData = [
         name: "비글 스카우트 캠프",
         hint: "폭포 앞 텐트",
         img: "/images/explore_camp.jpg",
-        sceneDesc:
-          "[사진 설명: 폭포 앞에서 대원들과 조우하며 탐험의 영감을 받는 스카우트 대원들입니다.]",
         text: "하이킹의 가장 좋은 점은 캠프파이어와 마시멜로야!",
         source: "- 비글 스카우트 대장 스누피 (1974.06.07.)",
       },
@@ -317,14 +305,12 @@ const themeData = [
         options: [
           {
             label: "모닥불",
-            desc: "텐트로 이동",
             route: [
               {
                 type: "location",
                 name: "비글 스카우트 텐트",
                 hint: "노란 텐트 앞",
                 img: "/images/explore_tent.jpg",
-                sceneDesc: "[사진 설명: 아늑한 노란 텐트 풍경입니다.]",
                 text: "텐트 생활은 훌륭해! 내 개집 지붕 위 다음으로 말이야.",
                 source: "- 비글 스카우트 대장 스누피 (1974.05.14.)",
               },
@@ -333,15 +319,12 @@ const themeData = [
           },
           {
             label: "망원경",
-            desc: "동물원 ➔ 전망대",
             route: [
               {
                 type: "location",
                 name: "스누피 동물원",
                 hint: "기린 흉내 스누피",
                 img: "/images/explore_zoo.jpg",
-                sceneDesc:
-                  "[사진 설명: 기린, 부엉이를 흉내 내는 스누피 길입니다.]",
                 text: "크앙! 나는 세계적으로 유명한 호랑이다!",
                 source: "- 세계적으로 유명한 동물 스누피 (1969.04.14.)",
               },
@@ -350,8 +333,6 @@ const themeData = [
                 name: "전망대",
                 hint: "높은 전망대 꼭대기",
                 img: "/images/explore_observatory.jpg",
-                sceneDesc:
-                  "[사진 설명: 전망대 위에서 망원경으로 가든을 내려다보는 모습입니다.]",
                 text: "비글 스카우트는 가장 높은 곳을 정복한다!",
                 source: "- 비글 스카우트 대장 스누피 (1974.05.21.)",
               },
@@ -360,15 +341,12 @@ const themeData = [
           },
           {
             label: "나침반",
-            desc: "미로 구역 탐험",
             route: [
               {
                 type: "location",
                 name: "비자나무숲 미로",
                 hint: "미로 입구",
                 img: "/images/explore_maze.jpg",
-                sceneDesc:
-                  "[사진 설명: 복잡한 미로 속에서 나침반을 든 스누피입니다.]",
                 text: "비글 스카우트는 절대 길을 잃지 않는다! 단지 약간 헤맬 뿐...",
                 source: "- 비글 스카우트 대장 스누피 (1974.05.15.)",
               },
@@ -379,15 +357,12 @@ const themeData = [
                 options: [
                   {
                     label: "망원경",
-                    desc: "전망대로 합류",
                     route: [
                       {
                         type: "location",
                         name: "전망대",
                         hint: "전망대 꼭대기",
                         img: "/images/explore_observatory.jpg",
-                        sceneDesc:
-                          "[사진 설명: 전망대에서 망원경을 보는 모습입니다.]",
                         text: "세상을 내려다보는 건 정말 멋진 일이야.",
                         source: "- 비글 스카우트 대장 스누피 (1974.05.15.)",
                       },
@@ -396,17 +371,15 @@ const themeData = [
                   },
                   {
                     label: "제주",
-                    desc: "돌하르방 스누피로",
                     route: [
                       {
                         type: "location",
                         name: "돌하르방 스누피",
                         hint: "돌하르방 동상 앞",
                         img: "/images/explore_dolhareubang.jpg",
-                        sceneDesc:
-                          "[사진 설명: 돌하르방 모습으로 변신한 듬직한 스누피입니다.]",
                         text: "나는 세계적으로 유명한 조각상이다!",
-                        source: "- 세계적으로 유명한 조각상 스누피 (1968.08.09.)",
+                        source:
+                          "- 세계적으로 유명한 조각상 스누피 (1968.08.09.)",
                       },
                       ...exploreTail,
                     ],
@@ -442,8 +415,6 @@ const themeData = [
         name: "소설왕 스누피 광장",
         hint: "언덕 위 잔디밭",
         img: "/images/challenge_square.jpg",
-        sceneDesc:
-          "[사진 설명: 언덕에 루시, 라이너스와 함께 누워있는 찰리 브라운입니다.]",
         text: "어떤 날은 누워서 하늘을 바라보는 게 네가 할 수 있는 최고의 일이야.",
         source: "- 찰리 브라운 (1961.08.05.)",
       },
@@ -452,8 +423,6 @@ const themeData = [
         name: "지그재그 수벽",
         hint: "지그재그 무늬 나무 벽",
         img: "/images/challenge_zigzag.jpg",
-        sceneDesc:
-          "[사진 설명: 찰리의 상징인 지그재그 문양이 새겨진 나무 벽입니다.]",
         text: "내 인생은 왜 항상 이렇게 꼬이는 걸까?",
         source: "- 찰리 브라운 (1959.01.21.)",
       },
@@ -462,8 +431,6 @@ const themeData = [
         name: "비글 스카우트 캠프",
         hint: "지그재그 텐트 앞",
         img: "/images/challenge_camp.jpg",
-        sceneDesc:
-          "[사진 설명: 찰리의 상징인 지그재그 무늬가 크게 새겨진 텐트를 바라보는 장면입니다.]",
         text: "가끔 난 우리 개가 평범했으면 좋겠어... 어떻게 텐트까지 내 셔츠 무늬로 칠할 생각을 했지?",
         source: "- 찰리 브라운 (1973.08.19.)",
       },
@@ -472,8 +439,6 @@ const themeData = [
         name: "찰리 브라운의 야구장 담장",
         hint: "빈티지 낙서 벽",
         img: "/images/challenge_wall.jpg",
-        sceneDesc:
-          "[사진 설명: 1950년대 초기 찰리의 낙서가 그려진 담장입니다.]",
         text: "가끔은 모든 게 훨씬 단순했던 옛날이 그리워.",
         source: "- 찰리 브라운 (1965.11.11.)",
       },
@@ -482,8 +447,6 @@ const themeData = [
         name: "찰리 브라운의 야구장",
         hint: "연 먹는 나무 근처",
         img: "/images/challenge_baseball.jpg",
-        sceneDesc:
-          "[사진 설명: 야구장이지만, 찰리의 시선은 온통 거대한 '연 먹는 나무'를 향해 있습니다.]",
         text: "야구를 하러 왔는데, 저 연 먹는 나무가 내 야구공까지 노리고 있는 것 같아.",
         source: "- 찰리 브라운 (1965.04.11.)",
       },
@@ -492,8 +455,6 @@ const themeData = [
         name: "피너츠 컬러가든",
         hint: "빨간 꽃밭",
         img: "/images/challenge_colorgarden.jpg",
-        sceneDesc:
-          "[사진 설명: 짝사랑하는 빨간 머리 소녀를 생각하며 수줍어하는 찰리입니다.]",
         text: "빨간 머리 소녀가 내게 미소 지었어!",
         source: "- 찰리 브라운 (1961.11.19.)",
       },
@@ -502,8 +463,6 @@ const themeData = [
         name: "둥근 머리 정원",
         hint: "동그란 나무",
         img: "/images/challenge_roundhead.jpg",
-        sceneDesc:
-          "[사진 설명: 찰리의 머리를 닮은 둥근 나무가 있는 정원입니다.]",
         text: "나는 왜 이렇게 둥근 머리를 가졌을까?",
         source: "- 찰리 브라운 (1953.08.15.)",
       },
@@ -512,8 +471,6 @@ const themeData = [
         name: "낮잠 둥지",
         hint: "둥지 속 쉼터",
         img: "/images/challenge_nest.jpg",
-        sceneDesc:
-          "[사진 설명: 따스한 햇빛 아래 커다란 둥지에서 스누피와 함께 쉬는 찰리입니다.]",
         text: "아무것도 안 하고 가만히 있는 건 내가 제일 잘하는 일 중 하나야.",
         source: "- 찰리 브라운 (1962.06.28.)",
       },
@@ -522,8 +479,6 @@ const themeData = [
         name: "웜 퍼피 레이크",
         hint: "호숫가 나루터",
         img: "/images/challenge_lake.jpg",
-        sceneDesc:
-          "[사진 설명: 썸머 캠프를 준비하는 찰리와 스누피입니다.]",
         text: "여름 캠프에 가려고 짐을 싸는 중인데, 난 벌써 향수병에 걸렸어!",
         source: "- 찰리 브라운 (1965.07.21.)",
       },
@@ -532,8 +487,6 @@ const themeData = [
         name: "아왜나무 산책로 입구",
         hint: "또 다른 연 먹는 나무",
         img: "/images/challenge_awaetree.jpg",
-        sceneDesc:
-          "[사진 설명: 길목에서 또 마주친 연 먹는 나무를 경계하는 찰리입니다.]",
         text: "이건 그 멍청한 연 먹는 나무야!",
         source: "- 찰리 브라운 (1965.04.11.)",
       },
@@ -542,8 +495,6 @@ const themeData = [
         name: "후박나무 (종료)",
         hint: "머리를 박고 있는 동상",
         img: "/images/challenge_hubaktree.jpg",
-        sceneDesc:
-          "[사진 설명: 나무에 머리를 박고 고개를 푹 숙이고 있는 안쓰러운 찰리 브라운의 모습입니다.]",
         text: "가끔 좌절해서 나무에 머리를 박더라도 괜찮아. 내일은 항상 새로운 하루가 시작되니까!",
         source: "- 찰리 브라운 (1968.07.16.)",
       },
@@ -581,8 +532,6 @@ const themeData = [
         name: "피너츠 사색 들판",
         hint: "돌담 앞",
         img: "/images/relax_field.jpg",
-        sceneDesc:
-          "[사진 설명: 제주의 돌담에 나란히 턱을 괴고 조용히 생각에 잠겨 있는 페퍼민트 패티와 마시입니다.]",
         text: "이렇게 턱을 괴고 조용히 바람을 느끼는 것만으로도, 복잡한 걱정은 다 사라지는 기분이야.",
         source: "- 페퍼민트 패티 (1981.07.02.)",
       },
@@ -591,7 +540,6 @@ const themeData = [
         name: "팽나무 길",
         hint: "마시 동상 벤치",
         img: "/images/relax_paengtree.jpg",
-        sceneDesc: "[사진 설명: 벤치에 앉아 책을 읽고 있는 마시 조형물입니다.]",
         text: "선생님, 숲속에서 역사책을 읽으니 꽤 괜찮네요.",
         source: "- 마시 (1985.06.14.)",
       },
@@ -600,8 +548,6 @@ const themeData = [
         name: "피너츠 컬러가든",
         hint: "초록색 정원",
         img: "/images/relax_colorgarden.jpg",
-        sceneDesc:
-          "[사진 설명: 패티를 상징하는 짙은 '초록색' 테마로 예쁘게 꾸며진 꽃 정원입니다.]",
         text: "가끔은 야구 방망이를 내려놓고, 이 예쁜 꽃들의 향기를 맡는 것도 꽤 괜찮은걸, 마시.",
         source: "- 페퍼민트 패티 (1978.05.22.)",
       },
@@ -610,7 +556,6 @@ const themeData = [
         name: "삼나무 숲",
         hint: "숲길",
         img: "/images/relax_cedar.jpg",
-        sceneDesc: "[사진 설명: 빽빽한 삼나무 길입니다.]",
         text: "학교 교실보다 숲속에 있는 게 훨씬 나아!",
         source: "- 페퍼민트 패티 (1980.07.15.)",
       },
@@ -619,8 +564,6 @@ const themeData = [
         name: "캐릭터 담장",
         hint: "머리모양 담장",
         img: "/images/relax_wall.jpg",
-        sceneDesc:
-          "[사진 설명: 패티와 스누피가 나란히 있는 실루엣 담장입니다.]",
         text: "이봐, 코 큰 꼬마! 내 머리카락이 아무리 수세미 같아도 네 펄럭이는 귀보다는 나을걸!",
         source: "- 페퍼민트 패티 (1974.08.15.)",
       },
@@ -629,8 +572,6 @@ const themeData = [
         name: "아왜나무 산책로",
         hint: "명상의 길",
         img: "/images/relax_awaetree.jpg",
-        sceneDesc:
-          "[사진 설명: 자연 속에서 발소리에 집중하며 걷기 명상을 할 수 있는 고요한 산책로입니다.]",
         text: "찰스가 내 생각을 하고 있을까?",
         source: "- 페퍼민트 패티 (1982.08.05.)",
       },
@@ -639,8 +580,6 @@ const themeData = [
         name: "가든 출구 (종료)",
         hint: "기대어 쉬는 나무",
         img: "/images/relax_exit.jpg",
-        sceneDesc:
-          "[사진 설명: 나무에 기대어 세상 편안하게 쉬고 있는 페퍼민트 패티입니다.]",
         text: "인생의 가장 큰 비밀은, 그냥 푹 자는 거야. Zzz...",
         source: "- 페퍼민트 패티 (1984.05.20.)",
       },
@@ -678,8 +617,6 @@ const themeData = [
         name: "소설왕 스누피 광장",
         hint: "언덕 위 세 친구",
         img: "/images/sentiment_square.jpg",
-        sceneDesc:
-          "[사진 설명: 광장 언덕에 누워있는 루시, 찰리, 라이너스입니다.]",
         text: "난 저 구름을 보며 키 크고 잘생긴 남자를 상상할래!",
         source: "- 루시 (1960.08.14.)",
       },
@@ -688,8 +625,6 @@ const themeData = [
         name: "사색 들판 (조형물)",
         hint: "담장에 기댄 라이너스",
         img: "/images/sentiment_field.jpg",
-        sceneDesc:
-          "[사진 설명: 담장에 기대어 있는 라이너스와 찰리 브라운 조형물입니다.]",
         text: "누군가 나를 좋아해 준다면, 내 인생은 완전히 달라질 텐데...",
         source: "- 찰리 브라운 (1960.05.03.)",
       },
@@ -698,8 +633,6 @@ const themeData = [
         name: "피너츠 컬러가든 (하트)",
         hint: "하트 조형물 앞",
         img: "/images/sentiment_colorgarden.jpg",
-        sceneDesc:
-          "[사진 설명: 포맥스 하트 조형물과 라이너스 & 샐리 정원입니다.]",
         text: "사랑은 사람을 맹목적으로 만들어!",
         source: "- 샐리 (1981.05.15.)",
       },
@@ -708,8 +641,6 @@ const themeData = [
         name: "슈로더의 야외무대",
         hint: "피아노 앞",
         img: "/images/sentiment_stage.jpg",
-        sceneDesc:
-          "[사진 설명: 피아노에 열중하는 슈로더와 그를 보는 루시입니다.]",
         text: "베토벤이 뭐가 그렇게 중요해? 지금 네 앞에 이렇게 예쁜 내가 있는데!",
         source: "- 루시 (1956.01.24.)",
       },
@@ -718,7 +649,6 @@ const themeData = [
         name: "루시의 레몬에이드 카페",
         hint: "5센트 상담 부스",
         img: "/images/sentiment_cafe.jpg",
-        sceneDesc: "[사진 설명: 루시의 5센트 심리 상담소 풍경입니다.]",
         text: "심리 상담은 5센트야! 짝사랑의 고통? 선불로 내면 다 들어주지.",
         source: "- 정신과 의사 루시 (1959.03.27.)",
       },
@@ -727,8 +657,6 @@ const themeData = [
         name: "호박 대왕의 호박밭",
         hint: "거대한 호박 모형",
         img: "/images/sentiment_pumpkin.jpg",
-        sceneDesc:
-          "[사진 설명: 함께 거대한 호박 모형 앞에서 위대한 호박 대왕을 기다리는 라이너스와 샐리입니다.]",
         text: "조금만 더 기다려봐, 샐리! 위대한 호박 대왕은 의심하지 않고 믿는 사람에게만 나타난다고!",
         source: "- 라이너스 (1968.10.31.)",
       },
@@ -737,8 +665,6 @@ const themeData = [
         name: "라이너스의 담요 숲",
         hint: "담요가 걸린 숲길",
         img: "/images/sentiment_blanket.jpg",
-        sceneDesc:
-          "[사진 설명: 짝사랑의 포근함이 느껴지는 숲길 산책로입니다.]",
         text: "담요 없이 어떻게 살아갈 수 있겠어?",
         source: "- 라이너스 (1954.06.01.)",
       },
@@ -747,8 +673,6 @@ const themeData = [
         name: "루시의 가드닝 스쿨 (종료)",
         hint: "온실 스쿨 입구",
         img: "/images/sentiment_gardeningschool.jpg",
-        sceneDesc:
-          "[사진 설명: 짝사랑의 감정을 갈무리하며 정원을 가꾸는 루시입니다.]",
         text: "내가 이렇게 예쁜데 슈로더는 왜 피아노만 치는 거야?",
         source: "- 루시 (1956.01.24.)",
       },
@@ -790,9 +714,11 @@ export default function App() {
 
   const [qrErrorMsg, setQrErrorMsg] = useState("");
   const [showResetModal, setShowResetModal] = useState(false);
+  const [showHintModal, setShowHintModal] = useState(false);
 
   const activeTheme = themeData.find((t) => t.id === activeThemeId) || null;
 
+  // 상태 변경 시 로컬 스토리지에 저장
   useEffect(() => {
     if (step === "splash" && !initialState) return;
 
@@ -805,14 +731,7 @@ export default function App() {
       themeStates,
     };
     localStorage.setItem(STORAGE_KEY_STATE, JSON.stringify(stateToSave));
-  }, [
-    step,
-    activeThemeId,
-    activePath,
-    progress,
-    completedThemes,
-    themeStates,
-  ]);
+  }, [step, activeThemeId, activePath, progress, completedThemes, themeStates]);
 
   const handleStartTheme = (theme) => {
     setActiveThemeId(theme.id);
@@ -851,17 +770,17 @@ export default function App() {
   };
 
   const handleQRSkip = (e) => {
-    if(e) e.preventDefault();
+    if (e) e.preventDefault();
     try {
-        setQrErrorMsg("");
-        setStep("scene");
-    } catch(err) {
-        console.error("QR Skip 방어막 에러:", err);
+      setQrErrorMsg("");
+      setStep("scene");
+    } catch (err) {
+      console.error("QR Skip 방어막 에러:", err);
     }
   };
 
   const handleGetStamp = (e) => {
-    if(e) e.preventDefault();
+    if (e) e.preventDefault();
     const nextProgress = progress + 1;
 
     setThemeStates((prev) => ({
@@ -930,7 +849,9 @@ export default function App() {
     return Array.from({ length: 40 }).map((_, i) => (
       <div
         key={i}
-        className={`confetti ${colors[Math.floor(Math.random() * colors.length)]}`}
+        className={`confetti ${
+          colors[Math.floor(Math.random() * colors.length)]
+        }`}
         style={{
           left: `${Math.random() * 100}%`,
           width: `${Math.random() * 6 + 6}px`,
@@ -945,7 +866,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-stone-100 flex items-center justify-center p-4 font-sans text-stone-800 relative">
       <div className="max-w-md w-full bg-white rounded-3xl shadow-xl overflow-hidden relative flex flex-col h-[750px] max-h-[100dvh]">
-        
+        {/* 커스텀 초기화 경고 모달창 */}
         {showResetModal && (
           <div className="absolute inset-0 z-50 bg-stone-900/60 flex items-center justify-center p-6 animate-fade-in">
             <div className="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl">
@@ -980,6 +901,58 @@ export default function App() {
           </div>
         )}
 
+        {/* 💡 장소 힌트 팝업 모달창 (다음 화면 이미지 연동 완료) */}
+        {showHintModal && (
+          <div className="absolute inset-0 z-50 bg-stone-900/80 flex items-center justify-center p-6 animate-fade-in">
+            <div className="bg-white rounded-3xl overflow-hidden w-full max-w-sm shadow-2xl relative flex flex-col">
+              {/* 닫기 버튼 */}
+              <button
+                onClick={() => setShowHintModal(false)}
+                className="absolute top-4 right-4 bg-stone-900/60 text-white rounded-full p-1.5 z-10 hover:bg-stone-800 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              {/* 힌트 이미지 영역 (다음 씬의 이미지(img)와 100% 동일한 경로를 사용) */}
+              <div className="w-full h-56 bg-stone-100 relative flex flex-col items-center justify-center">
+                {activePath[progress]?.img ? (
+                  <img
+                    src={activePath[progress].img}
+                    alt="힌트 이미지"
+                    className="w-full h-full object-cover absolute inset-0 z-10"
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                    }}
+                  />
+                ) : null}
+                <div className="flex flex-col items-center justify-center text-stone-400 opacity-60 relative z-0">
+                  <ImageIcon className="w-12 h-12 mb-2" />
+                  <span className="text-xs">힌트 사진 준비 중</span>
+                </div>
+              </div>
+
+              {/* 힌트 텍스트 영역 */}
+              <div className="p-6 text-center bg-white flex-1">
+                <div className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs font-bold mb-3">
+                  <MapPin className="w-3 h-3" /> HINT
+                </div>
+                <p className="text-lg font-bold text-stone-800 break-keep leading-tight">
+                  {activePath[progress]?.hint || "장소를 찾아주세요"}
+                </p>
+              </div>
+
+              {/* 팝업 하단 확인 버튼 */}
+              <button
+                onClick={() => setShowHintModal(false)}
+                className="w-full bg-stone-100 text-stone-600 font-bold py-4 hover:bg-stone-200 transition-colors border-t border-stone-200"
+              >
+                확인
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Header (고정) */}
         {step !== "splash" && step !== "qr" && (
           <div className="bg-stone-900 p-4 text-center text-white relative flex justify-between items-center z-10 shrink-0">
             <h1 className="text-lg font-bold tracking-tighter">
@@ -1007,7 +980,6 @@ export default function App() {
         )}
 
         <div className="flex-1 overflow-hidden bg-stone-50 flex flex-col relative">
-          
           {/* Step 0: 스플래시 */}
           {step === "splash" && (
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-stone-900 text-white overflow-hidden">
@@ -1017,7 +989,9 @@ export default function App() {
                 </div>
 
                 <h1 className="text-4xl font-black tracking-tighter mb-2 text-transparent bg-clip-text bg-gradient-to-b from-white to-stone-400">
-                  SNOOPY GARDEN<br />QUEST
+                  SNOOPY GARDEN
+                  <br />
+                  QUEST
                 </h1>
                 <p className="text-emerald-400 text-[10px] tracking-[0.3em] mb-16 uppercase font-bold">
                   위대한 모험의 시작
@@ -1241,9 +1215,6 @@ export default function App() {
                             <span className="text-blue-900 group-hover:text-blue-600">
                               {opt.label}
                             </span>
-                            <span className="block font-normal text-stone-400 mt-0.5">
-                              {opt.desc}
-                            </span>
                           </div>
                           <ChevronRight className="w-4 h-4 text-blue-300" />
                         </button>
@@ -1254,7 +1225,7 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => {
-                        handleScanQR(); 
+                      handleScanQR();
                     }}
                     className="w-full bg-stone-900 text-white font-bold py-5 rounded-2xl shadow-xl tracking-widest text-sm hover:bg-stone-800 transition"
                   >
@@ -1278,11 +1249,16 @@ export default function App() {
                   </div>
                 </div>
               )}
-              <div className="mb-6 z-10 shrink-0 mt-4">
-                <h2 className="text-xl font-bold mb-2">SCAN QR CODE</h2>
-                <p className="text-stone-400 text-xs bg-stone-800 px-4 py-1.5 rounded-full inline-block">
-                  HINT: {activePath[progress]?.hint || "장소를 찾아주세요"}
-                </p>
+              <div className="mb-6 z-10 shrink-0 mt-4 flex flex-col items-center">
+                <h2 className="text-xl font-bold mb-3">SCAN QR CODE</h2>
+
+                {/* 힌트 내용을 직접 텍스트로 보여주지 않고 '힌트 버튼'으로 대체 */}
+                <button
+                  onClick={() => setShowHintModal(true)}
+                  className="text-emerald-400 text-sm font-bold bg-stone-800 px-6 py-2.5 rounded-full inline-flex items-center gap-2 border border-stone-700 hover:bg-stone-700 transition-colors shadow-md"
+                >
+                  <MapPin className="w-4 h-4" /> 힌트 확인하기
+                </button>
               </div>
 
               {/* 커스텀 카메라 스캐너 영역 */}
@@ -1341,37 +1317,38 @@ export default function App() {
               <div className="flex-1 overflow-y-auto custom-scrollbar pr-1 pb-2">
                 <div className="bg-white rounded-2xl p-5 shadow-sm border border-stone-200 mb-6">
                   <span className="font-bold text-emerald-600 text-[10px] flex items-center gap-1 mb-4 uppercase tracking-wider">
-                    <MapPin className="w-3 h-3" /> {activePath[progress]?.name || "목적지"}
+                    <MapPin className="w-3 h-3" />{" "}
+                    {activePath[progress]?.name || "목적지"}
                   </span>
 
-                  {/* 📸 이미지 렌더링 영역 (이미지 경로가 있으면 이미지를, 없으면 아이콘 표시) */}
+                  {/* 📸 이미지 렌더링 영역 */}
                   <div className="w-full h-48 bg-stone-100 rounded-xl mb-5 overflow-hidden relative border border-stone-200 flex items-center justify-center">
                     {activePath[progress]?.img ? (
-                      <img 
-                        src={activePath[progress].img} 
+                      <img
+                        src={activePath[progress].img}
                         alt="장소 이미지"
                         className="w-full h-full object-cover absolute inset-0 z-10"
-                        onError={(e) => { e.target.style.display = 'none'; }}
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                        }}
                       />
                     ) : null}
-                    <div className="flex flex-col items-center text-stone-400 relative z-0">
+                    <div className="flex flex-col items-center text-stone-400 relative z-0 opacity-60">
                       <ImageIcon className="w-10 h-10 mb-2 opacity-40" />
-                      <span className="text-xs">이곳에 스누피가든 현장 사진이 들어갑니다.</span>
+                      <span className="text-xs font-medium">
+                        사진 이미지 준비 중
+                      </span>
                     </div>
-                  </div>
-
-                  <div className="bg-stone-50 p-3 rounded-lg border border-stone-100 mb-5 flex items-start gap-2">
-                    <Camera className="w-4 h-4 text-stone-400 shrink-0 mt-0.5" />
-                    <p className="text-[11px] text-stone-500 italic break-keep leading-relaxed">
-                      {activePath[progress]?.sceneDesc || "현장 풍경을 확인하세요."}
-                    </p>
                   </div>
 
                   <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-100 flex items-start gap-3 shadow-sm">
                     <Quote className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-emerald-900 font-bold text-sm leading-relaxed break-keep">
-                        "{activePath[progress]?.text || "위대한 탐험의 순간입니다!"}"
+                        "
+                        {activePath[progress]?.text ||
+                          "위대한 탐험의 순간입니다!"}
+                        "
                       </p>
                       {activePath[progress]?.source && (
                         <span className="text-[10px] font-normal text-emerald-600 mt-2 block">
