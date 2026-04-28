@@ -17,13 +17,13 @@ import {
   RotateCcw,
   AlertCircle,
   Star,
-  X, // 팝업 닫기 아이콘 추가
+  X, // 팝업 닫기 아이콘
 } from "lucide-react";
 
 // =====================================================================
-// 🔑 [중요] 정답 QR코드 설정 (테스트용)
+// 🔑 [중요] 마스터 코드 설정 (모든 장소 통과 가능)
 // =====================================================================
-const VALID_QR_CODE = "snoopy_garden_quest";
+const MASTER_QR_CODE = "snoopy_master";
 
 // =====================================================================
 // 📸 [핵심] 카메라 권한 1회 승인 및 세션 유지 매니저
@@ -197,8 +197,7 @@ const QRScanner = ({ onScan, onError }) => {
   );
 };
 
-// === [코스 1: 탐험형 공통 후반부 합류 동선] ===
-// 힌트 이미지를 별도로 두지 않고 img를 공통으로 사용합니다.
+// === [코스 1: 탐험형 공통 후반부 합류 동선 - 8곳 (토끼 추가 및 순서 변경)] ===
 const exploreTail = [
   {
     type: "location",
@@ -207,14 +206,7 @@ const exploreTail = [
     img: "/images/explore_pagora.jpg",
     text: "나는 내 모습이 참 맘에 들어...",
     source: "- 스누피 (1971.01.27.)",
-  },
-  {
-    type: "location",
-    name: "정낭 조쿨",
-    hint: "루시의 레모네이드 카페",
-    img: "/images/explore_jeongnang.jpg",
-    text: "조 쿨(Joe Cool)은 그냥 서성거리며 멋있어 보일 뿐이지.",
-    source: "- 조 쿨 스누피 (1971.05.27.)",
+    qrCode: "sg_explore_tail_01",
   },
   {
     type: "location",
@@ -223,6 +215,16 @@ const exploreTail = [
     img: "/images/explore_yeobran.jpg",
     text: "정글 탐험 중이다! 옆집 고양이가 나타나지 않길...",
     source: "- 비글 스카우트 대장 스누피 (1974.05.18.)",
+    qrCode: "sg_explore_tail_03",
+  },
+  {
+    type: "location",
+    name: "정낭 조쿨",
+    hint: "루시의 레모네이드 카페",
+    img: "/images/explore_jeongnang.jpg",
+    text: "조 쿨(Joe Cool)은 그냥 서성거리며 멋있어 보일 뿐이지.",
+    source: "- 조 쿨 스누피 (1971.05.27.)",
+    qrCode: "sg_explore_tail_02",
   },
   {
     type: "location",
@@ -231,6 +233,16 @@ const exploreTail = [
     img: "/images/explore_fountain.jpg",
     text: "이건 새 목욕탕(Bird bath)이 아니라고!",
     source: "- 스누피 (1968.04.16.)",
+    qrCode: "sg_explore_tail_04",
+  },
+  {
+    type: "location",
+    name: "토끼와 스누피",
+    hint: "야자원 토끼 조형물",
+    img: "/images/explore_rabbit.jpg",
+    text: "비글은 토끼를 사냥하지 않아, 따뜻하게 포옹하지!",
+    source: "- 스누피 (1973.06.01.)",
+    qrCode: "sg_explore_tail_rabbit",
   },
   {
     type: "location",
@@ -239,6 +251,7 @@ const exploreTail = [
     img: "/images/explore_golfer.jpg",
     text: "골프에서 가장 중요한 건 멋진 모자를 쓰는 거지.",
     source: "- 스누피 (1988.05.06.)",
+    qrCode: "sg_explore_tail_05",
   },
   {
     type: "location",
@@ -247,6 +260,7 @@ const exploreTail = [
     img: "/images/explore_cabin.jpg",
     text: "역시 개로 사는 것의 가장 좋은 점은 마음 편히 쉴 수 있다는 거야.",
     source: "- 스누피 (1958.07.11.)",
+    qrCode: "sg_explore_tail_06",
   },
   {
     type: "location",
@@ -255,6 +269,7 @@ const exploreTail = [
     img: "/images/explore_camellia.jpg",
     text: "위대한 비글 스카우트 대장은 숲의 모든 생물과 친구가 되지.",
     source: "- 비글 스카우트 대장 스누피 (1974.05.13.)",
+    qrCode: "sg_explore_tail_07",
   },
 ];
 
@@ -289,6 +304,7 @@ const themeData = [
         img: "/images/explore_square.jpg",
         text: "'어둡고 폭풍우 치는 밤이었다...'",
         source: "- 소설가 스누피 (1965.07.12.)",
+        qrCode: "sg_explore_01",
       },
       {
         type: "location",
@@ -297,6 +313,7 @@ const themeData = [
         img: "/images/explore_camp.jpg",
         text: "하이킹의 가장 좋은 점은 캠프파이어와 마시멜로야!",
         source: "- 비글 스카우트 대장 스누피 (1974.06.07.)",
+        qrCode: "sg_explore_02",
       },
       {
         type: "choice",
@@ -313,6 +330,7 @@ const themeData = [
                 img: "/images/explore_tent.jpg",
                 text: "텐트 생활은 훌륭해! 내 개집 지붕 위 다음으로 말이야.",
                 source: "- 비글 스카우트 대장 스누피 (1974.05.14.)",
+                qrCode: "sg_explore_03_tent",
               },
               ...exploreTail,
             ],
@@ -325,8 +343,9 @@ const themeData = [
                 name: "부엉이 스누피",
                 hint: "스누피 동물원",
                 img: "/images/explore_zoo.jpg",
-                text: "크앙! 나는 세계적으로 유명한 호랑이다!",
+                text: "부엉부엉! 나는 세계적으로 유명한 부엉이다!",
                 source: "- 세계적으로 유명한 동물 스누피 (1969.04.14.)",
+                qrCode: "sg_explore_03_zoo",
               },
               {
                 type: "location",
@@ -335,6 +354,7 @@ const themeData = [
                 img: "/images/explore_observatory.jpg",
                 text: "비글 스카우트는 가장 높은 곳을 정복한다!",
                 source: "- 비글 스카우트 대장 스누피 (1974.05.21.)",
+                qrCode: "sg_explore_04_obs",
               },
               ...exploreTail,
             ],
@@ -349,6 +369,7 @@ const themeData = [
                 img: "/images/explore_maze.jpg",
                 text: "비글 스카우트는 절대 길을 잃지 않는다! 단지 약간 헤맬 뿐...",
                 source: "- 비글 스카우트 대장 스누피 (1974.05.15.)",
+                qrCode: "sg_explore_03_maze",
               },
               {
                 type: "choice",
@@ -365,6 +386,7 @@ const themeData = [
                         img: "/images/explore_observatory.jpg",
                         text: "세상을 내려다보는 건 정말 멋진 일이야.",
                         source: "- 비글 스카우트 대장 스누피 (1974.05.15.)",
+                        qrCode: "sg_explore_04_obs",
                       },
                       ...exploreTail,
                     ],
@@ -380,6 +402,7 @@ const themeData = [
                         text: "나는 세계적으로 유명한 조각상이다!",
                         source:
                           "- 세계적으로 유명한 조각상 스누피 (1968.08.09.)",
+                        qrCode: "sg_explore_04_jeju",
                       },
                       ...exploreTail,
                     ],
@@ -417,6 +440,7 @@ const themeData = [
         img: "/images/challenge_square.jpg",
         text: "어떤 날은 누워서 하늘을 바라보는 게 네가 할 수 있는 최고의 일이야.",
         source: "- 찰리 브라운 (1961.08.05.)",
+        qrCode: "sg_chal_01",
       },
       {
         type: "location",
@@ -425,6 +449,7 @@ const themeData = [
         img: "/images/challenge_zigzag.jpg",
         text: "내 인생은 왜 항상 이렇게 꼬이는 걸까?",
         source: "- 찰리 브라운 (1959.01.21.)",
+        qrCode: "sg_chal_02",
       },
       {
         type: "location",
@@ -433,6 +458,7 @@ const themeData = [
         img: "/images/challenge_camp.jpg",
         text: "가끔 난 우리 개가 평범했으면 좋겠어... 어떻게 텐트까지 내 셔츠 무늬로 칠할 생각을 했지?",
         source: "- 찰리 브라운 (1973.08.19.)",
+        qrCode: "sg_chal_03",
       },
       {
         type: "location",
@@ -441,6 +467,7 @@ const themeData = [
         img: "/images/challenge_wall.jpg",
         text: "가끔은 모든 게 훨씬 단순했던 옛날이 그리워.",
         source: "- 찰리 브라운 (1965.11.11.)",
+        qrCode: "sg_chal_04",
       },
       {
         type: "location",
@@ -449,6 +476,7 @@ const themeData = [
         img: "/images/challenge_baseball.jpg",
         text: "야구를 하러 왔는데, 저 연 먹는 나무가 내 야구공까지 노리고 있는 것 같아.",
         source: "- 찰리 브라운 (1965.04.11.)",
+        qrCode: "sg_chal_05",
       },
       {
         type: "location",
@@ -457,6 +485,7 @@ const themeData = [
         img: "/images/challenge_colorgarden.jpg",
         text: "빨간 머리 소녀가 내게 미소 지었어!",
         source: "- 찰리 브라운 (1961.11.19.)",
+        qrCode: "sg_chal_06",
       },
       {
         type: "location",
@@ -465,6 +494,7 @@ const themeData = [
         img: "/images/challenge_roundhead.jpg",
         text: "나는 왜 이렇게 둥근 머리를 가졌을까?",
         source: "- 찰리 브라운 (1953.08.15.)",
+        qrCode: "sg_chal_07",
       },
       {
         type: "location",
@@ -473,6 +503,7 @@ const themeData = [
         img: "/images/challenge_nest.jpg",
         text: "아무것도 안 하고 가만히 있는 건 내가 제일 잘하는 일 중 하나야.",
         source: "- 찰리 브라운 (1962.06.28.)",
+        qrCode: "sg_chal_08",
       },
       {
         type: "location",
@@ -481,6 +512,7 @@ const themeData = [
         img: "/images/challenge_lake.jpg",
         text: "여름 캠프에 가려고 짐을 싸는 중인데, 난 벌써 향수병에 걸렸어!",
         source: "- 찰리 브라운 (1965.07.21.)",
+        qrCode: "sg_chal_09",
       },
       {
         type: "location",
@@ -489,6 +521,7 @@ const themeData = [
         img: "/images/challenge_awaetree.jpg",
         text: "이건 그 멍청한 연 먹는 나무야!",
         source: "- 찰리 브라운 (1965.04.11.)",
+        qrCode: "sg_chal_10",
       },
       {
         type: "location",
@@ -497,6 +530,7 @@ const themeData = [
         img: "/images/challenge_hubaktree.jpg",
         text: "가끔 좌절해서 나무에 머리를 박더라도 괜찮아. 내일은 항상 새로운 하루가 시작되니까!",
         source: "- 찰리 브라운 (1968.07.16.)",
+        qrCode: "sg_chal_11",
       },
     ],
   },
@@ -534,6 +568,7 @@ const themeData = [
         img: "/images/relax_field.jpg",
         text: "이렇게 턱을 괴고 조용히 바람을 느끼는 것만으로도, 복잡한 걱정은 다 사라지는 기분이야.",
         source: "- 페퍼민트 패티 (1981.07.02.)",
+        qrCode: "sg_relax_01",
       },
       {
         type: "location",
@@ -542,6 +577,7 @@ const themeData = [
         img: "/images/relax_paengtree.jpg",
         text: "선생님, 숲속에서 역사책을 읽으니 꽤 괜찮네요.",
         source: "- 마시 (1985.06.14.)",
+        qrCode: "sg_relax_02",
       },
       {
         type: "location",
@@ -550,6 +586,7 @@ const themeData = [
         img: "/images/relax_colorgarden.jpg",
         text: "가끔은 야구 방망이를 내려놓고, 이 예쁜 꽃들의 향기를 맡는 것도 꽤 괜찮은걸, 마시.",
         source: "- 페퍼민트 패티 (1978.05.22.)",
+        qrCode: "sg_relax_03",
       },
       {
         type: "location",
@@ -558,6 +595,7 @@ const themeData = [
         img: "/images/relax_cedar.jpg",
         text: "학교 교실보다 숲속에 있는 게 훨씬 나아!",
         source: "- 페퍼민트 패티 (1980.07.15.)",
+        qrCode: "sg_relax_04",
       },
       {
         type: "location",
@@ -566,6 +604,7 @@ const themeData = [
         img: "/images/relax_wall.jpg",
         text: "이봐, 코 큰 꼬마! 내 머리카락이 아무리 수세미 같아도 네 펄럭이는 귀보다는 나을걸!",
         source: "- 페퍼민트 패티 (1974.08.15.)",
+        qrCode: "sg_relax_05",
       },
       {
         type: "location",
@@ -574,6 +613,16 @@ const themeData = [
         img: "/images/relax_awaetree.jpg",
         text: "찰스가 내 생각을 하고 있을까?",
         source: "- 페퍼민트 패티 (1982.08.05.)",
+        qrCode: "sg_relax_06",
+      },
+      {
+        type: "location",
+        name: "수박을 든 패티",
+        hint: "루시의 가드닝 스쿨",
+        img: "/images/relax_watermelon.jpg",
+        text: "여름엔 역시 시원한 수박이 최고지! 씨 뱉기 대회 할 사람?",
+        source: "- 페퍼민트 패티 (1984.07.03.)",
+        qrCode: "sg_relax_watermelon",
       },
       {
         type: "location",
@@ -582,6 +631,7 @@ const themeData = [
         img: "/images/relax_exit.jpg",
         text: "인생의 가장 큰 비밀은, 그냥 푹 자는 거야. Zzz...",
         source: "- 페퍼민트 패티 (1984.05.20.)",
+        qrCode: "sg_relax_07",
       },
     ],
   },
@@ -619,6 +669,7 @@ const themeData = [
         img: "/images/sentiment_square.jpg",
         text: "난 저 구름을 보며 키 크고 잘생긴 남자를 상상할래!",
         source: "- 루시 (1960.08.14.)",
+        qrCode: "sg_senti_01",
       },
       {
         type: "location",
@@ -627,6 +678,16 @@ const themeData = [
         img: "/images/sentiment_field.jpg",
         text: "누군가 나를 좋아해 준다면, 내 인생은 완전히 달라질 텐데...",
         source: "- 찰리 브라운 (1960.05.03.)",
+        qrCode: "sg_senti_02",
+      },
+      {
+        type: "location",
+        name: "낙서하는 루시",
+        hint: "사색 들판 벽면",
+        img: "/images/sentiment_graffiti.jpg",
+        text: "슈뢰더가 날 안 봐준다면, 내 매력을 벽에 아주 크게 적어놓는 수밖에 없지!",
+        source: "- 루시 (1962.08.15.)",
+        qrCode: "sg_senti_graffiti",
       },
       {
         type: "location",
@@ -635,6 +696,7 @@ const themeData = [
         img: "/images/sentiment_colorgarden.jpg",
         text: "사랑은 사람을 맹목적으로 만들어!",
         source: "- 샐리 (1981.05.15.)",
+        qrCode: "sg_senti_03",
       },
       {
         type: "location",
@@ -643,6 +705,7 @@ const themeData = [
         img: "/images/sentiment_stage.jpg",
         text: "베토벤이 뭐가 그렇게 중요해? 지금 네 앞에 이렇게 예쁜 내가 있는데!",
         source: "- 루시 (1956.01.24.)",
+        qrCode: "sg_senti_04",
       },
       {
         type: "location",
@@ -651,6 +714,7 @@ const themeData = [
         img: "/images/sentiment_cafe.jpg",
         text: "심리 상담은 5센트야! 짝사랑의 고통? 선불로 내면 다 들어주지.",
         source: "- 정신과 의사 루시 (1959.03.27.)",
+        qrCode: "sg_senti_05",
       },
       {
         type: "location",
@@ -659,6 +723,7 @@ const themeData = [
         img: "/images/sentiment_pumpkin.jpg",
         text: "조금만 더 기다려봐, 샐리! 위대한 호박 대왕은 의심하지 않고 믿는 사람에게만 나타난다고!",
         source: "- 라이너스 (1968.10.31.)",
+        qrCode: "sg_senti_06",
       },
       {
         type: "location",
@@ -667,6 +732,7 @@ const themeData = [
         img: "/images/sentiment_blanket.jpg",
         text: "담요 없이 어떻게 살아갈 수 있겠어?",
         source: "- 라이너스 (1954.06.01.)",
+        qrCode: "sg_senti_07",
       },
       {
         type: "location",
@@ -675,6 +741,7 @@ const themeData = [
         img: "/images/sentiment_gardeningschool.jpg",
         text: "내가 이렇게 예쁜데 슈로더는 왜 피아노만 치는 거야?",
         source: "- 루시 (1956.01.24.)",
+        qrCode: "sg_senti_08",
       },
     ],
   },
@@ -758,14 +825,19 @@ export default function App() {
   };
 
   const handleQRSuccess = (scannedData) => {
-    if (scannedData === VALID_QR_CODE) {
+    const currentExpectedQR = activePath[progress]?.qrCode;
+
+    // [수정] 오직 고유 QR코드 이거나 마스터 코드일때만 통과하도록 수정 (VALID_QR_CODE 삭제)
+    if (scannedData === currentExpectedQR || scannedData === MASTER_QR_CODE) {
       setQrErrorMsg("");
       setStep("scene");
     } else {
-      setQrErrorMsg("앗! 스누피가든 퀘스트 전용\nQR코드가 아닌 것 같아요! 🐶");
+      setQrErrorMsg(
+        "앗! 현재 위치의\n정답 QR코드가 아닌 것 같아요! 🐶\n(위치를 다시 확인해주세요)"
+      );
       setTimeout(() => {
         setQrErrorMsg("");
-      }, 3000);
+      }, 3500);
     }
   };
 
@@ -901,11 +973,10 @@ export default function App() {
           </div>
         )}
 
-        {/* 💡 장소 힌트 팝업 모달창 (다음 화면 이미지 연동 완료) */}
+        {/* 💡 장소 힌트 팝업 모달창 */}
         {showHintModal && (
           <div className="absolute inset-0 z-50 bg-stone-900/80 flex items-center justify-center p-6 animate-fade-in">
             <div className="bg-white rounded-3xl overflow-hidden w-full max-w-sm shadow-2xl relative flex flex-col">
-              {/* 닫기 버튼 */}
               <button
                 onClick={() => setShowHintModal(false)}
                 className="absolute top-4 right-4 bg-stone-900/60 text-white rounded-full p-1.5 z-10 hover:bg-stone-800 transition-colors"
@@ -913,7 +984,6 @@ export default function App() {
                 <X className="w-5 h-5" />
               </button>
 
-              {/* 힌트 이미지 영역 (다음 씬의 이미지(img)와 100% 동일한 경로를 사용) */}
               <div className="w-full h-56 bg-stone-100 relative flex flex-col items-center justify-center">
                 {activePath[progress]?.img ? (
                   <img
@@ -931,7 +1001,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* 힌트 텍스트 영역 */}
               <div className="p-6 text-center bg-white flex-1">
                 <div className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs font-bold mb-3">
                   <MapPin className="w-3 h-3" /> HINT
@@ -941,7 +1010,6 @@ export default function App() {
                 </p>
               </div>
 
-              {/* 팝업 하단 확인 버튼 */}
               <button
                 onClick={() => setShowHintModal(false)}
                 className="w-full bg-stone-100 text-stone-600 font-bold py-4 hover:bg-stone-200 transition-colors border-t border-stone-200"
@@ -980,21 +1048,30 @@ export default function App() {
         )}
 
         <div className="flex-1 overflow-hidden bg-stone-50 flex flex-col relative">
-          {/* Step 0: 스플래시 */}
+          {/* Step 0: 스플래시 (전체화면 배경 디자인으로 개편) */}
           {step === "splash" && (
-            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-stone-900 text-white overflow-hidden">
-              <div className="z-10 flex flex-col items-center text-center px-6 w-full animate-fade-in">
-                <div className="w-20 h-20 bg-emerald-500 rounded-3xl rotate-12 flex items-center justify-center mb-8 shadow-[0_0_30px_rgba(16,185,129,0.5)]">
-                  <Map className="w-10 h-10 text-white -rotate-12" />
-                </div>
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center overflow-hidden bg-stone-900">
+              {/* 사용자 커스텀 배경 이미지 */}
+              <img
+                src="/images/splash_bg.jpg"
+                alt="스플래시 배경"
+                className="absolute inset-0 w-full h-full object-cover opacity-60"
+                onError={(e) => {
+                  e.target.style.display = "none";
+                }}
+              />
 
-                <h1 className="text-4xl font-black tracking-tighter mb-2 text-transparent bg-clip-text bg-gradient-to-b from-white to-stone-400">
+              {/* 텍스트 가독성을 위한 그라데이션 오버레이 */}
+              <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/40 to-transparent"></div>
+
+              <div className="z-10 flex flex-col items-center text-center px-6 w-full animate-fade-in mt-auto pb-24">
+                <h1 className="text-5xl font-black tracking-tighter mb-3 text-white drop-shadow-lg">
                   SNOOPY GARDEN
                   <br />
                   QUEST
                 </h1>
-                <p className="text-emerald-400 text-[10px] tracking-[0.3em] mb-16 uppercase font-bold">
-                  위대한 모험의 시작
+                <p className="text-emerald-300 text-xs tracking-[0.4em] mb-12 uppercase font-bold drop-shadow-md">
+                  자연 속 위대한 모험의 시작
                 </p>
 
                 <button
@@ -1003,17 +1080,13 @@ export default function App() {
                     await requestCameraPermissionOnce();
                     setStep("intro");
                   }}
-                  className="group relative w-full max-w-[240px] bg-white text-stone-900 font-black py-4 rounded-full shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] hover:bg-emerald-50 hover:text-emerald-700 transition-all active:scale-95 flex items-center justify-center gap-2 overflow-hidden"
+                  className="group relative w-full max-w-[260px] bg-emerald-600 text-white font-black py-5 rounded-full shadow-[0_10px_40px_rgba(16,185,129,0.4)] hover:bg-emerald-500 transition-all active:scale-95 flex items-center justify-center gap-2 overflow-hidden border border-emerald-400"
                 >
-                  <span className="relative z-10 tracking-widest text-sm">
-                    PRESS TO START
+                  <span className="relative z-10 tracking-widest text-base">
+                    탐험 시작하기
                   </span>
-                  <ChevronRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
-                  <div className="absolute inset-0 bg-emerald-100 opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                  <ChevronRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
                 </button>
-              </div>
-              <div className="absolute bottom-8 text-[9px] text-stone-500 tracking-widest font-bold">
-                TAP TO BEGIN YOUR ADVENTURE
               </div>
             </div>
           )}
@@ -1252,7 +1325,6 @@ export default function App() {
               <div className="mb-6 z-10 shrink-0 mt-4 flex flex-col items-center">
                 <h2 className="text-xl font-bold mb-3">SCAN QR CODE</h2>
 
-                {/* 힌트 내용을 직접 텍스트로 보여주지 않고 '힌트 버튼'으로 대체 */}
                 <button
                   onClick={() => setShowHintModal(true)}
                   className="text-emerald-400 text-sm font-bold bg-stone-800 px-6 py-2.5 rounded-full inline-flex items-center gap-2 border border-stone-700 hover:bg-stone-700 transition-colors shadow-md"
@@ -1372,7 +1444,7 @@ export default function App() {
             </div>
           )}
 
-          {/* Step 5 & 6 (기존과 동일) */}
+          {/* Step 5 & 6 */}
           {step === "complete" && activeTheme && (
             <div className="p-6 flex-1 flex flex-col items-center justify-center animate-fade-in h-full overflow-y-auto custom-scrollbar">
               <div className="w-28 h-28 bg-emerald-100 rounded-full flex items-center justify-center mb-8 relative shadow-inner shrink-0">
