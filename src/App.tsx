@@ -17,7 +17,7 @@ import {
   RotateCcw,
   AlertCircle,
   Star,
-  X, // 팝업 닫기 아이콘
+  X,
 } from "lucide-react";
 
 // =====================================================================
@@ -33,7 +33,6 @@ let globalCameraStream = null;
 const requestCameraPermissionOnce = async () => {
   if (globalCameraStream && globalCameraStream.active) return true;
   try {
-    // [수정] 미리보기(iframe) 환경 등에서 카메라 API가 없을 때 앱이 튕기는 현상 방지
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       console.warn("현재 환경에서는 카메라 API를 지원하지 않습니다.");
       return false;
@@ -93,7 +92,6 @@ const QRScanner = ({ onScan, onError }) => {
     let lastScanTime = 0;
 
     const startCamera = async () => {
-      // [수정] 카메라 API가 없는 캔버스 환경에서 에러 처리하여 튕김 방지
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         setCamError(true);
         if (onErrorRef.current)
@@ -156,7 +154,6 @@ const QRScanner = ({ onScan, onError }) => {
 
           if (code && code.data) {
             const now = Date.now();
-            // 연속 스캔 방지 (2.5초 간격으로 제한하여 너무 빨리 3번 틀리는 것을 방지)
             if (now - lastScanTime > 2500) {
               lastScanTime = now;
               if (onScanRef.current) onScanRef.current(code.data);
@@ -197,13 +194,6 @@ const QRScanner = ({ onScan, onError }) => {
           카메라 권한이 없거나
           <br />
           접근이 차단되었습니다.
-          <br />
-          <br />
-          <span className="text-stone-400 font-normal">
-            잠시 후 나타나는 '건너뛰기' 버튼을
-            <br />
-            이용해 주세요.
-          </span>
         </div>
       )}
       {!isJsQRLoaded && !camError && (
@@ -507,7 +497,7 @@ const themeData = [
       },
       {
         type: "location",
-        name: "둥근 머리 정원",
+        name: "둥근 머 정원",
         hint: "스누피 페르소나 암석원",
         img: "/images/challenge_roundhead.jpg",
         text: "나는 왜 이렇게 둥근 머리를 가졌을까?",
@@ -801,9 +791,8 @@ export default function App() {
   const [showResetModal, setShowResetModal] = useState(false);
   const [showHintModal, setShowHintModal] = useState(false);
 
-  // [신규] 스캔 실패 횟수 및 건너뛰기 버튼 상태
+  // 스캔 실패 횟수 관리
   const [scanFailCount, setScanFailCount] = useState(0);
-  const [showSkipBtn, setShowSkipBtn] = useState(false);
 
   const activeTheme = themeData.find((t) => t.id === activeThemeId) || null;
 
@@ -821,17 +810,6 @@ export default function App() {
     };
     localStorage.setItem(STORAGE_KEY_STATE, JSON.stringify(stateToSave));
   }, [step, activeThemeId, activePath, progress, completedThemes, themeStates]);
-
-  // [신규] QR 화면 진입 시 1분(60초) 경과하면 무조건 건너뛰기 허용
-  useEffect(() => {
-    let timer;
-    if (step === "qr") {
-      timer = setTimeout(() => {
-        setShowSkipBtn(true);
-      }, 60000); // 60,000ms = 1분
-    }
-    return () => clearTimeout(timer);
-  }, [step]);
 
   const handleStartTheme = (theme) => {
     setActiveThemeId(theme.id);
@@ -854,45 +832,37 @@ export default function App() {
 
   const handleScanQR = () => {
     setQrErrorMsg("");
-    setScanFailCount(0); // [추가] 초기화
-    setShowSkipBtn(false); // [추가] 건너뛰기 버튼 숨김
+    setScanFailCount(0); // QR 화면에 들어올 때 실패 횟수 초기화
     setStep("qr");
   };
 
   const handleQRSuccess = (scannedData) => {
     const currentExpectedQR = activePath[progress]?.qrCode;
 
-    if (scannedData === currentExpectedQR || scannedData === MASTER_QR_CODE) {
+    // [중요 로직]
+    // 1) 스캔한 코드가 정답 코드일 때
+    // 2) 마스터 코드일 때
+    // 3) 실패 횟수가 3회 이상 쌓여 '비밀리에' 프리패스가 발동될 때
+    if (
+      scannedData === currentExpectedQR ||
+      scannedData === MASTER_QR_CODE ||
+      scanFailCount >= 3
+    ) {
       setQrErrorMsg("");
       setScanFailCount(0);
-      setShowSkipBtn(false);
       setStep("scene");
     } else {
-      // 3회 오류 시 건너뛰기 버튼 노출
+      // 오답일 경우 실패 카운트 증가시키고 일반 에러 문구 표시
       const newCount = scanFailCount + 1;
       setScanFailCount(newCount);
-      if (newCount >= 3) {
-        setShowSkipBtn(true);
-      }
 
       setQrErrorMsg(
-        `앗! 현재 위치의\n정답 QR코드가 아닌 것 같아요! 🐶\n(위치를 다시 확인해주세요) [오류 ${newCount}회]`
+        "앗! 현재 위치의\n정답 QR코드가 아닌 것 같아요! 🐶\n(위치를 다시 확인해주세요)"
       );
+
       setTimeout(() => {
         setQrErrorMsg("");
       }, 3500);
-    }
-  };
-
-  const handleQRSkip = (e) => {
-    if (e) e.preventDefault();
-    try {
-      setQrErrorMsg("");
-      setScanFailCount(0);
-      setShowSkipBtn(false);
-      setStep("scene");
-    } catch (err) {
-      console.error("QR Skip 에러:", err);
     }
   };
 
@@ -1320,7 +1290,7 @@ export default function App() {
                       {activePath[progress].title}
                     </p>
                     <div className="flex flex-col gap-2">
-                      {activePath[progress]?.options?.map((opt, i) => (
+                      {activePath[progress].options.map((opt, i) => (
                         <button
                           type="button"
                           key={i}
@@ -1406,19 +1376,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* 하단 패스 및 돌아가기 버튼 */}
               <div className="flex flex-col gap-3 w-full z-10 shrink-0">
-                {/* [핵심] QR코드 3회 실패 또는 1분 경과 시 노출되는 건너뛰기 버튼 */}
-                {showSkipBtn && (
-                  <button
-                    type="button"
-                    onClick={handleQRSkip}
-                    className="w-full bg-stone-800 hover:bg-stone-700 text-yellow-400 font-bold py-4 rounded-2xl text-sm transition-colors flex items-center justify-center gap-2 border border-stone-700 shadow-md animate-fade-in"
-                  >
-                    <CheckCircle className="w-4 h-4" /> 장소 인식 건너뛰기
-                  </button>
-                )}
-
                 <button
                   type="button"
                   onClick={() => setStep("journey")}
