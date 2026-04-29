@@ -1202,12 +1202,10 @@ export default function App() {
                   <Quote className="w-5 h-5 text-emerald-400 shrink-0 mt-1" />
                   <div>
                     <p className="text-sm font-bold text-emerald-900 leading-relaxed italic">
-                      "아, 위대한 대자연이여!
-                      <br />
-                      자, 새로운 모험을 향해 전진!"
+                      "여행은 사람을 성장시킨다."
                     </p>
                     <span className="text-[10px] font-normal text-emerald-600 mt-2 block">
-                      - 비글 스카우트 대장 스누피
+                      - CHARIE BROWN
                     </span>
                   </div>
                 </div>
