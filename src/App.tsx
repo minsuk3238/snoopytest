@@ -1194,7 +1194,7 @@ export default function App() {
                   <p className="text-sm font-bold text-yellow-900 leading-relaxed break-keep">
                     스누피가든의 모든 미션을 완수했습니다!
                     <br />
-                    배너를 터치하여 임명식을 다시 확인하세요!
+                    배너를 터치하여 리워드를 다시 확인하세요!
                   </p>
                 </div>
               ) : (
