@@ -511,7 +511,7 @@ const themeData = [
       },
       {
         type: "location",
-        name: "캠핑 찰리브라운과 스누피",
+        name: "썸머 캠프",
         hint: "웜 퍼피 레이크",
         img: "/images/challenge_lake.jpg",
         text: "여름 내내 아무것도 안하고 뒹굴기만 할 순 없잖아.",
@@ -520,7 +520,7 @@ const themeData = [
       },
       {
         type: "location",
-        name: "또 다른 연 먹는 나무",
+        name: "연 먹는 나무",
         hint: "아왜니무 산책로 입구",
         img: "/images/challenge_awaetree.jpg",
         text: "이 연 먹고 싶어? 아니면 가오리연은 어때? 아니, 내가 아예 메뉴판이라도 가져다 줄까?",
@@ -529,7 +529,7 @@ const themeData = [
       },
       {
         type: "location",
-        name: "후박나무에 머리를 박고 있는 찰리브라운",
+        name: "후박나무에서 위로 받는 찰리브라운",
         hint: "유실수원 맞은편",
         img: "/images/challenge_hubaktree.jpg",
         text: "난 새로운 철학을 만들어냈어. 한번에 하루씩만 두려워하기로 말이야!",
@@ -560,7 +560,7 @@ const themeData = [
     path: [
       {
         type: "location",
-        name: "사색들판 패티&마시",
+        name: "사색들판 패티 & 마시",
         hint: "피너츠 사색 들판",
         img: "/images/relax_field.jpg",
         text: "날씨를 욕해선 안돼요, 선생님 이것도 모두 우리가 사는 세상의 일부잖아요.",
@@ -578,7 +578,7 @@ const themeData = [
       },
       {
         type: "location",
-        name: "패퍼민트의 초록 정원",
+        name: "패퍼민트의 그린 정원",
         hint: "피너츠 컬러 가든",
         img: "/images/relax_colorgarden.jpg",
         text: "이제 하늘은 파란색, 풀은 초록색으로 칠해야지. 노란색 꽃도 몇송이 집어놓고...",
@@ -669,7 +669,7 @@ const themeData = [
       {
         type: "location",
         name: "야구장 낙서하는 루시",
-        hint: "사색 들판 벽면",
+        hint: "찰리브라운의 야구장 벽면",
         img: "/images/sentiment_graffiti.jpg",
         text: "난 내방식대로 해냈어!",
         source: "- LUCY",
@@ -677,7 +677,7 @@ const themeData = [
       },
       {
         type: "location",
-        name: "샐리&루시의 사랑",
+        name: "샐리 & 루시의 사랑",
         hint: "피너츠 컬러 가든",
         img: "/images/sentiment_colorgarden.jpg",
         text: "사랑이란 별 이상한 짓을 다 하게 만든다니까...",
@@ -713,7 +713,7 @@ const themeData = [
       },
       {
         type: "location",
-        name: "라이너스의 담요 숲",
+        name: "애착담요 라이너스",
         hint: "라이너스의 담요 숲",
         img: "/images/sentiment_blanket.jpg",
         text: "난 너의 스윗 바부가 아니야!",
