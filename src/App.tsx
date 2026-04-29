@@ -23,7 +23,8 @@ import {
 // =====================================================================
 // 🔑 [중요] 마스터 코드 설정 (모든 장소 통과 가능)
 // =====================================================================
-const MASTER_QR_CODE = "snoopy_master";
+const BASE_URL = "https://snoopytest-mu.vercel.app/?key=";
+const MASTER_QR_CODE = `${BASE_URL}snoopy_master`;
 
 // =====================================================================
 // 📸 [핵심] 카메라 권한 1회 승인 및 세션 유지 매니저
@@ -214,7 +215,7 @@ const exploreTail = [
     img: "/images/explore_pagora.jpg",
     text: "갑자기 아래쪽을 가로질러 빠르게 움직이는 그림자가 보인다. 성난 굉음이 허공을 채운다!",
     source: "- SNOOPY ",
-    qrCode: "sg_explore_tail_01",
+    qrCode: `${BASE_URL}sg_explore_tail_01`,
   },
   {
     type: "location",
@@ -223,7 +224,7 @@ const exploreTail = [
     img: "/images/explore_yeobran.jpg",
     text: "또 일주일이 지났는데 아직도 풀을 안깎다니! 이러단 곧 내 눈앞이 다 가려지겠어!",
     source: "- SNOOPY ",
-    qrCode: "sg_explore_tail_03",
+    qrCode: `${BASE_URL}sg_explore_tail_03`,
   },
   {
     type: "location",
@@ -232,7 +233,7 @@ const exploreTail = [
     img: "/images/explore_jeongnang.jpg",
     text: "휴 조 쿨은 일요일 오후를 싫어해.",
     source: "- SNOOPY ",
-    qrCode: "sg_explore_tail_02",
+    qrCode: `${BASE_URL}sg_explore_tail_02`,
   },
   {
     type: "location",
@@ -241,7 +242,7 @@ const exploreTail = [
     img: "/images/explore_fountain.jpg",
     text: "우드스탁의 수영장 파티는 정말 싫다고!",
     source: "- SNOOPY ",
-    qrCode: "sg_explore_tail_04",
+    qrCode: `${BASE_URL}sg_explore_tail_04`,
   },
   {
     type: "location",
@@ -250,7 +251,7 @@ const exploreTail = [
     img: "/images/explore_rabbit.jpg",
     text: "토끼다! 우와 난 토끼 구경하는게 너무 좋아!",
     source: "- SNOOPY ",
-    qrCode: "sg_explore_tail_rabbit",
+    qrCode: `${BASE_URL}sg_explore_tail_rabbit`,
   },
   {
     type: "location",
@@ -259,7 +260,7 @@ const exploreTail = [
     img: "/images/explore_golfer.jpg",
     text: "넌 운이 좋은 줄 알아, 골프화를 안 신어도 되잖아.",
     source: "-  CHARIE BROWN",
-    qrCode: "sg_explore_tail_05",
+    qrCode: `${BASE_URL}sg_explore_tail_05`,
   },
   {
     type: "location",
@@ -268,7 +269,7 @@ const exploreTail = [
     img: "/images/explore_cabin.jpg",
     text: "난 시키지 않으면 절대 아무것도 안하거든!",
     source: "- SNOOPY ",
-    qrCode: "sg_explore_tail_06",
+    qrCode: `${BASE_URL}sg_explore_tail_06`,
   },
   {
     type: "location",
@@ -277,7 +278,7 @@ const exploreTail = [
     img: "/images/explore_camellia.jpg",
     text: "세계적으로 유명한 비글 스카우트가 하이킹에 나선다.",
     source: "- SNOOPY",
-    qrCode: "sg_explore_tail_07",
+    qrCode: `${BASE_URL}sg_explore_tail_07`,
   },
 ];
 
@@ -310,7 +311,7 @@ const themeData = [
         img: "/images/explore_square.jpg",
         text: "'어둡고 폭풍우 치는 밤이었다...'",
         source: "- SNOOPY",
-        qrCode: "sg_explore_01",
+        qrCode: `${BASE_URL}sg_explore_01`,
       },
       {
         type: "location",
@@ -319,7 +320,7 @@ const themeData = [
         img: "/images/explore_camp.jpg",
         text: "세계적으로 유명한 비글 스카우트가 그의 분대를 이끌고 자연탐사를 떠난다.",
         source: "- SNOOPY",
-        qrCode: "sg_explore_02",
+        qrCode: `${BASE_URL}sg_explore_02`,
       },
       {
         type: "choice",
@@ -336,7 +337,7 @@ const themeData = [
                 img: "/images/explore_tent.jpg",
                 text: "하이킹의 마지막 밤을 위해 좀 특별한 걸 준비했는데... 마시멜로 구워 먹기 어때?",
                 source: "- SNOOPY",
-                qrCode: "sg_explore_03_tent",
+                qrCode: `${BASE_URL}sg_explore_03_tent`,
               },
               ...exploreTail,
             ],
@@ -351,7 +352,7 @@ const themeData = [
                 img: "/images/explore_zoo.jpg",
                 text: "지혜로운 늙은 부엉이가 나무 구멍으로 머리를 내밀고 있다.",
                 source: "- SNOOPY",
-                qrCode: "sg_explore_03_zoo",
+                qrCode: `${BASE_URL}sg_explore_03_zoo`,
               },
               {
                 type: "location",
@@ -360,7 +361,7 @@ const themeData = [
                 img: "/images/explore_observatory.jpg",
                 text: "정찰병 노릇을 할 지원자가 하나 필요한데...",
                 source: "- SNOOPY",
-                qrCode: "sg_explore_04_obs",
+                qrCode: `${BASE_URL}sg_explore_04_obs`,
               },
               ...exploreTail,
             ],
@@ -375,7 +376,7 @@ const themeData = [
                 img: "/images/explore_maze.jpg",
                 text: "길을 잃었을 땐 나침반을 따라가라!",
                 source: "- SNOOPY",
-                qrCode: "sg_explore_03_maze",
+                qrCode: `${BASE_URL}sg_explore_03_maze`,
               },
               {
                 type: "choice",
@@ -392,7 +393,7 @@ const themeData = [
                         img: "/images/explore_observatory.jpg",
                         text: "정찰병 노릇을 할 지원자가 하나 필요한데...",
                         source: "- SNOOPY",
-                        qrCode: "sg_explore_04_obs",
+                        qrCode: `${BASE_URL}sg_explore_04_obs`,
                       },
                       ...exploreTail,
                     ],
@@ -407,7 +408,7 @@ const themeData = [
                         img: "/images/explore_dolhareubang.jpg",
                         text: "바위를 숭배하기로 결정한거야! 하하하하!",
                         source: "- SNOOPY",
-                        qrCode: "sg_explore_04_jeju",
+                        qrCode: `${BASE_URL}sg_explore_04_jeju`,
                       },
                       ...exploreTail,
                     ],
@@ -443,7 +444,7 @@ const themeData = [
         img: "/images/challenge_square.jpg",
         text: "남은 평생 여기 누워있을래.",
         source: "- CHARIE BROWN",
-        qrCode: "sg_chal_01",
+        qrCode: `${BASE_URL}sg_chal_01`,
       },
       {
         type: "location",
@@ -452,7 +453,7 @@ const themeData = [
         img: "/images/challenge_zigzag.jpg",
         text: "이건 내 전용 셔츠라고!",
         source: "- CHARIE BROWN",
-        qrCode: "sg_chal_02",
+        qrCode: `${BASE_URL}sg_chal_02`,
       },
       {
         type: "location",
@@ -461,7 +462,7 @@ const themeData = [
         img: "/images/challenge_camp.jpg",
         text: "미안해. 이 옷이 그렇게 거슬리는 줄 몰랐어.",
         source: "- CHARIE BROWN",
-        qrCode: "sg_chal_03",
+        qrCode: `${BASE_URL}sg_chal_03`,
       },
       {
         type: "location",
@@ -470,7 +471,7 @@ const themeData = [
         img: "/images/challenge_wall.jpg",
         text: "찰리브라운(밟지마시오)",
         source: "- CHARIE BROWN",
-        qrCode: "sg_chal_04",
+        qrCode: `${BASE_URL}sg_chal_04`,
       },
       {
         type: "location",
@@ -479,7 +480,7 @@ const themeData = [
         img: "/images/challenge_baseball.jpg",
         text: "난 연먹는 나무가 정말 싫어! 순진한 어린애들의 연을 빼앗아서 나뭇가지로 붙들고 있다가 꿀꺽 삼켜버리잖아...",
         source: "- CHARIE BROWN",
-        qrCode: "sg_chal_05",
+        qrCode: `${BASE_URL}sg_chal_05`,
       },
       {
         type: "location",
@@ -488,7 +489,7 @@ const themeData = [
         img: "/images/challenge_colorgarden.jpg",
         text: "빨간 머리 여자애한테 내 존재를 알리려면 어떻게 해야 할까...",
         source: "- CHARIE BROWN",
-        qrCode: "sg_chal_06",
+        qrCode: `${BASE_URL}sg_chal_06`,
       },
       {
         type: "location",
@@ -497,7 +498,7 @@ const themeData = [
         img: "/images/challenge_roundhead.jpg",
         text: "그 머리통 둥근 녀석 이름이 뭐였더라...",
         source: "- CHARIE BROWN",
-        qrCode: "sg_chal_07",
+        qrCode: `${BASE_URL}sg_chal_07`,
       },
       {
         type: "location",
@@ -506,7 +507,7 @@ const themeData = [
         img: "/images/challenge_nest.jpg",
         text: "행복이란 내 강아지가 집으로 돌아오는 거지!",
         source: "- CHARIE BROWN",
-        qrCode: "sg_chal_08",
+        qrCode: `${BASE_URL}sg_chal_08`,
       },
       {
         type: "location",
@@ -515,7 +516,7 @@ const themeData = [
         img: "/images/challenge_lake.jpg",
         text: "여름 내내 아무것도 안하고 뒹굴기만 할 순 없잖아.",
         source: "- CHARIE BROWN",
-        qrCode: "sg_chal_09",
+        qrCode: `${BASE_URL}sg_chal_09`,
       },
       {
         type: "location",
@@ -524,7 +525,7 @@ const themeData = [
         img: "/images/challenge_awaetree.jpg",
         text: "이 연 먹고 싶어? 아니면 가오리연은 어때? 아니, 내가 아예 메뉴판이라도 가져다 줄까?",
         source: "- CHARIE BROWN",
-        qrCode: "sg_chal_10",
+        qrCode: `${BASE_URL}sg_chal_10`,
       },
       {
         type: "location",
@@ -533,7 +534,7 @@ const themeData = [
         img: "/images/challenge_hubaktree.jpg",
         text: "난 새로운 철학을 만들어냈어. 한번에 하루씩만 두려워하기로 말이야!",
         source: "- CHARIE BROWN",
-        qrCode: "sg_chal_11",
+        qrCode: `${BASE_URL}sg_chal_11`,
       },
     ],
   },
@@ -564,7 +565,7 @@ const themeData = [
         img: "/images/relax_field.jpg",
         text: "날씨를 욕해선 안돼요, 선생님 이것도 모두 우리가 사는 세상의 일부잖아요.",
         source: "- PEPPERMINT PATTY",
-        qrCode: "sg_relax_01",
+        qrCode: `${BASE_URL}sg_relax_01`,
       },
       {
         type: "location",
@@ -573,7 +574,7 @@ const themeData = [
         img: "/images/relax_paengtree.jpg",
         text: "잠언 8장의 한 구절이에요'대저 지혜는 진주보다 나으므로....",
         source: "- MARCIE",
-        qrCode: "sg_relax_02",
+        qrCode: `${BASE_URL}sg_relax_02`,
       },
       {
         type: "location",
@@ -582,7 +583,7 @@ const themeData = [
         img: "/images/relax_colorgarden.jpg",
         text: "이제 하늘은 파란색, 풀은 초록색으로 칠해야지. 노란색 꽃도 몇송이 집어놓고...",
         source: "- PEPPERMINT PATTY",
-        qrCode: "sg_relax_03",
+        qrCode: `${BASE_URL}sg_relax_03`,
       },
       {
         type: "location",
@@ -591,7 +592,7 @@ const themeData = [
         img: "/images/relax_cedar.jpg",
         text: "아뇨, 선생님... 그냥 눈 좀 감고 있었던 거예요",
         source: "- PEPPERMINT PATTY",
-        qrCode: "sg_relax_04",
+        qrCode: `${BASE_URL}sg_relax_04`,
       },
       {
         type: "location",
@@ -600,7 +601,7 @@ const themeData = [
         img: "/images/relax_wall.jpg",
         text: "아무래도 오늘은 제 두뇌가 휴가를 낸 것 같네요. 혹시 자동응답기에 메세지를 남기고 싶으신가요?",
         source: "- PEPPERMINT PATTY",
-        qrCode: "sg_relax_05",
+        qrCode: `${BASE_URL}sg_relax_05`,
       },
       {
         type: "location",
@@ -609,7 +610,7 @@ const themeData = [
         img: "/images/relax_awaetree.jpg",
         text: "가끔씩 휴식을 취하면 머리가 떨어지지 않을 거예요",
         source: "- PEPPERMINT PATTY",
-        qrCode: "sg_relax_06",
+        qrCode: `${BASE_URL}sg_relax_06`,
       },
       {
         type: "location",
@@ -618,7 +619,7 @@ const themeData = [
         img: "/images/relax_watermelon.jpg",
         text: "이 세상은 아름다운 꽃과 식물로 가득하지.",
         source: "- PEPPERMINT PATTY",
-        qrCode: "sg_relax_watermelon",
+        qrCode: `${BASE_URL}sg_relax_watermelon`,
       },
       {
         type: "location",
@@ -627,7 +628,7 @@ const themeData = [
         img: "/images/relax_exit.jpg",
         text: "인생이 이렇게 아름다울 수 있다니 미처 몰랐어!",
         source: "- PEPPERMINT PATTY",
-        qrCode: "sg_relax_07",
+        qrCode: `${BASE_URL}sg_relax_07`,
       },
     ],
   },
@@ -654,7 +655,7 @@ const themeData = [
         img: "/images/sentiment_square.jpg",
         text: "하루 종일 여기 그냥 누워서 구름이 떠가는 것만 봐도 되겠어...",
         source: "- LUCY",
-        qrCode: "sg_senti_01",
+        qrCode: `${BASE_URL}sg_senti_01`,
       },
       {
         type: "location",
@@ -663,7 +664,7 @@ const themeData = [
         img: "/images/sentiment_field.jpg",
         text: "누구나 바보 같은 짓도 하고 똑똑한 짓도 하는 건가봐.",
         source: "- LINUS",
-        qrCode: "sg_senti_02",
+        qrCode: `${BASE_URL}sg_senti_02`,
       },
       {
         type: "location",
@@ -672,7 +673,7 @@ const themeData = [
         img: "/images/sentiment_graffiti.jpg",
         text: "난 내방식대로 해냈어!",
         source: "- LUCY",
-        qrCode: "sg_senti_graffiti",
+        qrCode: `${BASE_URL}sg_senti_graffiti`,
       },
       {
         type: "location",
@@ -681,7 +682,7 @@ const themeData = [
         img: "/images/sentiment_colorgarden.jpg",
         text: "사랑이란 별 이상한 짓을 다 하게 만든다니까...",
         source: "- SALLY",
-        qrCode: "sg_senti_03",
+        qrCode: `${BASE_URL}sg_senti_03`,
       },
       {
         type: "location",
@@ -690,7 +691,7 @@ const themeData = [
         img: "/images/sentiment_stage.jpg",
         text: "어째서 넌 한번도 나를 '우리 귀염둥이'라고 불러주지 않을까?",
         source: "- LUCY",
-        qrCode: "sg_senti_04",
+        qrCode: `${BASE_URL}sg_senti_04`,
       },
       {
         type: "location",
@@ -699,7 +700,7 @@ const themeData = [
         img: "/images/sentiment_cafe.jpg",
         text: "이 멍청아! 5센트나 내라고...",
         source: "- LUCY",
-        qrCode: "sg_senti_05",
+        qrCode: `${BASE_URL}sg_senti_05`,
       },
       {
         type: "location",
@@ -708,7 +709,7 @@ const themeData = [
         img: "/images/sentiment_pumpkin.jpg",
         text: "핼러윈 밤이면 호박 대왕이 호박밭에서 솟아나와 온 세상 아이들에게 장난감을 가져다주거든!",
         source: "- LINUS",
-        qrCode: "sg_senti_06",
+        qrCode: `${BASE_URL}sg_senti_06`,
       },
       {
         type: "location",
@@ -717,7 +718,7 @@ const themeData = [
         img: "/images/sentiment_blanket.jpg",
         text: "난 너의 스윗 바부가 아니야!",
         source: "- LINUS",
-        qrCode: "sg_senti_07",
+        qrCode: `${BASE_URL}sg_senti_07`,
       },
       {
         type: "location",
@@ -726,7 +727,7 @@ const themeData = [
         img: "/images/sentiment_gardeningschool.jpg",
         text: "슈로더, 너 내가 예쁘다고 생각하니?",
         source: "- LUCY",
-        qrCode: "sg_senti_08",
+        qrCode: `${BASE_URL}sg_senti_08`,
       },
     ],
   },
@@ -768,6 +769,9 @@ export default function App() {
   const [showResetModal, setShowResetModal] = useState(false);
   const [showHintModal, setShowHintModal] = useState(false);
 
+  // 👇 설문조사 팝업창을 위한 상태값 추가
+  const [showSurveyModal, setShowSurveyModal] = useState(false);
+
   // 스캔 실패 횟수 관리
   const [scanFailCount, setScanFailCount] = useState(0);
 
@@ -787,6 +791,45 @@ export default function App() {
     };
     localStorage.setItem(STORAGE_KEY_STATE, JSON.stringify(stateToSave));
   }, [step, activeThemeId, activePath, progress, completedThemes, themeStates]);
+
+  // =====================================================================
+  // 🔗 [핵심 기능] URL 파라미터를 통한 외부 카메라 스캔 자동 연동 로직
+  // =====================================================================
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const qrFromUrl = params.get("key"); // qr 대신 key 파라미터 확인
+
+    if (qrFromUrl) {
+      // 1. 끝없는 반복 실행을 막기 위해 파라미터를 URL에서 조용히 지웁니다.
+      window.history.replaceState({}, document.title, window.location.pathname);
+
+      const currentExpectedQR = activePath[progress]?.qrCode;
+
+      // 2. 퀘스트를 진행 중일 때만 스캔을 허용합니다. (activePath 존재 여부)
+      if (activePath.length > 0) {
+        // 데이터 상 URL 뒷부분의 ID값만 추출 (?key= 기준으로 자름)
+        const rawExpectedId = currentExpectedQR
+          ? currentExpectedQR.split("?key=")[1]
+          : null;
+
+        if (
+          rawExpectedId &&
+          (qrFromUrl === rawExpectedId || qrFromUrl === "snoopy_master")
+        ) {
+          // 정답일 경우 자동으로 씬(Scene) 화면으로 이동
+          setQrErrorMsg("");
+          setScanFailCount(0);
+          setStep("scene");
+        } else {
+          // 오답일 경우 에러 메시지와 함께 스캔 화면으로 이동
+          setStep("qr");
+          setQrErrorMsg(
+            "앗! 현재 위치의\n정답 QR코드가 아닌 것 같아요! 🐶\n(위치를 다시 확인해주세요)"
+          );
+        }
+      }
+    }
+  }, [activePath, progress]); // activePath와 progress가 로드되거나 변경될 때만 체크
 
   const handleStartTheme = (theme) => {
     setActiveThemeId(theme.id);
@@ -815,14 +858,17 @@ export default function App() {
 
   const handleQRSuccess = (scannedData) => {
     const currentExpectedQR = activePath[progress]?.qrCode;
+    const rawExpectedId = currentExpectedQR
+      ? currentExpectedQR.split("?key=")[1]
+      : "";
 
     // [중요 로직]
-    // 1) 스캔한 코드가 정답 코드일 때
+    // 1) 스캔한 코드가 정답 코드일 때 (URL 전체이거나 ID만 포함되어 있을 때 모두 통과)
     // 2) 마스터 코드일 때
     // 3) 실패 횟수가 3회 이상 쌓여 '비밀리에' 프리패스가 발동될 때
     if (
-      scannedData === currentExpectedQR ||
-      scannedData === MASTER_QR_CODE ||
+      (rawExpectedId && scannedData.includes(rawExpectedId)) ||
+      scannedData.includes("snoopy_master") ||
       scanFailCount >= 3
     ) {
       setQrErrorMsg("");
@@ -868,6 +914,9 @@ export default function App() {
         setJustGotGrandClear(false);
       }
       setStep("complete");
+
+      // 👇 코스가 완료될 때 설문조사 모달 띄우기
+      setShowSurveyModal(true);
     } else {
       setProgress(nextProgress);
       setStep("journey");
@@ -1012,6 +1061,52 @@ export default function App() {
           </div>
         )}
 
+        {/* 📋 코스 완료 설문조사 팝업 모달창 */}
+        {showSurveyModal && (
+          <div className="absolute inset-0 z-50 bg-stone-900/60 flex items-center justify-center p-6 animate-fade-in">
+            <div className="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl relative">
+              <button
+                onClick={() => setShowSurveyModal(false)}
+                className="absolute top-4 right-4 text-stone-400 hover:text-stone-600 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                <CheckCircle className="w-8 h-8 text-emerald-500" />
+              </div>
+
+              <h3 className="text-xl font-black text-stone-800 mb-2">
+                코스 완주를 축하합니다! 🎉
+              </h3>
+              <p className="text-sm text-stone-500 mb-6 break-keep leading-relaxed">
+                더 나은 스누피 가든 탐험을 위해
+                <br />
+                짧은 설문조사에 참여해 주시겠어요?
+              </p>
+
+              <div className="flex flex-col gap-3">
+                <a
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSdfwEIIIGQ6eBFjstuBj_VtoGHswevq1qy3gF-ndveDdg0rhw/viewform?usp=publish-editor"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setShowSurveyModal(false)}
+                  className="w-full py-3.5 rounded-xl font-black bg-emerald-500 text-white hover:bg-emerald-600 transition-colors shadow-md flex items-center justify-center gap-2"
+                >
+                  설문조사 참여하기
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setShowSurveyModal(false)}
+                  className="w-full py-3.5 rounded-xl font-bold bg-stone-100 text-stone-500 hover:bg-stone-200 transition-colors"
+                >
+                  나중에 하기
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Header (고정) */}
         {step !== "splash" && step !== "qr" && (
           <div className="bg-stone-900 p-4 text-center text-white relative flex justify-between items-center z-10 shrink-0">
@@ -1112,7 +1207,7 @@ export default function App() {
                       자, 새로운 모험을 향해 전진!"
                     </p>
                     <span className="text-[10px] font-normal text-emerald-600 mt-2 block">
-                      - 비글 스카우트 대장 스누피 (1974.05.13.)
+                      - 비글 스카우트 대장 스누피
                     </span>
                   </div>
                 </div>
@@ -1537,7 +1632,7 @@ export default function App() {
                         춤춘다는 것은 살아간다는 것이다!"
                       </p>
                       <span className="text-[10px] font-normal text-yellow-600 mt-2 block">
-                        - 스누피 (1984.02.24.)
+                        - 스누피
                       </span>
                     </div>
                   </div>
@@ -1550,7 +1645,7 @@ export default function App() {
                           "우리가 이렇게 진심인데 어떻게 질 수 있겠어?"
                         </p>
                         <span className="block text-[10px] font-normal text-stone-500 mt-2">
-                          - 찰리 브라운 (1959.10.15.)
+                          - 찰리 브라운
                         </span>
                       </div>
                     </div>
@@ -1561,7 +1656,7 @@ export default function App() {
                           "너도 가끔은 꽤 훌륭한 구석이 있구나!"
                         </p>
                         <span className="block text-[10px] font-normal text-stone-500 mt-2">
-                          - 루시 (1955.03.22.)
+                          - 루시
                         </span>
                       </div>
                     </div>
