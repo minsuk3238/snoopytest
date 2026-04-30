@@ -769,7 +769,7 @@ export default function App() {
   const [showResetModal, setShowResetModal] = useState(false);
   const [showHintModal, setShowHintModal] = useState(false);
 
-  // 👇 설문조사 팝업창을 위한 상태값 추가
+  // 설문조사 팝업창을 위한 상태값
   const [showSurveyModal, setShowSurveyModal] = useState(false);
 
   // 스캔 실패 횟수 관리
@@ -915,7 +915,7 @@ export default function App() {
       }
       setStep("complete");
 
-      // 👇 코스가 완료될 때 설문조사 모달 띄우기
+      // 코스가 완료될 때 설문조사 모달 띄우기
       setShowSurveyModal(true);
     } else {
       setProgress(nextProgress);
@@ -1061,7 +1061,7 @@ export default function App() {
           </div>
         )}
 
-        {/* 📋 코스 완료 설문조사 팝업 모달창 */}
+        {/* 📋 코스 완료 설문조사 팝업 모달창 (리워드 안내 추가됨) */}
         {showSurveyModal && (
           <div className="absolute inset-0 z-50 bg-stone-900/60 flex items-center justify-center p-6 animate-fade-in">
             <div className="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl relative">
@@ -1084,9 +1084,11 @@ export default function App() {
                 <br />
                 짧은 설문조사에 참여해 주시겠어요?
                 <br />
-                설문조사 완료 후 페이지를 매표소에 보여주시면
-                <br />
-                소정의 리워드를 제공합니다.
+                <span className="block mt-3 p-3 bg-emerald-50 text-emerald-700 rounded-xl border border-emerald-100 font-bold text-xs">
+                  🎁 설문 완료 페이지를 매표소에 보여주시면
+                  <br />
+                  소정의 리워드를 증정해 드립니다!
+                </span>
               </p>
 
               <div className="flex flex-col gap-3">
@@ -1139,7 +1141,7 @@ export default function App() {
         )}
 
         <div className="flex-1 overflow-hidden bg-stone-50 flex flex-col relative">
-          {/* Step 0: 스플래시 */}
+          {/* Step 0: 스플래시 (수정: 세로 화면 정중앙 위치) */}
           {step === "splash" && (
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center overflow-hidden bg-stone-900">
               <img
@@ -1153,7 +1155,8 @@ export default function App() {
 
               <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/40 to-transparent"></div>
 
-              <div className="z-10 flex flex-col items-center text-center px-6 w-full animate-fade-in mt-auto pb-24">
+              {/* 하단에 붙어있던 mt-auto pb-24를 제거하고 h-full, justify-center 추가 */}
+              <div className="z-10 flex flex-col items-center justify-center text-center px-6 w-full h-full animate-fade-in">
                 <h1 className="text-5xl font-black tracking-tighter mb-3 text-white drop-shadow-lg">
                   SNOOPY GARDEN
                   <br />
@@ -1225,7 +1228,8 @@ export default function App() {
                         : "bg-emerald-100 border-emerald-200 text-emerald-600"
                     }`}
                   >
-                    <Award className="w-3 h-3" /> REWARDS{" "}
+                    {/* 수정: REWARDS를 코스 완주로 텍스트 변경 */}
+                    <Award className="w-3 h-3" /> 코스 완주{" "}
                     {completedThemes.length}/{themeData.length}
                   </div>
                 </div>
@@ -1283,6 +1287,23 @@ export default function App() {
                     </button>
                   );
                 })}
+
+                {/* 추가: 코스를 1개라도 완주했을 시 나타나는 상시 설문조사 버튼 탭 */}
+                {completedThemes.length > 0 && (
+                  <a
+                    href="https://docs.google.com/forms/d/e/1FAIpQLSdfwEIIIGQ6eBFjstuBj_VtoGHswevq1qy3gF-ndveDdg0rhw/viewform?usp=publish-editor"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full text-center bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold py-4 rounded-2xl border border-emerald-300 shadow-sm transition-all mt-6"
+                  >
+                    <span className="flex items-center justify-center gap-2 mb-1">
+                      <Sparkles className="w-4 h-4" /> 만족도 설문조사 참여하기
+                    </span>
+                    <span className="text-[11px] font-medium text-emerald-600 block">
+                      🎁 매표소에 완료 화면 제시 시 소정의 리워드 증정
+                    </span>
+                  </a>
+                )}
               </div>
             </div>
           )}
