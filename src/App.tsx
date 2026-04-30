@@ -990,7 +990,7 @@ export default function App() {
                 초기화 경고
               </h3>
               <p className="text-sm text-stone-500 mb-6 break-keep leading-relaxed">
-                모든 퀘스트 진행 상황과 모은 리워드가 삭제됩니다.
+                모든 퀘스트 진행 상황과 모은 코스 완료 사항이 삭제됩니다.
                 <br />
                 정말 처음부터 다시 시작하시겠습니까?
               </p>
@@ -1083,6 +1083,10 @@ export default function App() {
                 더 나은 스누피 가든 탐험을 위해
                 <br />
                 짧은 설문조사에 참여해 주시겠어요?
+                <br />
+                설문조사 완료 후 페이지를 매표소에 보여주시면
+                <br />
+                소정의 리워드를 제공합니다.
               </p>
 
               <div className="flex flex-col gap-3">
