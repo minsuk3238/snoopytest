@@ -214,7 +214,7 @@ const exploreTail = [
     hint: "스누피 페르소나 암석원",
     img: "/images/explore_pagora.jpg",
     text: "갑자기 아래쪽을 가로질러 빠르게 움직이는 그림자가 보인다. 성난 굉음이 허공을 채운다!",
-    source: "- SNOOPY ",
+    source: "- SNOOPY",
     qrCode: `${BASE_URL}sg_explore_tail_01`,
   },
   {
@@ -223,7 +223,7 @@ const exploreTail = [
     hint: "라이너스의 담요 숲",
     img: "/images/explore_yeobran.jpg",
     text: "또 일주일이 지났는데 아직도 풀을 안깎다니! 이러단 곧 내 눈앞이 다 가려지겠어!",
-    source: "- SNOOPY ",
+    source: "- SNOOPY",
     qrCode: `${BASE_URL}sg_explore_tail_03`,
   },
   {
@@ -232,7 +232,7 @@ const exploreTail = [
     hint: "루시의 레모네이드 카페",
     img: "/images/explore_jeongnang.jpg",
     text: "휴 조 쿨은 일요일 오후를 싫어해.",
-    source: "- SNOOPY ",
+    source: "- SNOOPY",
     qrCode: `${BASE_URL}sg_explore_tail_02`,
   },
   {
@@ -241,7 +241,7 @@ const exploreTail = [
     hint: "야자원",
     img: "/images/explore_fountain.jpg",
     text: "우드스탁의 수영장 파티는 정말 싫다고!",
-    source: "- SNOOPY ",
+    source: "- SNOOPY",
     qrCode: `${BASE_URL}sg_explore_tail_04`,
   },
   {
@@ -250,7 +250,7 @@ const exploreTail = [
     hint: "야자원 토끼 조형물",
     img: "/images/explore_rabbit.jpg",
     text: "토끼다! 우와 난 토끼 구경하는게 너무 좋아!",
-    source: "- SNOOPY ",
+    source: "- SNOOPY",
     qrCode: `${BASE_URL}sg_explore_tail_rabbit`,
   },
   {
@@ -259,7 +259,7 @@ const exploreTail = [
     hint: "웜 퍼피 레이크",
     img: "/images/explore_golfer.jpg",
     text: "넌 운이 좋은 줄 알아, 골프화를 안 신어도 되잖아.",
-    source: "-  CHARIE BROWN",
+    source: "- CHARLIE BROWN",
     qrCode: `${BASE_URL}sg_explore_tail_05`,
   },
   {
@@ -268,7 +268,7 @@ const exploreTail = [
     hint: "트리하우스",
     img: "/images/explore_cabin.jpg",
     text: "난 시키지 않으면 절대 아무것도 안하거든!",
-    source: "- SNOOPY ",
+    source: "- SNOOPY",
     qrCode: `${BASE_URL}sg_explore_tail_06`,
   },
   {
@@ -298,7 +298,7 @@ const themeData = [
           text: "이걸보러 여기까지 온 거야 제군들. 저 경치 좀 보라고!",
         },
         {
-          speaker: "우드스탁",
+          speaker: "- WOODSTOCK",
           text: "|||| || ||| ||!",
         },
       ],
@@ -425,13 +425,13 @@ const themeData = [
     id: "challenge",
     title: "항상 도전하는 찰리의 하루",
     type: "도전형 (공감/일상)",
-    character: "- CHARIE BROWN",
+    character: "- CHARLIE BROWN",
     color: "orange",
     completion: {
       title: "찰리의 야구팀 신입 부원",
       dialogues: [
         {
-          speaker: "찰리 브라운",
+          speaker: "- CHARLIE BROWN",
           text: "나 9회에 홈런을 쳤어, 우리팀이 이겼어! 내가 영웅이 됐다고!!",
         },
       ],
@@ -443,7 +443,7 @@ const themeData = [
         hint: "소설왕 스누피 광장",
         img: "/images/challenge_square.jpg",
         text: "남은 평생 여기 누워있을래.",
-        source: "- CHARIE BROWN",
+        source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_01`,
       },
       {
@@ -452,7 +452,7 @@ const themeData = [
         hint: "소설왕 스누피광장 - 피너츠 사색 들판",
         img: "/images/challenge_zigzag.jpg",
         text: "이건 내 전용 셔츠라고!",
-        source: "- CHARIE BROWN",
+        source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_02`,
       },
       {
@@ -461,7 +461,7 @@ const themeData = [
         hint: "도토리숲",
         img: "/images/challenge_camp.jpg",
         text: "미안해. 이 옷이 그렇게 거슬리는 줄 몰랐어.",
-        source: "- CHARIE BROWN",
+        source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_03`,
       },
       {
@@ -470,7 +470,7 @@ const themeData = [
         hint: "찰리브라운의 야구장",
         img: "/images/challenge_wall.jpg",
         text: "찰리브라운(밟지마시오)",
-        source: "- CHARIE BROWN",
+        source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_04`,
       },
       {
@@ -479,7 +479,7 @@ const themeData = [
         hint: "찰리브라운의 야구장",
         img: "/images/challenge_baseball.jpg",
         text: "난 연먹는 나무가 정말 싫어! 순진한 어린애들의 연을 빼앗아서 나뭇가지로 붙들고 있다가 꿀꺽 삼켜버리잖아...",
-        source: "- CHARIE BROWN",
+        source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_05`,
       },
       {
@@ -488,16 +488,16 @@ const themeData = [
         hint: "피너츠 컬러 가든",
         img: "/images/challenge_colorgarden.jpg",
         text: "빨간 머리 여자애한테 내 존재를 알리려면 어떻게 해야 할까...",
-        source: "- CHARIE BROWN",
+        source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_06`,
       },
       {
         type: "location",
-        name: "둥근 머리 정원",
+        name: "둥근 머 정원",
         hint: "스누피 페르소나 암석원",
         img: "/images/challenge_roundhead.jpg",
         text: "그 머리통 둥근 녀석 이름이 뭐였더라...",
-        source: "- CHARIE BROWN",
+        source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_07`,
       },
       {
@@ -506,7 +506,7 @@ const themeData = [
         hint: "하이라인 데크 아래",
         img: "/images/challenge_nest.jpg",
         text: "행복이란 내 강아지가 집으로 돌아오는 거지!",
-        source: "- CHARIE BROWN",
+        source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_08`,
       },
       {
@@ -515,7 +515,7 @@ const themeData = [
         hint: "웜 퍼피 레이크",
         img: "/images/challenge_lake.jpg",
         text: "여름 내내 아무것도 안하고 뒹굴기만 할 순 없잖아.",
-        source: "- CHARIE BROWN",
+        source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_09`,
       },
       {
@@ -524,7 +524,7 @@ const themeData = [
         hint: "아왜니무 산책로 입구",
         img: "/images/challenge_awaetree.jpg",
         text: "이 연 먹고 싶어? 아니면 가오리연은 어때? 아니, 내가 아예 메뉴판이라도 가져다 줄까?",
-        source: "- CHARIE BROWN",
+        source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_10`,
       },
       {
@@ -533,7 +533,7 @@ const themeData = [
         hint: "유실수원 맞은편",
         img: "/images/challenge_hubaktree.jpg",
         text: "난 새로운 철학을 만들어냈어. 한번에 하루씩만 두려워하기로 말이야!",
-        source: "- CHARIE BROWN",
+        source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_11`,
       },
     ],
@@ -642,7 +642,7 @@ const themeData = [
       title: "우리의 감성 기록",
       dialogues: [
         {
-          speaker: "- CHARIE BROWN",
+          speaker: "- CHARLIE BROWN",
           text: "으악! 짝사랑만큼 땅콩버터 맛을 떨어뜨리는 건 없어.",
         },
       ],
@@ -1212,7 +1212,7 @@ export default function App() {
                       "여행은 사람을 성장시킨다."
                     </p>
                     <span className="text-[10px] font-normal text-emerald-600 mt-2 block">
-                      - CHARIE BROWN
+                      - CHARLIE BROWN
                     </span>
                   </div>
                 </div>
@@ -1650,12 +1650,10 @@ export default function App() {
                     <Quote className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-sm font-bold text-yellow-50 leading-relaxed italic">
-                        "살아간다는 것은 춤추는 것이고,
-                        <br />
-                        춤춘다는 것은 살아간다는 것이다!"
+                        "숲속 하이킹은 즐거움과 영감을 줄 수 있습니다."
                       </p>
                       <span className="text-[10px] font-normal text-yellow-600 mt-2 block">
-                        - 스누피
+                        - SNOOPY
                       </span>
                     </div>
                   </div>
@@ -1668,7 +1666,7 @@ export default function App() {
                           "우리가 이렇게 진심인데 어떻게 질 수 있겠어?"
                         </p>
                         <span className="block text-[10px] font-normal text-stone-500 mt-2">
-                          - 찰리 브라운
+                          - CHARLIE BROWN
                         </span>
                       </div>
                     </div>
@@ -1676,22 +1674,13 @@ export default function App() {
                       <Quote className="w-4 h-4 text-stone-500 shrink-0 mt-0.5" />
                       <div>
                         <p className="text-stone-200 font-bold text-[13px] leading-relaxed break-keep">
-                          "너도 가끔은 꽤 훌륭한 구석이 있구나!"
+                          "이건 내 인생이고, 난 내 마음대로 할 거야!"
                         </p>
                         <span className="block text-[10px] font-normal text-stone-500 mt-2">
-                          - 루시
+                          - LUCY
                         </span>
                       </div>
                     </div>
-                  </div>
-
-                  <div className="mt-5 bg-stone-900/80 p-3 rounded-lg border border-stone-700/50 flex items-start gap-2 text-left">
-                    <Camera className="w-4 h-4 text-stone-500 shrink-0 mt-0.5" />
-                    <p className="text-[10px] text-stone-400 italic break-keep leading-relaxed">
-                      [사진 설명: 스누피가 귀를 펄럭이며 기쁨의 '행복의 춤(Happy
-                      Dance)'을 추고, 새로운 비글 스카우트 대원에게 축하의
-                      박수를 보내는 장면입니다.]
-                    </p>
                   </div>
                 </div>
 
