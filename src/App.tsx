@@ -493,7 +493,7 @@ const themeData = [
       },
       {
         type: "location",
-        name: "둥근 머리 정원",
+        name: "둥근 머 정원",
         hint: "스누피 페르소나 암석원",
         img: "/images/challenge_roundhead.jpg",
         text: "그 머리통 둥근 녀석 이름이 뭐였더라...",
@@ -1258,7 +1258,7 @@ export default function App() {
                       <div className="flex justify-between items-start relative z-10">
                         <div>
                           <span
-                            className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold mb-1 
+                            className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold mb-1
                             ${
                               isCompleted
                                 ? "bg-emerald-200 text-emerald-800"
@@ -1578,9 +1578,10 @@ export default function App() {
                       >
                         "{dialogue.text}"
                       </div>
-                      {dialogue.date && (
+                      {/* [핵심 수정 부분] dialogue.date 체크를 dialogue.speaker 로 변경! */}
+                      {dialogue.speaker && (
                         <span className="text-[10px] font-bold text-stone-400 mt-1.5 px-1">
-                          {dialogue.speaker} {dialogue.date}
+                          {dialogue.speaker}
                         </span>
                       )}
                     </div>
@@ -1711,11 +1712,11 @@ export default function App() {
           width: 6px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: #f5f5f4; 
+          background: #f5f5f4;
           border-radius: 4px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #d6d3d1; 
+          background: #d6d3d1;
           border-radius: 4px;
         }
       `,
