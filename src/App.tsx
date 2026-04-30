@@ -493,7 +493,7 @@ const themeData = [
       },
       {
         type: "location",
-        name: "둥근 머 정원",
+        name: "둥근 머리 정원",
         hint: "스누피 페르소나 암석원",
         img: "/images/challenge_roundhead.jpg",
         text: "그 머리통 둥근 녀석 이름이 뭐였더라...",
@@ -1538,7 +1538,7 @@ export default function App() {
                   onClick={handleGetStamp}
                   className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-5 rounded-2xl shadow-lg text-sm tracking-widest transition-transform active:scale-95 flex items-center justify-center gap-2"
                 >
-                  GET REWARD! <Star className="w-4 h-4" />
+                  다음 이야기 찾기! <Star className="w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -1631,7 +1631,7 @@ export default function App() {
                 </div>
 
                 <span className="text-yellow-400 font-black tracking-[0.3em] text-xs mb-1 mt-4">
-                  OFFICIAL BEAGLE SCOUT
+                  BEAGLE SCOUT
                 </span>
                 <h2 className="text-3xl font-black text-white mb-2 tracking-tighter">
                   명예 대원 임명!
