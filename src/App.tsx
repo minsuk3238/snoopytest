@@ -18,6 +18,7 @@ import {
   AlertCircle,
   Star,
   X,
+  ZoomIn, // 확대 돋보기 아이콘 추가
 } from "lucide-react";
 
 // =====================================================================
@@ -213,6 +214,7 @@ const exploreTail = [
     name: "스누피 파고라",
     hint: "스누피 페르소나 암석원",
     img: "/images/explore_pagora.jpg",
+    mapImg: "/images/maps/explore_pagora_map.jpg",
     text: "갑자기 아래쪽을 가로질러 빠르게 움직이는 그림자가 보인다. 성난 굉음이 허공을 채운다!",
     source: "- SNOOPY",
     qrCode: `${BASE_URL}sg_explore_tail_01`,
@@ -222,6 +224,7 @@ const exploreTail = [
     name: "엽란 스누피",
     hint: "루시의 레모네이드 카페",
     img: "/images/explore_yeobran.jpg",
+    mapImg: "/images/maps/explore_yeobran_map.jpg",
     text: "또 일주일이 지났는데 아직도 풀을 안깎다니! 이러단 곧 내 눈앞이 다 가려지겠어!",
     source: "- SNOOPY",
     qrCode: `${BASE_URL}sg_explore_tail_03`,
@@ -231,6 +234,7 @@ const exploreTail = [
     name: "정낭 조쿨",
     hint: "루시의 레모네이드 카페",
     img: "/images/explore_jeongnang.jpg",
+    mapImg: "/images/maps/explore_jeongnang_map.jpg",
     text: "휴 조 쿨은 일요일 오후를 싫어해.",
     source: "- SNOOPY",
     qrCode: `${BASE_URL}sg_explore_tail_02`,
@@ -240,6 +244,7 @@ const exploreTail = [
     name: "우드스탁 분수대",
     hint: "푸드트럭",
     img: "/images/explore_fountain.jpg",
+    mapImg: "/images/maps/explore_fountain_map.jpg",
     text: "우드스탁의 수영장 파티는 정말 싫다고!",
     source: "- SNOOPY",
     qrCode: `${BASE_URL}sg_explore_tail_04`,
@@ -249,6 +254,7 @@ const exploreTail = [
     name: "스누피&래빗",
     hint: "동백원",
     img: "/images/explore_rabbit.jpg",
+    mapImg: "/images/maps/explore_rabbit_map.jpg",
     text: "토끼다! 우와 난 토끼 구경하는게 너무 좋아!",
     source: "- SNOOPY",
     qrCode: `${BASE_URL}sg_explore_tail_rabbit`,
@@ -258,6 +264,7 @@ const exploreTail = [
     name: "골퍼 스누피",
     hint: "웜 퍼피 레이크",
     img: "/images/explore_golfer.jpg",
+    mapImg: "/images/maps/explore_golfer_map.jpg",
     text: "넌 운이 좋은 줄 알아, 골프화를 안 신어도 되잖아.",
     source: "- CHARLIE BROWN",
     qrCode: `${BASE_URL}sg_explore_tail_05`,
@@ -267,6 +274,7 @@ const exploreTail = [
     name: "트리하우스 스누피",
     hint: "트리하우스",
     img: "/images/explore_cabin.jpg",
+    mapImg: "/images/maps/explore_cabin_map.jpg",
     text: "난 시키지 않으면 절대 아무것도 안하거든!",
     source: "- SNOOPY",
     qrCode: `${BASE_URL}sg_explore_tail_06`,
@@ -276,6 +284,7 @@ const exploreTail = [
     name: "애기 동백원",
     hint: "애기 동백원",
     img: "/images/explore_camellia.jpg",
+    mapImg: "/images/maps/explore_camellia_map.jpg",
     text: "세계적으로 유명한 비글 스카우트가 하이킹에 나선다.",
     source: "- SNOOPY",
     qrCode: `${BASE_URL}sg_explore_tail_07`,
@@ -309,6 +318,7 @@ const themeData = [
         name: "소설왕 스누피",
         hint: "소설왕 스누피 광장",
         img: "/images/explore_square.jpg",
+        mapImg: "/images/maps/explore_square_map.jpg",
         text: "'어둡고 폭풍우 치는 밤이었다...'",
         source: "- SNOOPY",
         qrCode: `${BASE_URL}sg_explore_01`,
@@ -318,6 +328,7 @@ const themeData = [
         name: "비글 스카우트",
         hint: "비글 스카우트 캠프",
         img: "/images/explore_camp.jpg",
+        mapImg: "/images/maps/explore_camp_map.jpg",
         text: "세계적으로 유명한 비글 스카우트가 그의 분대를 이끌고 자연탐사를 떠난다.",
         source: "- SNOOPY",
         qrCode: `${BASE_URL}sg_explore_02`,
@@ -335,6 +346,7 @@ const themeData = [
                 name: "비글 스카우트 텐트",
                 hint: "도토리숲",
                 img: "/images/explore_tent.jpg",
+                mapImg: "/images/maps/explore_tent_map.jpg",
                 text: "하이킹의 마지막 밤을 위해 좀 특별한 걸 준비했는데... 마시멜로 구워 먹기 어때?",
                 source: "- SNOOPY",
                 qrCode: `${BASE_URL}sg_explore_03_tent`,
@@ -350,7 +362,8 @@ const themeData = [
                 name: "부엉이 스누피",
                 hint: "스누피 동물원",
                 img: "/images/explore_zoo.jpg",
-                text: "지혜로운 늙은 부엉이가 나무 구멍으로 머리를 내밀고 있다.",
+                mapImg: "/images/maps/explore_zoo_map.jpg",
+                text: "지혜로운 늙은 부엉이가 나무 구멍으로 머리를 내밀고 큰 눈을 껌뻑인다.",
                 source: "- SNOOPY",
                 qrCode: `${BASE_URL}sg_explore_03_zoo`,
               },
@@ -359,6 +372,7 @@ const themeData = [
                 name: "블럭 전망대",
                 hint: "스누피 페르소나 암석원",
                 img: "/images/explore_observatory.jpg",
+                mapImg: "/images/maps/explore_observatory_map.jpg",
                 text: "정찰병 노릇을 할 지원자가 하나 필요한데...",
                 source: "- SNOOPY",
                 qrCode: `${BASE_URL}sg_explore_04_obs`,
@@ -374,6 +388,7 @@ const themeData = [
                 name: "미로",
                 hint: "비자나무 숲",
                 img: "/images/explore_maze.jpg",
+                mapImg: "/images/maps/explore_maze_map.jpg",
                 text: "길을 잃었을 땐 나침반을 따라가라!",
                 source: "- SNOOPY",
                 qrCode: `${BASE_URL}sg_explore_03_maze`,
@@ -391,6 +406,7 @@ const themeData = [
                         name: "블럭 전망대",
                         hint: "스누피 페르소나 암석원",
                         img: "/images/explore_observatory.jpg",
+                        mapImg: "/images/maps/explore_observatory_map.jpg",
                         text: "정찰병 노릇을 할 지원자가 하나 필요한데...",
                         source: "- SNOOPY",
                         qrCode: `${BASE_URL}sg_explore_04_obs`,
@@ -406,6 +422,7 @@ const themeData = [
                         name: "돌하르방 스누피",
                         hint: "스누피동물원",
                         img: "/images/explore_dolhareubang.jpg",
+                        mapImg: "/images/maps/explore_dolhareubang_map.jpg",
                         text: "바위를 숭배하기로 결정한거야! 하하하하!",
                         source: "- SNOOPY",
                         qrCode: `${BASE_URL}sg_explore_04_jeju`,
@@ -442,6 +459,7 @@ const themeData = [
         name: "언덕 위 찰리 브라운",
         hint: "소설왕 스누피 광장",
         img: "/images/challenge_square.jpg",
+        mapImg: "/images/maps/challenge_square_map.jpg",
         text: "남은 평생 여기 누워있을래.",
         source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_01`,
@@ -451,6 +469,7 @@ const themeData = [
         name: "지그재그 수벽",
         hint: "소설왕 스누피광장 - 피너츠 사색 들판",
         img: "/images/challenge_zigzag.jpg",
+        mapImg: "/images/maps/challenge_zigzag_map.jpg",
         text: "이건 내 전용 셔츠라고!",
         source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_02`,
@@ -460,6 +479,7 @@ const themeData = [
         name: "지그재그 텐트",
         hint: "도토리숲",
         img: "/images/challenge_camp.jpg",
+        mapImg: "/images/maps/challenge_camp_map.jpg",
         text: "미안해. 이 옷이 그렇게 거슬리는 줄 몰랐어.",
         source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_03`,
@@ -469,6 +489,7 @@ const themeData = [
         name: "찰리 브라운의 야구장 담장",
         hint: "찰리브라운의 야구장",
         img: "/images/challenge_wall.jpg",
+        mapImg: "/images/maps/challenge_wall_map.jpg",
         text: "찰리브라운(밟지마시오)",
         source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_04`,
@@ -478,6 +499,7 @@ const themeData = [
         name: "연 먹는 나무",
         hint: "찰리브라운의 야구장",
         img: "/images/challenge_baseball.jpg",
+        mapImg: "/images/maps/challenge_baseball_map.jpg",
         text: "난 연먹는 나무가 정말 싫어! 순진한 어린애들의 연을 빼앗아서 나뭇가지로 붙들고 있다가 꿀꺽 삼켜버리잖아...",
         source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_05`,
@@ -487,6 +509,7 @@ const themeData = [
         name: "빨간 머리 소녀",
         hint: "피너츠 컬러 가든",
         img: "/images/challenge_colorgarden.jpg",
+        mapImg: "/images/maps/challenge_colorgarden_map.jpg",
         text: "빨간 머리 여자애한테 내 존재를 알리려면 어떻게 해야 할까...",
         source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_06`,
@@ -496,6 +519,7 @@ const themeData = [
         name: "둥근 머리 정원",
         hint: "슈로더의 야외무대",
         img: "/images/challenge_roundhead.jpg",
+        mapImg: "/images/maps/challenge_roundhead_map.jpg",
         text: "그 머리통 둥근 녀석 이름이 뭐였더라...",
         source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_07`,
@@ -505,6 +529,7 @@ const themeData = [
         name: "찰리브라운과 스누피의 휴식",
         hint: "하이라인 데크 아래",
         img: "/images/challenge_nest.jpg",
+        mapImg: "/images/maps/challenge_nest_map.jpg",
         text: "행복이란 내 강아지가 집으로 돌아오는 거지!",
         source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_08`,
@@ -514,6 +539,7 @@ const themeData = [
         name: "썸머 캠프",
         hint: "웜 퍼피 레이크",
         img: "/images/challenge_lake.jpg",
+        mapImg: "/images/maps/challenge_lake_map.jpg",
         text: "여름 내내 아무것도 안하고 뒹굴기만 할 순 없잖아.",
         source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_09`,
@@ -523,6 +549,7 @@ const themeData = [
         name: "연 먹는 나무",
         hint: "아왜나무 산책로 입구",
         img: "/images/challenge_awaetree.jpg",
+        mapImg: "/images/maps/challenge_awaetree_map.jpg",
         text: "이 연 먹고 싶어? 아니면 가오리연은 어때? 아니, 내가 아예 메뉴판이라도 가져다 줄까?",
         source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_10`,
@@ -532,6 +559,7 @@ const themeData = [
         name: "후박나무에서 위로 받는 찰리브라운",
         hint: "팽나무길 맞은편",
         img: "/images/challenge_hubaktree.jpg",
+        mapImg: "/images/maps/challenge_hubaktree_map.jpg",
         text: "난 새로운 철학을 만들어냈어. 한번에 하루씩만 두려워하기로 말이야!",
         source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_11`,
@@ -563,6 +591,7 @@ const themeData = [
         name: "사색들판 패티 & 마시",
         hint: "피너츠 사색 들판",
         img: "/images/relax_field.jpg",
+        mapImg: "/images/maps/relax_field_map.jpg",
         text: "날씨를 욕해선 안돼요, 선생님 이것도 모두 우리가 사는 세상의 일부잖아요.",
         source: "- PEPPERMINT PATTY",
         qrCode: `${BASE_URL}sg_relax_01`,
@@ -572,6 +601,7 @@ const themeData = [
         name: "마시의 독서 벤치",
         hint: "팽나무 산책로",
         img: "/images/relax_paengtree.jpg",
+        mapImg: "/images/maps/relax_paengtree_map.jpg",
         text: "잠언 8장의 한 구절이에요'대저 지혜는 진주보다 나으므로....",
         source: "- MARCIE",
         qrCode: `${BASE_URL}sg_relax_02`,
@@ -581,6 +611,7 @@ const themeData = [
         name: "패퍼민트의 그린 정원",
         hint: "피너츠 컬러 가든",
         img: "/images/relax_colorgarden.jpg",
+        mapImg: "/images/maps/relax_colorgarden_map.jpg",
         text: "이제 하늘은 파란색, 풀은 초록색으로 칠해야지. 노란색 꽃도 몇송이 집어놓고...",
         source: "- PEPPERMINT PATTY",
         qrCode: `${BASE_URL}sg_relax_03`,
@@ -590,6 +621,7 @@ const themeData = [
         name: "삼나무 숲 담요벤치",
         hint: "라이너스의 담요 숲",
         img: "/images/relax_cedar.jpg",
+        mapImg: "/images/maps/relax_cedar_map.jpg",
         text: "아뇨, 선생님... 그냥 눈 좀 감고 있었던 거예요",
         source: "- PEPPERMINT PATTY",
         qrCode: `${BASE_URL}sg_relax_04`,
@@ -599,6 +631,7 @@ const themeData = [
         name: "패티 & 스누피 파마머리 담장",
         hint: "야생 동백원",
         img: "/images/relax_wall.jpg",
+        mapImg: "/images/maps/relax_wall_map.jpg",
         text: "아무래도 오늘은 제 두뇌가 휴가를 낸 것 같네요. 혹시 자동응답기에 메세지를 남기고 싶으신가요?",
         source: "- PEPPERMINT PATTY",
         qrCode: `${BASE_URL}sg_relax_05`,
@@ -608,6 +641,7 @@ const themeData = [
         name: "아왜나무 산책로",
         hint: "아왜나무 산책로",
         img: "/images/relax_awaetree.jpg",
+        mapImg: "/images/maps/relax_awaetree_map.jpg",
         text: "가끔씩 휴식을 취하면 머리가 떨어지지 않을 거예요",
         source: "- PEPPERMINT PATTY",
         qrCode: `${BASE_URL}sg_relax_06`,
@@ -617,6 +651,7 @@ const themeData = [
         name: "가드닝스쿨 장미담장",
         hint: "루시의 가드닝 스쿨",
         img: "/images/relax_watermelon.jpg",
+        mapImg: "/images/maps/relax_watermelon_map.jpg",
         text: "이 세상은 아름다운 꽃과 식물로 가득하지.",
         source: "- PEPPERMINT PATTY",
         qrCode: `${BASE_URL}sg_relax_watermelon`,
@@ -626,6 +661,7 @@ const themeData = [
         name: "나무에서 휴식을 취하는 패티",
         hint: "가든 출구",
         img: "/images/relax_exit.jpg",
+        mapImg: "/images/maps/relax_exit_map.jpg",
         text: "인생이 이렇게 아름다울 수 있다니 미처 몰랐어!",
         source: "- PEPPERMINT PATTY",
         qrCode: `${BASE_URL}sg_relax_07`,
@@ -653,6 +689,7 @@ const themeData = [
         name: "언덕 위에 세 친구",
         hint: "소설왕 스누피 광장",
         img: "/images/sentiment_square.jpg",
+        mapImg: "/images/maps/sentiment_square_map.jpg",
         text: "하루 종일 여기 그냥 누워서 구름이 떠가는 것만 봐도 되겠어...",
         source: "- LUCY",
         qrCode: `${BASE_URL}sg_senti_01`,
@@ -662,6 +699,7 @@ const themeData = [
         name: "사색들판 찰리 & 라이너스",
         hint: "피너츠 사색 들판",
         img: "/images/sentiment_field.jpg",
+        mapImg: "/images/maps/sentiment_field_map.jpg",
         text: "누구나 바보 같은 짓도 하고 똑똑한 짓도 하는 건가봐.",
         source: "- LINUS",
         qrCode: `${BASE_URL}sg_senti_02`,
@@ -671,6 +709,7 @@ const themeData = [
         name: "야구장 낙서하는 루시",
         hint: "찰리브라운의 야구장 벽면",
         img: "/images/sentiment_graffiti.jpg",
+        mapImg: "/images/maps/sentiment_graffiti_map.jpg",
         text: "난 내방식대로 해냈어!",
         source: "- LUCY",
         qrCode: `${BASE_URL}sg_senti_graffiti`,
@@ -680,6 +719,7 @@ const themeData = [
         name: "샐리 & 루시의 사랑",
         hint: "피너츠 컬러 가든",
         img: "/images/sentiment_colorgarden.jpg",
+        mapImg: "/images/maps/sentiment_colorgarden_map.jpg",
         text: "사랑이란 별 이상한 짓을 다 하게 만든다니까...",
         source: "- SALLY",
         qrCode: `${BASE_URL}sg_senti_03`,
@@ -689,6 +729,7 @@ const themeData = [
         name: "피아노 치는 슈로더",
         hint: "슈로더의 야외무대",
         img: "/images/sentiment_stage.jpg",
+        mapImg: "/images/maps/sentiment_stage_map.jpg",
         text: "어째서 넌 한번도 나를 '우리 귀염둥이'라고 불러주지 않을까?",
         source: "- LUCY",
         qrCode: `${BASE_URL}sg_senti_04`,
@@ -698,6 +739,7 @@ const themeData = [
         name: "루시의 고민 상담소",
         hint: "하귤밭",
         img: "/images/sentiment_cafe.jpg",
+        mapImg: "/images/maps/sentiment_cafe_map.jpg",
         text: "이 멍청아! 5센트나 내라고...",
         source: "- LUCY",
         qrCode: `${BASE_URL}sg_senti_05`,
@@ -707,6 +749,7 @@ const themeData = [
         name: "호박대왕을 기다리는 라이너스",
         hint: "호박대왕의 호박밭",
         img: "/images/sentiment_pumpkin.jpg",
+        mapImg: "/images/maps/sentiment_pumpkin_map.jpg",
         text: "핼러윈 밤이면 호박 대왕이 호박밭에서 솟아나와 온 세상 아이들에게 장난감을 가져다주거든!",
         source: "- LINUS",
         qrCode: `${BASE_URL}sg_senti_06`,
@@ -716,6 +759,7 @@ const themeData = [
         name: "애착담요 라이너스",
         hint: "라이너스의 담요 숲",
         img: "/images/sentiment_blanket.jpg",
+        mapImg: "/images/maps/sentiment_blanket_map.jpg",
         text: "난 너의 스윗 바부가 아니야!",
         source: "- LINUS",
         qrCode: `${BASE_URL}sg_senti_07`,
@@ -725,6 +769,7 @@ const themeData = [
         name: "루시의 가드닝 스쿨",
         hint: "루시의 가드닝 스쿨",
         img: "/images/sentiment_gardeningschool.jpg",
+        mapImg: "/images/maps/sentiment_gardeningschool_map.jpg",
         text: "슈로더, 너 내가 예쁘다고 생각하니?",
         source: "- LUCY",
         qrCode: `${BASE_URL}sg_senti_08`,
@@ -768,6 +813,9 @@ export default function App() {
   const [qrErrorMsg, setQrErrorMsg] = useState("");
   const [showResetModal, setShowResetModal] = useState(false);
   const [showHintModal, setShowHintModal] = useState(false);
+
+  // 🔍 이미지를 크게 보기 위한 상태값 추가
+  const [zoomedImage, setZoomedImage] = useState(null);
 
   // 설문조사 팝업창을 위한 상태값
   const [showSurveyModal, setShowSurveyModal] = useState(false);
@@ -979,6 +1027,32 @@ export default function App() {
   return (
     <div className="min-h-screen bg-stone-100 flex items-center justify-center p-4 font-sans text-stone-800 relative">
       <div className="max-w-md w-full bg-white rounded-3xl shadow-xl overflow-hidden relative flex flex-col h-[750px] max-h-[100dvh]">
+        {/* 🔍 이미지 전체화면 확대 모달창 (제일 위에 뜸) */}
+        {zoomedImage && (
+          <div
+            className="absolute inset-0 z-[100] bg-black/95 flex items-center justify-center animate-fade-in touch-none flex-col"
+            onClick={() => setZoomedImage(null)}
+          >
+            <button
+              onClick={() => setZoomedImage(null)}
+              className="absolute top-6 right-6 bg-white/10 text-white rounded-full p-2 z-10 hover:bg-white/30 transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <div className="w-full h-full flex items-center justify-center p-2 overflow-auto">
+              <img
+                src={zoomedImage}
+                alt="확대된 전체화면 이미지"
+                className="w-full h-auto max-h-full object-contain"
+                onClick={(e) => e.stopPropagation()} // 이미지 클릭시 닫히지 않도록 방지
+              />
+            </div>
+            <p className="absolute bottom-8 text-white/50 text-[11px] font-bold tracking-widest bg-black/50 px-4 py-2 rounded-full">
+              화면을 터치하면 닫힙니다
+            </p>
+          </div>
+        )}
+
         {/* 커스텀 초기화 경고 모달창 */}
         {showResetModal && (
           <div className="absolute inset-0 z-50 bg-stone-900/60 flex items-center justify-center p-6 animate-fade-in">
@@ -1014,46 +1088,104 @@ export default function App() {
           </div>
         )}
 
-        {/* 💡 장소 힌트 팝업 모달창 */}
+        {/* 💡 장소 힌트 팝업 모달창 (지도 및 확대 기능 포함) */}
         {showHintModal && (
           <div className="absolute inset-0 z-50 bg-stone-900/80 flex items-center justify-center p-6 animate-fade-in">
-            <div className="bg-white rounded-3xl overflow-hidden w-full max-w-sm shadow-2xl relative flex flex-col">
+            <div className="bg-white rounded-3xl overflow-hidden w-full max-w-sm shadow-2xl relative flex flex-col max-h-[85vh]">
+              {/* 닫기 버튼 */}
               <button
                 onClick={() => setShowHintModal(false)}
-                className="absolute top-4 right-4 bg-stone-900/60 text-white rounded-full p-1.5 z-10 hover:bg-stone-800 transition-colors"
+                className="absolute top-4 right-4 bg-stone-900/60 text-white rounded-full p-1.5 z-20 hover:bg-stone-800 transition-colors shadow-sm"
               >
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="w-full h-56 bg-stone-100 relative flex flex-col items-center justify-center">
-                {activePath[progress]?.img ? (
-                  <img
-                    src={activePath[progress].img}
-                    alt="힌트 이미지"
-                    className="w-full h-full object-cover absolute inset-0 z-10"
-                    onError={(e) => {
-                      e.target.style.display = "none";
-                    }}
-                  />
-                ) : null}
-                <div className="flex flex-col items-center justify-center text-stone-400 opacity-60 relative z-0">
-                  <ImageIcon className="w-12 h-12 mb-2" />
-                  <span className="text-xs">힌트 사진 준비 중</span>
+              {/* 스크롤 가능한 콘텐츠 영역 */}
+              <div className="flex-1 overflow-y-auto custom-scrollbar">
+                {/* 1. 상단 장소 사진 영역 (터치 시 확대) */}
+                <div
+                  className="w-full h-56 bg-stone-100 relative flex flex-col items-center justify-center shrink-0 cursor-pointer group"
+                  onClick={() =>
+                    activePath[progress]?.img &&
+                    setZoomedImage(activePath[progress].img)
+                  }
+                >
+                  {activePath[progress]?.img ? (
+                    <>
+                      <img
+                        src={activePath[progress].img}
+                        alt={`${activePath[progress]?.name} 장소에 대한 사진 설명 이미지입니다.`}
+                        className="w-full h-full object-cover absolute inset-0 z-10 transition-transform duration-300 group-hover:scale-105"
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                        }}
+                      />
+                      {/* 확대 안내 아이콘 */}
+                      <div className="absolute bottom-3 right-3 bg-stone-900/70 text-white px-2.5 py-1.5 rounded-lg z-20 flex items-center gap-1.5 backdrop-blur-sm shadow-md">
+                        <ZoomIn className="w-3.5 h-3.5" />
+                        <span className="text-[10px] font-bold">확대</span>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center text-stone-400 opacity-60 relative z-0">
+                      <ImageIcon className="w-12 h-12 mb-2" />
+                      <span className="text-xs">힌트 사진 준비 중</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* 2. 힌트 텍스트 및 지도 영역 */}
+                <div className="p-6 text-center bg-white flex flex-col items-center shrink-0">
+                  <div className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs font-bold mb-3">
+                    <MapPin className="w-3 h-3" /> HINT
+                  </div>
+                  <p className="text-lg font-bold text-stone-800 break-keep leading-tight mb-6">
+                    {activePath[progress]?.hint || "장소를 찾아주세요"}
+                  </p>
+
+                  {/* 🗺️ 하단 지도 이미지 영역 (터치 시 확대) */}
+                  <div
+                    className="w-full aspect-[300/260] bg-stone-50 rounded-xl overflow-hidden relative border border-stone-200 flex items-center justify-center shadow-inner cursor-pointer group"
+                    onClick={() =>
+                      activePath[progress]?.mapImg &&
+                      setZoomedImage(activePath[progress].mapImg)
+                    }
+                  >
+                    {activePath[progress]?.mapImg ? (
+                      <>
+                        <img
+                          src={activePath[progress].mapImg}
+                          alt={`${activePath[progress]?.name}의 상세 위치를 나타내는 지도 이미지입니다.`}
+                          className="w-full h-full object-contain absolute inset-0 z-10 p-2 transition-transform duration-300 group-hover:scale-105"
+                          onError={(e) => {
+                            e.target.style.display = "none";
+                          }}
+                        />
+                        {/* 지도 확대 안내 아이콘 */}
+                        <div className="absolute bottom-2 right-2 bg-stone-900/70 text-white px-2 py-1.5 rounded-lg z-20 flex items-center gap-1.5 backdrop-blur-sm shadow-md">
+                          <ZoomIn className="w-3 h-3" />
+                          <span className="text-[10px] font-bold">확대</span>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center text-stone-400 opacity-60 relative z-0">
+                        <Map className="w-8 h-8 mb-2" />
+                        <span className="text-[11px] font-bold">
+                          상세 위치 지도 준비 중
+                        </span>
+                        <span className="text-[9px] mt-1">
+                          (권장 사이즈: 300x260)
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              <div className="p-6 text-center bg-white flex-1">
-                <div className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs font-bold mb-3">
-                  <MapPin className="w-3 h-3" /> HINT
-                </div>
-                <p className="text-lg font-bold text-stone-800 break-keep leading-tight">
-                  {activePath[progress]?.hint || "장소를 찾아주세요"}
-                </p>
-              </div>
-
+              {/* 하단 확인 버튼 */}
               <button
                 onClick={() => setShowHintModal(false)}
-                className="w-full bg-stone-100 text-stone-600 font-bold py-4 hover:bg-stone-200 transition-colors border-t border-stone-200"
+                className="w-full bg-stone-100 text-stone-600 font-bold py-4 hover:bg-stone-200 transition-colors border-t border-stone-200 shrink-0"
               >
                 확인
               </button>
