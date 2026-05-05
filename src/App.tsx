@@ -220,7 +220,7 @@ const exploreTail = [
   {
     type: "location",
     name: "엽란 스누피",
-    hint: "라이너스의 담요 숲",
+    hint: "루시의 레모네이드 카페",
     img: "/images/explore_yeobran.jpg",
     text: "또 일주일이 지났는데 아직도 풀을 안깎다니! 이러단 곧 내 눈앞이 다 가려지겠어!",
     source: "- SNOOPY",
@@ -238,7 +238,7 @@ const exploreTail = [
   {
     type: "location",
     name: "우드스탁 분수대",
-    hint: "야자원",
+    hint: "푸드트럭",
     img: "/images/explore_fountain.jpg",
     text: "우드스탁의 수영장 파티는 정말 싫다고!",
     source: "- SNOOPY",
@@ -246,8 +246,8 @@ const exploreTail = [
   },
   {
     type: "location",
-    name: "토끼와 스누피",
-    hint: "야자원 토끼 조형물",
+    name: "스누피&래빗",
+    hint: "동백원",
     img: "/images/explore_rabbit.jpg",
     text: "토끼다! 우와 난 토끼 구경하는게 너무 좋아!",
     source: "- SNOOPY",
@@ -493,8 +493,8 @@ const themeData = [
       },
       {
         type: "location",
-        name: "둥근 머 정원",
-        hint: "스누피 페르소나 암석원",
+        name: "둥근 머리 정원",
+        hint: "슈로더의 야외무대",
         img: "/images/challenge_roundhead.jpg",
         text: "그 머리통 둥근 녀석 이름이 뭐였더라...",
         source: "- CHARLIE BROWN",
@@ -521,7 +521,7 @@ const themeData = [
       {
         type: "location",
         name: "연 먹는 나무",
-        hint: "아왜니무 산책로 입구",
+        hint: "아왜나무 산책로 입구",
         img: "/images/challenge_awaetree.jpg",
         text: "이 연 먹고 싶어? 아니면 가오리연은 어때? 아니, 내가 아예 메뉴판이라도 가져다 줄까?",
         source: "- CHARLIE BROWN",
@@ -530,7 +530,7 @@ const themeData = [
       {
         type: "location",
         name: "후박나무에서 위로 받는 찰리브라운",
-        hint: "유실수원 맞은편",
+        hint: "팽나무길 맞은편",
         img: "/images/challenge_hubaktree.jpg",
         text: "난 새로운 철학을 만들어냈어. 한번에 하루씩만 두려워하기로 말이야!",
         source: "- CHARLIE BROWN",
@@ -705,7 +705,7 @@ const themeData = [
       {
         type: "location",
         name: "호박대왕을 기다리는 라이너스",
-        hint: "펌킨 코타지",
+        hint: "호박대왕의 호박밭",
         img: "/images/sentiment_pumpkin.jpg",
         text: "핼러윈 밤이면 호박 대왕이 호박밭에서 솟아나와 온 세상 아이들에게 장난감을 가져다주거든!",
         source: "- LINUS",
