@@ -841,6 +841,18 @@ export default function App() {
   }, [step, activeThemeId, activePath, progress, completedThemes, themeStates]);
 
   // =====================================================================
+  // 📊 [추가] 구글 애널리틱스 화면(Step) 이동 추적
+  // =====================================================================
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "page_view", {
+        page_title: `Quest_Step_${step}`,
+        page_path: `/${step}`,
+      });
+    }
+  }, [step]);
+
+  // =====================================================================
   // 🔗 [핵심 기능] URL 파라미터를 통한 외부 카메라 스캔 자동 연동 로직
   // =====================================================================
   useEffect(() => {
