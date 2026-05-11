@@ -207,96 +207,12 @@ const QRScanner = ({ onScan, onError }) => {
   );
 };
 
-// === [코스 1: 탐험형 공통 후반부 합류 동선 - 8곳] ===
-const exploreTail = [
-  {
-    type: "location",
-    name: "스누피 파고라",
-    hint: "스누피 페르소나 암석원",
-    img: "/images/explore_pagora.jpg",
-    mapImg: "/images/maps/explore_pagora_map.jpg",
-    text: "갑자기 아래쪽을 가로질러 빠르게 움직이는 그림자가 보인다. 성난 굉음이 허공을 채운다!",
-    source: "- SNOOPY",
-    qrCode: `${BASE_URL}sg_explore_tail_01`,
-  },
-  {
-    type: "location",
-    name: "엽란 스누피",
-    hint: "루시의 레모네이드 카페",
-    img: "/images/explore_yeobran.jpg",
-    mapImg: "/images/maps/explore_yeobran_map.jpg",
-    text: "또 일주일이 지났는데 아직도 풀을 안깎다니! 이러단 곧 내 눈앞이 다 가려지겠어!",
-    source: "- SNOOPY",
-    qrCode: `${BASE_URL}sg_explore_tail_03`,
-  },
-  {
-    type: "location",
-    name: "정낭 조쿨",
-    hint: "루시의 레모네이드 카페",
-    img: "/images/explore_jeongnang.jpg",
-    mapImg: "/images/maps/explore_jeongnang_map.jpg",
-    text: "휴 조 쿨은 일요일 오후를 싫어해.",
-    source: "- SNOOPY",
-    qrCode: `${BASE_URL}sg_explore_tail_02`,
-  },
-  {
-    type: "location",
-    name: "우드스탁 분수대",
-    hint: "푸드트럭",
-    img: "/images/explore_fountain.jpg",
-    mapImg: "/images/maps/explore_fountain_map.jpg",
-    text: "우드스탁의 수영장 파티는 정말 싫다고!",
-    source: "- SNOOPY",
-    qrCode: `${BASE_URL}sg_explore_tail_04`,
-  },
-  {
-    type: "location",
-    name: "스누피&래빗",
-    hint: "동백원",
-    img: "/images/explore_rabbit.jpg",
-    mapImg: "/images/maps/explore_rabbit_map.jpg",
-    text: "토끼다! 우와 난 토끼 구경하는게 너무 좋아!",
-    source: "- SNOOPY",
-    qrCode: `${BASE_URL}sg_explore_tail_rabbit`,
-  },
-  {
-    type: "location",
-    name: "골퍼 스누피",
-    hint: "웜 퍼피 레이크",
-    img: "/images/explore_golfer.jpg",
-    mapImg: "/images/maps/explore_golfer_map.jpg",
-    text: "넌 운이 좋은 줄 알아, 골프화를 안 신어도 되잖아.",
-    source: "- CHARLIE BROWN",
-    qrCode: `${BASE_URL}sg_explore_tail_05`,
-  },
-  {
-    type: "location",
-    name: "트리하우스 스누피",
-    hint: "트리하우스",
-    img: "/images/explore_cabin.jpg",
-    mapImg: "/images/maps/explore_cabin_map.jpg",
-    text: "난 시키지 않으면 절대 아무것도 안하거든!",
-    source: "- SNOOPY",
-    qrCode: `${BASE_URL}sg_explore_tail_06`,
-  },
-  {
-    type: "location",
-    name: "애기 동백원",
-    hint: "애기 동백원",
-    img: "/images/explore_camellia.jpg",
-    mapImg: "/images/maps/explore_camellia_map.jpg",
-    text: "세계적으로 유명한 비글 스카우트가 하이킹에 나선다.",
-    source: "- SNOOPY",
-    qrCode: `${BASE_URL}sg_explore_tail_07`,
-  },
-];
-
-// === [전체 2대 테마 데이터 (사색의 쉼, 짝사랑 스토리 제외)] ===
+// === [전체 2대 테마 데이터] ===
 const themeData = [
   {
     id: "explore",
-    title: "비글 스카우트의 위대한 탐험",
-    type: "탐험형 (모험/선택)",
+    title: "비글 스카우트의 숲속 탐험기",
+    type: "탐험형",
     character: "스누피 & 우드스탁",
     color: "emerald",
     completion: {
@@ -312,10 +228,11 @@ const themeData = [
         },
       ],
     },
+    // 사용자 요청사항(12개 코스) 완벽 반영
     path: [
       {
         type: "location",
-        name: "소설왕 스누피",
+        name: "소설왕 스누피 광장",
         hint: "소설왕 스누피 광장",
         img: "/images/explore_square.jpg",
         mapImg: "/images/maps/explore_square_map.jpg",
@@ -325,7 +242,7 @@ const themeData = [
       },
       {
         type: "location",
-        name: "비글 스카우트",
+        name: "비글 스카우트 폭포",
         hint: "비글 스카우트 캠프",
         img: "/images/explore_camp.jpg",
         mapImg: "/images/maps/explore_camp_map.jpg",
@@ -334,114 +251,111 @@ const themeData = [
         qrCode: `${BASE_URL}sg_explore_02`,
       },
       {
-        type: "choice",
-        name: "우든 어드벤처 갈림길",
-        title: "하단 오브제를 하나 선택하세요!",
-        options: [
-          {
-            label: "모닥불",
-            route: [
-              {
-                type: "location",
-                name: "비글 스카우트 텐트",
-                hint: "도토리숲",
-                img: "/images/explore_tent.jpg",
-                mapImg: "/images/maps/explore_tent_map.jpg",
-                text: "하이킹의 마지막 밤을 위해 좀 특별한 걸 준비했는데... 마시멜로 구워 먹기 어때?",
-                source: "- SNOOPY",
-                qrCode: `${BASE_URL}sg_explore_03_tent`,
-              },
-              ...exploreTail,
-            ],
-          },
-          {
-            label: "망원경",
-            route: [
-              {
-                type: "location",
-                name: "부엉이 스누피",
-                hint: "스누피 동물원",
-                img: "/images/explore_zoo.jpg",
-                mapImg: "/images/maps/explore_zoo_map.jpg",
-                text: "지혜로운 늙은 부엉이가 나무 구멍으로 머리를 내밀고 큰 눈을 껌뻑인다.",
-                source: "- SNOOPY",
-                qrCode: `${BASE_URL}sg_explore_03_zoo`,
-              },
-              {
-                type: "location",
-                name: "블럭 전망대",
-                hint: "스누피 페르소나 암석원",
-                img: "/images/explore_observatory.jpg",
-                mapImg: "/images/maps/explore_observatory_map.jpg",
-                text: "정찰병 노릇을 할 지원자가 하나 필요한데...",
-                source: "- SNOOPY",
-                qrCode: `${BASE_URL}sg_explore_04_obs`,
-              },
-              ...exploreTail,
-            ],
-          },
-          {
-            label: "나침반",
-            route: [
-              {
-                type: "location",
-                name: "미로",
-                hint: "비자나무 숲",
-                img: "/images/explore_maze.jpg",
-                mapImg: "/images/maps/explore_maze_map.jpg",
-                text: "길을 잃었을 땐 나침반을 따라가라!",
-                source: "- SNOOPY",
-                qrCode: `${BASE_URL}sg_explore_03_maze`,
-              },
-              {
-                type: "choice",
-                name: "미로 내 추가 선택",
-                title: "나침반이 가리키는 곳은?",
-                options: [
-                  {
-                    label: "망원경",
-                    route: [
-                      {
-                        type: "location",
-                        name: "블럭 전망대",
-                        hint: "스누피 페르소나 암석원",
-                        img: "/images/explore_observatory.jpg",
-                        mapImg: "/images/maps/explore_observatory_map.jpg",
-                        text: "정찰병 노릇을 할 지원자가 하나 필요한데...",
-                        source: "- SNOOPY",
-                        qrCode: `${BASE_URL}sg_explore_04_obs`,
-                      },
-                      ...exploreTail,
-                    ],
-                  },
-                  {
-                    label: "제주",
-                    route: [
-                      {
-                        type: "location",
-                        name: "돌하르방 스누피",
-                        hint: "스누피동물원",
-                        img: "/images/explore_dolhareubang.jpg",
-                        mapImg: "/images/maps/explore_dolhareubang_map.jpg",
-                        text: "바위를 숭배하기로 결정한거야! 하하하하!",
-                        source: "- SNOOPY",
-                        qrCode: `${BASE_URL}sg_explore_04_jeju`,
-                      },
-                      ...exploreTail,
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
+        type: "location",
+        name: "비글 스카우트 캠프 파이어",
+        hint: "도토리숲",
+        img: "/images/explore_tent.jpg",
+        mapImg: "/images/maps/explore_tent_map.jpg",
+        text: "하이킹의 마지막 밤을 위해 좀 특별한 걸 준비했는데... 마시멜로 구워 먹기 어때?",
+        source: "- SNOOPY",
+        qrCode: `${BASE_URL}sg_explore_03_tent`,
+      },
+      {
+        type: "location",
+        name: "때죽나무 숲 미로",
+        hint: "비자나무 숲",
+        img: "/images/explore_maze.jpg",
+        mapImg: "/images/maps/explore_maze_map.jpg",
+        text: "괜히 적을 도발하려는 녀석들이 꼭 있다니까!",
+        source: "- SNOOPY",
+        qrCode: `${BASE_URL}sg_explore_03_maze`,
+      },
+      {
+        type: "location",
+        name: "스누피 블럭 전망대",
+        hint: "스누피 페르소나 암석원",
+        img: "/images/explore_observatory.jpg",
+        mapImg: "/images/maps/explore_observatory_map.jpg",
+        text: "정찰병 노릇을 할 지원자가 하나 필요한데...",
+        source: "- SNOOPY",
+        qrCode: `${BASE_URL}sg_explore_04_obs`,
+      },
+      {
+        type: "location",
+        name: "스누피 파고라",
+        hint: "스누피 페르소나 암석원",
+        img: "/images/explore_pagora.jpg",
+        mapImg: "/images/maps/explore_pagora_map.jpg",
+        text: "햇살에 눈이 부시니?",
+        source: "- SNOOPY",
+        qrCode: `${BASE_URL}sg_explore_tail_01`,
+      },
+      {
+        type: "location",
+        name: "정낭 조쿨",
+        hint: "루시의 레모네이드 카페",
+        img: "/images/explore_jeongnang.jpg",
+        mapImg: "/images/maps/explore_jeongnang_map.jpg",
+        text: "조 쿨이 일요일 오후 기숙사에서 한가롭게 시간을 보내고 있는 모습입니다...",
+        source: "- SNOOPY",
+        qrCode: `${BASE_URL}sg_explore_tail_02`,
+      },
+      {
+        type: "location",
+        name: "우드스탁 분수대",
+        hint: "푸드트럭",
+        img: "/images/explore_fountain.jpg",
+        mapImg: "/images/maps/explore_fountain_map.jpg",
+        text: "우드스탁의 수영장 파티는 정말 싫다고!",
+        source: "- SNOOPY",
+        qrCode: `${BASE_URL}sg_explore_tail_04`,
+      },
+      {
+        type: "location",
+        name: "래빗",
+        hint: "동백원",
+        img: "/images/explore_rabbit.jpg",
+        mapImg: "/images/maps/explore_rabbit_map.jpg",
+        text: "토끼다! 우와 난 토끼 구경하는게 너무 좋아!",
+        source: "- SNOOPY",
+        qrCode: `${BASE_URL}sg_explore_tail_rabbit`,
+      },
+      {
+        type: "location",
+        name: "골퍼 스누피",
+        hint: "웜 퍼피 레이크",
+        img: "/images/explore_golfer.jpg",
+        mapImg: "/images/maps/explore_golfer_map.jpg",
+        text: "넌 운이 좋은 줄 알아, 골프화를 안 신어도 되잖아.",
+        source: "- CHARLIE BROWN",
+        qrCode: `${BASE_URL}sg_explore_tail_05`,
+      },
+      {
+        type: "location",
+        name: "스누피 트리하우스",
+        hint: "트리하우스",
+        img: "/images/explore_cabin.jpg",
+        mapImg: "/images/maps/explore_cabin_map.jpg",
+        text: "정말 흥분돼, 우리말곤 아무도 못오겠지!",
+        source: "- CHARLIE BROWN",
+        qrCode: `${BASE_URL}sg_explore_tail_06`,
+      },
+      {
+        type: "location",
+        name: "동백원 스누피",
+        hint: "애기 동백원",
+        img: "/images/explore_camellia.jpg",
+        mapImg: "/images/maps/explore_camellia_map.jpg",
+        text: "나비들은 날 좋아해!",
+        source: "- SNOOPY",
+        qrCode: `${BASE_URL}sg_explore_tail_07`,
       },
     ],
   },
   {
     id: "challenge",
-    title: "항상 도전하는 찰리의 하루",
-    type: "도전형 (공감/일상)",
+    title: "서툴러도 괜찮은 찰리의 하루",
+    type: "일상형",
     character: "- CHARLIE BROWN",
     color: "orange",
     completion: {
@@ -453,46 +367,37 @@ const themeData = [
         },
       ],
     },
+    // 사용자 요청사항(10개 코스) 완벽 반영
     path: [
       {
         type: "location",
-        name: "언덕 위 찰리 브라운",
+        name: "피너츠 언덕",
         hint: "소설왕 스누피 광장",
         img: "/images/challenge_square.jpg",
         mapImg: "/images/maps/challenge_square_map.jpg",
-        text: "남은 평생 여기 누워있을래.",
-        source: "- CHARLIE BROWN",
+        text: "넌 구름 속에서 뭐가 보이니, 찰리 브라운",
+        source: "- LUCY",
         qrCode: `${BASE_URL}sg_chal_01`,
       },
       {
         type: "location",
-        name: "지그재그 수벽",
-        hint: "소설왕 스누피광장 - 피너츠 사색 들판",
-        img: "/images/challenge_zigzag.jpg",
-        mapImg: "/images/maps/challenge_zigzag_map.jpg",
-        text: "이건 내 전용 셔츠라고!",
-        source: "- CHARLIE BROWN",
-        qrCode: `${BASE_URL}sg_chal_02`,
-      },
-      {
-        type: "location",
-        name: "지그재그 텐트",
+        name: "비글 스카우트 텐트",
         hint: "도토리숲",
         img: "/images/challenge_camp.jpg",
         mapImg: "/images/maps/challenge_camp_map.jpg",
-        text: "미안해. 이 옷이 그렇게 거슬리는 줄 몰랐어.",
-        source: "- CHARLIE BROWN",
+        text: "오빠의 멍청한 여자친구들이 또 전화했어.... 캠프가 마음에 안든대.",
+        source: "- SALLY BROWN",
         qrCode: `${BASE_URL}sg_chal_03`,
       },
       {
         type: "location",
-        name: "찰리 브라운의 야구장 담장",
-        hint: "찰리브라운의 야구장",
-        img: "/images/challenge_wall.jpg",
-        mapImg: "/images/maps/challenge_wall_map.jpg",
-        text: "찰리브라운(밟지마시오)",
+        name: "이웃 담장",
+        hint: "피너츠 사색 들판",
+        img: "/images/sentiment_field.jpg",
+        mapImg: "/images/maps/sentiment_field_map.jpg",
+        text: "정말로 폭풍 가운데로 걸을 때도 두려워할 필요가 없는걸까?",
         source: "- CHARLIE BROWN",
-        qrCode: `${BASE_URL}sg_chal_04`,
+        qrCode: `${BASE_URL}sg_senti_02`,
       },
       {
         type: "location",
@@ -500,17 +405,17 @@ const themeData = [
         hint: "찰리브라운의 야구장",
         img: "/images/challenge_baseball.jpg",
         mapImg: "/images/maps/challenge_baseball_map.jpg",
-        text: "난 연먹는 나무가 정말 싫어! 순진한 어린애들의 연을 빼앗아서 나뭇가지로 붙들고 있다가 꿀꺽 삼켜버리잖아...",
+        text: "이 연은 못가져갈 거야, 이 더러운 연 먹는 나무야!",
         source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_05`,
       },
       {
         type: "location",
-        name: "빨간 머리 소녀",
+        name: "빨간 머리 소녀의 발렌타인 레드 가든",
         hint: "피너츠 컬러 가든",
         img: "/images/challenge_colorgarden.jpg",
         mapImg: "/images/maps/challenge_colorgarden_map.jpg",
-        text: "빨간 머리 여자애한테 내 존재를 알리려면 어떻게 해야 할까...",
+        text: "집에 직접 찾아가서 건네주고 싶지만, 연습을 안하고 가면 너무 긴장할 것 같아서...",
         source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_06`,
       },
@@ -520,23 +425,33 @@ const themeData = [
         hint: "슈로더의 야외무대",
         img: "/images/challenge_roundhead.jpg",
         mapImg: "/images/maps/challenge_roundhead_map.jpg",
-        text: "그 머리통 둥근 녀석 이름이 뭐였더라...",
-        source: "- CHARLIE BROWN",
+        text: "네 머리통처럼 말이야, 찰리브라운! 둥글둥글! 딱 네 머리처럼!",
+        source: "- LUCY",
         qrCode: `${BASE_URL}sg_chal_07`,
       },
       {
         type: "location",
-        name: "찰리브라운과 스누피의 휴식",
-        hint: "하이라인 데크 아래",
+        name: "루시의 레모네이드 스탠드",
+        hint: "루시의 레모네이드 카페",
+        img: "/images/sentiment_cafe.jpg",
+        mapImg: "/images/maps/sentiment_cafe_map.jpg",
+        text: "너도 알잖아 내가 얼마나 노력했는지! 내가 정말로 노력했다고 말해줘...",
+        source: "- CHARLIE BROWN",
+        qrCode: `${BASE_URL}sg_senti_05`,
+      },
+      {
+        type: "location",
+        name: "찰리브라운의 휴식",
+        hint: "하이라인 데크",
         img: "/images/challenge_nest.jpg",
         mapImg: "/images/maps/challenge_nest_map.jpg",
-        text: "행복이란 내 강아지가 집으로 돌아오는 거지!",
+        text: "사람이 무얼 더 바랄 수 있겠어? 얼굴을 간질이는 따뜻한 햇볕... 무릎에 앉은 개... 만족스러움 그 자체지",
         source: "- CHARLIE BROWN",
         qrCode: `${BASE_URL}sg_chal_08`,
       },
       {
         type: "location",
-        name: "썸머 캠프",
+        name: "썸머캠프",
         hint: "웜 퍼피 레이크",
         img: "/images/challenge_lake.jpg",
         mapImg: "/images/maps/challenge_lake_map.jpg",
@@ -546,17 +461,7 @@ const themeData = [
       },
       {
         type: "location",
-        name: "연 먹는 나무",
-        hint: "아왜나무 산책로 입구",
-        img: "/images/challenge_awaetree.jpg",
-        mapImg: "/images/maps/challenge_awaetree_map.jpg",
-        text: "이 연 먹고 싶어? 아니면 가오리연은 어때? 아니, 내가 아예 메뉴판이라도 가져다 줄까?",
-        source: "- CHARLIE BROWN",
-        qrCode: `${BASE_URL}sg_chal_10`,
-      },
-      {
-        type: "location",
-        name: "후박나무에서 위로 받는 찰리브라운",
+        name: "후박나무에 위로를 받는 찰리브라운",
         hint: "팽나무길 맞은편",
         img: "/images/challenge_hubaktree.jpg",
         mapImg: "/images/maps/challenge_hubaktree_map.jpg",
@@ -631,7 +536,7 @@ export default function App() {
   }, [step, activeThemeId, activePath, progress, completedThemes, themeStates]);
 
   // =====================================================================
-  // 📊 [추가] 구글 애널리틱스 화면(Step) 이동 추적
+  // 📊 구글 애널리틱스 화면(Step) 이동 추적
   // =====================================================================
   useEffect(() => {
     if (typeof window !== "undefined" && window.gtag) {
@@ -679,7 +584,7 @@ export default function App() {
         }
       }
     }
-  }, [activePath, progress]); // activePath와 progress가 로드되거나 변경될 때만 체크
+  }, [activePath, progress]);
 
   const handleStartTheme = (theme) => {
     setActiveThemeId(theme.id);
@@ -712,10 +617,6 @@ export default function App() {
       ? currentExpectedQR.split("?key=")[1]
       : "";
 
-    // [중요 로직]
-    // 1) 스캔한 코드가 정답 코드일 때 (URL 전체이거나 ID만 포함되어 있을 때 모두 통과)
-    // 2) 마스터 코드일 때
-    // 3) 실패 횟수가 3회 이상 쌓여 '비밀리에' 프리패스가 발동될 때
     if (
       (rawExpectedId && scannedData.includes(rawExpectedId)) ||
       scannedData.includes("snoopy_master") ||
@@ -725,7 +626,6 @@ export default function App() {
       setScanFailCount(0);
       setStep("scene");
     } else {
-      // 오답일 경우 실패 카운트 증가시키고 일반 에러 문구 표시
       const newCount = scanFailCount + 1;
       setScanFailCount(newCount);
 
@@ -765,7 +665,6 @@ export default function App() {
       }
       setStep("complete");
 
-      // 코스가 완료될 때 설문조사 모달 띄우기
       setShowSurveyModal(true);
     } else {
       setProgress(nextProgress);
@@ -829,7 +728,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-stone-100 flex items-center justify-center p-4 font-sans text-stone-800 relative">
       <div className="max-w-md w-full bg-white rounded-3xl shadow-xl overflow-hidden relative flex flex-col h-[750px] max-h-[100dvh]">
-        {/* 🔍 이미지 전체화면 확대 모달창 (제일 위에 뜸) */}
+        {/* 🔍 이미지 전체화면 확대 모달창 */}
         {zoomedImage && (
           <div
             className="absolute inset-0 z-[100] bg-black/95 flex items-center justify-center animate-fade-in touch-none flex-col"
@@ -846,7 +745,7 @@ export default function App() {
                 src={zoomedImage}
                 alt="확대된 전체화면 이미지"
                 className="w-full h-auto max-h-full object-contain"
-                onClick={(e) => e.stopPropagation()} // 이미지 클릭시 닫히지 않도록 방지
+                onClick={(e) => e.stopPropagation()}
               />
             </div>
             <p className="absolute bottom-8 text-white/50 text-[11px] font-bold tracking-widest bg-black/50 px-4 py-2 rounded-full">
@@ -890,11 +789,10 @@ export default function App() {
           </div>
         )}
 
-        {/* 💡 장소 힌트 팝업 모달창 (지도 및 확대 기능 포함) */}
+        {/* 💡 장소 힌트 팝업 모달창 */}
         {showHintModal && (
           <div className="absolute inset-0 z-50 bg-stone-900/80 flex items-center justify-center p-6 animate-fade-in">
             <div className="bg-white rounded-3xl overflow-hidden w-full max-w-sm shadow-2xl relative flex flex-col max-h-[85vh]">
-              {/* 닫기 버튼 */}
               <button
                 onClick={() => setShowHintModal(false)}
                 className="absolute top-4 right-4 bg-stone-900/60 text-white rounded-full p-1.5 z-20 hover:bg-stone-800 transition-colors shadow-sm"
@@ -902,9 +800,7 @@ export default function App() {
                 <X className="w-5 h-5" />
               </button>
 
-              {/* 스크롤 가능한 콘텐츠 영역 */}
               <div className="flex-1 overflow-y-auto custom-scrollbar">
-                {/* 1. 상단 장소 사진 영역 (터치 시 확대) */}
                 <div
                   className="w-full h-56 bg-stone-100 relative flex flex-col items-center justify-center shrink-0 cursor-pointer group"
                   onClick={() =>
@@ -916,13 +812,12 @@ export default function App() {
                     <>
                       <img
                         src={activePath[progress].img}
-                        alt={`${activePath[progress]?.name} 장소에 대한 사진 설명 이미지입니다.`}
+                        alt="장소 설명 이미지"
                         className="w-full h-full object-cover absolute inset-0 z-10 transition-transform duration-300 group-hover:scale-105"
                         onError={(e) => {
                           e.target.style.display = "none";
                         }}
                       />
-                      {/* 확대 안내 아이콘 */}
                       <div className="absolute bottom-3 right-3 bg-stone-900/70 text-white px-2.5 py-1.5 rounded-lg z-20 flex items-center gap-1.5 backdrop-blur-sm shadow-md">
                         <ZoomIn className="w-3.5 h-3.5" />
                         <span className="text-[10px] font-bold">확대</span>
@@ -936,7 +831,6 @@ export default function App() {
                   )}
                 </div>
 
-                {/* 2. 힌트 텍스트 및 지도 영역 */}
                 <div className="p-6 text-center bg-white flex flex-col items-center shrink-0">
                   <div className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs font-bold mb-3">
                     <MapPin className="w-3 h-3" /> HINT
@@ -945,7 +839,6 @@ export default function App() {
                     {activePath[progress]?.hint || "장소를 찾아주세요"}
                   </p>
 
-                  {/* 🗺️ 하단 지도 이미지 영역 (터치 시 확대) */}
                   <div
                     className="w-full aspect-[300/260] bg-stone-50 rounded-xl overflow-hidden relative border border-stone-200 flex items-center justify-center shadow-inner cursor-pointer group"
                     onClick={() =>
@@ -957,13 +850,12 @@ export default function App() {
                       <>
                         <img
                           src={activePath[progress].mapImg}
-                          alt={`${activePath[progress]?.name}의 상세 위치를 나타내는 지도 이미지입니다.`}
+                          alt="지도 이미지"
                           className="w-full h-full object-contain absolute inset-0 z-10 p-2 transition-transform duration-300 group-hover:scale-105"
                           onError={(e) => {
                             e.target.style.display = "none";
                           }}
                         />
-                        {/* 지도 확대 안내 아이콘 */}
                         <div className="absolute bottom-2 right-2 bg-stone-900/70 text-white px-2 py-1.5 rounded-lg z-20 flex items-center gap-1.5 backdrop-blur-sm shadow-md">
                           <ZoomIn className="w-3 h-3" />
                           <span className="text-[10px] font-bold">확대</span>
@@ -975,16 +867,12 @@ export default function App() {
                         <span className="text-[11px] font-bold">
                           상세 위치 지도 준비 중
                         </span>
-                        <span className="text-[9px] mt-1">
-                          (권장 사이즈: 300x260)
-                        </span>
                       </div>
                     )}
                   </div>
                 </div>
               </div>
 
-              {/* 하단 확인 버튼 */}
               <button
                 onClick={() => setShowHintModal(false)}
                 className="w-full bg-stone-100 text-stone-600 font-bold py-4 hover:bg-stone-200 transition-colors border-t border-stone-200 shrink-0"
@@ -995,7 +883,7 @@ export default function App() {
           </div>
         )}
 
-        {/* 📋 코스 완료 설문조사 팝업 모달창 (리워드 안내 추가됨) */}
+        {/* 📋 코스 완료 설문조사 팝업 모달창 */}
         {showSurveyModal && (
           <div className="absolute inset-0 z-50 bg-stone-900/60 flex items-center justify-center p-6 animate-fade-in">
             <div className="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl relative">
@@ -1075,7 +963,7 @@ export default function App() {
         )}
 
         <div className="flex-1 overflow-hidden bg-stone-50 flex flex-col relative">
-          {/* Step 0: 스플래시 (수정: 세로 화면 정중앙 위치) */}
+          {/* Step 0: 스플래시 */}
           {step === "splash" && (
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center overflow-hidden bg-stone-900">
               <img
@@ -1089,7 +977,6 @@ export default function App() {
 
               <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/40 to-transparent"></div>
 
-              {/* 하단에 붙어있던 mt-auto pb-24를 제거하고 h-full, justify-center 추가 */}
               <div className="z-10 flex flex-col items-center justify-center text-center px-6 w-full h-full animate-fade-in">
                 <h1 className="text-5xl font-black tracking-tighter mb-3 text-white drop-shadow-lg">
                   SNOOPY GARDEN
@@ -1162,7 +1049,6 @@ export default function App() {
                         : "bg-emerald-100 border-emerald-200 text-emerald-600"
                     }`}
                   >
-                    {/* 수정: REWARDS를 코스 완주로 텍스트 변경 */}
                     <Award className="w-3 h-3" /> 코스 완주{" "}
                     {completedThemes.length}/{themeData.length}
                   </div>
@@ -1222,7 +1108,6 @@ export default function App() {
                   );
                 })}
 
-                {/* 추가: 코스를 1개라도 완주했을 시 나타나는 상시 설문조사 버튼 탭 */}
                 {completedThemes.length > 0 && (
                   <a
                     href="https://docs.google.com/forms/d/e/1FAIpQLSdfwEIIIGQ6eBFjstuBj_VtoGHswevq1qy3gF-ndveDdg0rhw/viewform?usp=publish-editor"
@@ -1512,7 +1397,6 @@ export default function App() {
                       >
                         "{dialogue.text}"
                       </div>
-                      {/* [핵심 수정 부분] dialogue.date 체크를 dialogue.speaker 로 변경! */}
                       {dialogue.speaker && (
                         <span className="text-[10px] font-bold text-stone-400 mt-1.5 px-1">
                           {dialogue.speaker}
