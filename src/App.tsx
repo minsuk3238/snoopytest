@@ -28,6 +28,12 @@ const BASE_URL = "https://snoopytest-mu.vercel.app/?key=";
 const MASTER_QR_CODE = `${BASE_URL}snoopy_master`;
 
 // =====================================================================
+// 📊 [신규 추가] 구글 애널리틱스(GA4) 설정 정보
+// =====================================================================
+// ⚠️ 본인의 실제 GA4 측정 ID(Measurement ID)인 "G-XXXXXXXXXX" 형태로 변경해 주세요.
+const GA_MEASUREMENT_ID = "G-XXXXXXXXXX"; 
+
+// =====================================================================
 // 📸 [핵심] 카메라 권한 1회 승인 및 세션 유지 매니저
 // =====================================================================
 let globalCameraStream = null;
@@ -228,7 +234,6 @@ const themeData = [
         },
       ],
     },
-    // 사용자 요청사항(12개 코스) 완벽 반영
     path: [
       {
         type: "location",
@@ -367,7 +372,6 @@ const themeData = [
         },
       ],
     },
-    // 사용자 요청사항(10개 코스) 완벽 반영
     path: [
       {
         type: "location",
@@ -536,13 +540,51 @@ export default function App() {
   }, [step, activeThemeId, activePath, progress, completedThemes, themeStates]);
 
   // =====================================================================
-  // 📊 구글 애널리틱스 화면(Step) 이동 추적
+  // 📊 [수정 및 연동] 구글 애널리틱스(GA4) 동적 스크립트 삽입 및 초기화
   // =====================================================================
   useEffect(() => {
-    if (typeof window !== "undefined" && window.gtag) {
+    // 플레이스홀더 상태(ID가 안 바뀜)면 로딩하지 않음
+    if (!GA_MEASUREMENT_ID || GA_MEASUREMENT_ID === "G-XXXXXXXXXX") {
+      console.warn("GA4 측정 ID가 비어있거나 'G-XXXXXXXXXX'입니다. 실제 ID로 교체해 주셔야 로킹이 가능합니다.");
+      return;
+    }
+
+    // 전역 변수 'gtag'가 없는 경우에만 스크립트 로드 및 데이터 레이어 초기화 진행
+    if (!window.gtag) {
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () {
+        window.dataLayer.push(arguments);
+      };
+
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+      document.head.appendChild(script);
+
+      window.gtag("js", new Date());
+      // SPA의 가상 페이지 추적을 수동 제어하기 위해, 스크립트 첫 진입 시의 자동 page_view는 꺼둡니다.
+      window.gtag("config", GA_MEASUREMENT_ID, {
+        send_page_view: false,
+      });
+    }
+  }, []);
+
+  // =====================================================================
+  // 📊 [완전한 수동 제어] 단계(Step) 이동 시 GA 가상 페이지 추적 전송
+  // =====================================================================
+  useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      window.gtag &&
+      GA_MEASUREMENT_ID &&
+      GA_MEASUREMENT_ID !== "G-XXXXXXXXXX"
+    ) {
+      // 📍 GA4에 page_view 커스텀 전송 실행
       window.gtag("event", "page_view", {
         page_title: `Quest_Step_${step}`,
+        page_location: window.location.href,
         page_path: `/${step}`,
+        send_to: GA_MEASUREMENT_ID,
       });
     }
   }, [step]);
