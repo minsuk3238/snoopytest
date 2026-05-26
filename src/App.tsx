@@ -28,10 +28,9 @@ const BASE_URL = "https://snoopytest-mu.vercel.app/?key=";
 const MASTER_QR_CODE = `${BASE_URL}snoopy_master`;
 
 // =====================================================================
-// 📊 [신규 추가] 구글 애널리틱스(GA4) 설정 정보
+// 📊 [수정 반영] 구글 애널리틱스(GA4) 측정 ID 입력 완료
 // =====================================================================
-// ⚠️ 본인의 실제 GA4 측정 ID(Measurement ID)인 "G-XXXXXXXXXX" 형태로 변경해 주세요.
-const GA_MEASUREMENT_ID = "G-XXXXXXXXXX"; 
+const GA_MEASUREMENT_ID = "G-S70VVGYXCX"; 
 
 // =====================================================================
 // 📸 [핵심] 카메라 권한 1회 승인 및 세션 유지 매니저
@@ -540,7 +539,7 @@ export default function App() {
   }, [step, activeThemeId, activePath, progress, completedThemes, themeStates]);
 
   // =====================================================================
-  // 📊 [수정 및 연동] 구글 애널리틱스(GA4) 동적 스크립트 삽입 및 초기화
+  // 📊 구글 애널리틱스(GA4) 동적 스크립트 삽입 및 초기화
   // =====================================================================
   useEffect(() => {
     // 플레이스홀더 상태(ID가 안 바뀜)면 로딩하지 않음
@@ -570,7 +569,7 @@ export default function App() {
   }, []);
 
   // =====================================================================
-  // 📊 [완전한 수동 제어] 단계(Step) 이동 시 GA 가상 페이지 추적 전송
+  // 📊 단계(Step) 이동 시 GA 가상 페이지 추적 전송
   // =====================================================================
   useEffect(() => {
     if (
@@ -594,7 +593,7 @@ export default function App() {
   // =====================================================================
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const qrFromUrl = params.get("key"); // qr 대신 key 파라미터 확인
+    const qrFromUrl = params.get("key"); // qr 대신 key 파라미화 확인
 
     if (qrFromUrl) {
       // 1. 끝없는 반복 실행을 막기 위해 파라미터를 URL에서 조용히 지웁니다.
