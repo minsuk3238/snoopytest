@@ -483,7 +483,18 @@ const getInitialState = () => {
   try {
     const saved = localStorage.getItem(STORAGE_KEY_STATE);
     if (saved) {
-      return JSON.parse(saved);
+      const parsed = JSON.parse(saved);
+      // 🔥 안정화 로직: 로컬 스토리지 데이터 무결성 검증
+      if (parsed && typeof parsed === "object") {
+        // activeThemeId가 유효한지 확인
+        if (
+          parsed.activeThemeId &&
+          !themeData.find((t) => t.id === parsed.activeThemeId)
+        ) {
+          return null; // 데이터가 오염되었으면 초기화
+        }
+        return parsed;
+      }
     }
   } catch (e) {
     console.error("Failed to load state", e);
@@ -523,6 +534,22 @@ export default function App() {
 
   const activeTheme = themeData.find((t) => t.id === activeThemeId) || null;
 
+  // URL 파라미터 중복 실행 방지 Ref
+  const isUrlProcessed = useRef(false);
+
+  // =====================================================================
+  // 🔥 [핵심 안정화] 상태 이상 감지 및 복구 (빈 화면 방지)
+  // =====================================================================
+  useEffect(() => {
+    // 테마가 필요한 스텝에서 테마 데이터나 경로 데이터가 없다면 에러 발생(흰 화면) 방지를 위해 리셋
+    if (["journey", "scene", "complete"].includes(step)) {
+      if (!activeTheme || activePath.length === 0) {
+        console.warn("Invalid State Detected! Resetting to Intro...");
+        setStep("intro");
+      }
+    }
+  }, [step, activeTheme, activePath]);
+
   // 상태 변경 시 로컬 스토리지에 저장
   useEffect(() => {
     if (step === "splash" && !initialState) return;
@@ -542,7 +569,6 @@ export default function App() {
   // 📊 구글 애널리틱스(GA4) 동적 스크립트 삽입 및 초기화
   // =====================================================================
   useEffect(() => {
-    // 플레이스홀더 상태(ID가 안 바뀜)면 로딩하지 않음
     if (!GA_MEASUREMENT_ID || GA_MEASUREMENT_ID === "G-XXXXXXXXXX") {
       console.warn(
         "GA4 측정 ID가 비어있거나 'G-XXXXXXXXXX'입니다. 실제 ID로 교체해 주셔야 로킹이 가능합니다."
@@ -550,7 +576,6 @@ export default function App() {
       return;
     }
 
-    // 전역 변수 'gtag'가 없는 경우에만 스크립트 로드 및 데이터 레이어 초기화 진행
     if (!window.gtag) {
       window.dataLayer = window.dataLayer || [];
       window.gtag = function () {
@@ -563,7 +588,6 @@ export default function App() {
       document.head.appendChild(script);
 
       window.gtag("js", new Date());
-      // SPA의 가상 페이지 추적을 수동 제어하기 위해, 스크립트 첫 진입 시의 자동 page_view는 꺼둡니다.
       window.gtag("config", GA_MEASUREMENT_ID, {
         send_page_view: false,
       });
@@ -580,7 +604,6 @@ export default function App() {
       GA_MEASUREMENT_ID &&
       GA_MEASUREMENT_ID !== "G-XXXXXXXXXX"
     ) {
-      // 📍 GA4에 page_view 커스텀 전송 실행
       window.gtag("event", "page_view", {
         page_title: `Quest_Step_${step}`,
         page_location: window.location.href,
@@ -591,21 +614,23 @@ export default function App() {
   }, [step]);
 
   // =====================================================================
-  // 🔗 [핵심 기능] URL 파라미터를 통한 외부 카메라 스캔 자동 연동 로직
+  // 🔗 [핵심 안정화] URL 파라미터를 통한 외부 카메라 스캔 자동 연동 로직
   // =====================================================================
   useEffect(() => {
+    // 이미 URL 처리를 끝냈다면 재실행 방지
+    if (isUrlProcessed.current) return;
+
     const params = new URLSearchParams(window.location.search);
-    const qrFromUrl = params.get("key"); // qr 대신 key 파라미화 확인
+    const qrFromUrl = params.get("key");
 
     if (qrFromUrl) {
       // 1. 끝없는 반복 실행을 막기 위해 파라미터를 URL에서 조용히 지웁니다.
       window.history.replaceState({}, document.title, window.location.pathname);
+      isUrlProcessed.current = true; // 처리 완료 마킹
 
-      const currentExpectedQR = activePath[progress]?.qrCode;
-
-      // 2. 퀘스트를 진행 중일 때만 스캔을 허용합니다. (activePath 존재 여부)
-      if (activePath.length > 0) {
-        // 데이터 상 URL 뒷부분의 ID값만 추출 (?key= 기준으로 자름)
+      // 2. 퀘스트를 진행 중일 때 정상 스캔 판별
+      if (activePath.length > 0 && progress < activePath.length) {
+        const currentExpectedQR = activePath[progress]?.qrCode;
         const rawExpectedId = currentExpectedQR
           ? currentExpectedQR.split("?key=")[1]
           : null;
@@ -625,9 +650,15 @@ export default function App() {
             "앗! 현재 위치의\n정답 QR코드가 아닌 것 같아요! 🐶\n(위치를 다시 확인해주세요)"
           );
         }
+      } else {
+        // 🔥 예외 처리: 퀘스트를 선택하지 않았거나, 이미 완료했는데 딥링크로 들어온 경우
+        setStep("intro");
+        setTimeout(() => {
+          alert("새로운 퀘스트 테마를 먼저 선택해주세요! 🏕️");
+        }, 500);
       }
     }
-  }, [activePath, progress]);
+  }, [activePath, progress]); // 마운트 시 및 상태 복원 직후 실행됨
 
   const handleStartTheme = (theme) => {
     setActiveThemeId(theme.id);
