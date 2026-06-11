@@ -1009,23 +1009,26 @@ export default function App() {
           {/* Step 0: 스플래시 */}
           {step === "splash" && (
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center overflow-hidden bg-stone-900">
-              {/* 스플래시 배경 이미지 변경 및 불투명도 조절 */}
+              {/* [수정] 스플래시 배경 이미지: overlay 믹스 블렌딩을 제거하고 opacity-30 조정으로 가독성과 가시성을 모두 잡았습니다. */}
               <img
                 src="/images/explore_square.jpg"
                 alt="소설왕 스누피 광장 배경"
-                className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay"
+                className="absolute inset-0 w-full h-full object-cover opacity-30"
                 onError={(e) => {
-                  e.target.style.display = "none";
+                  console.warn(
+                    "스플래시 이미지를 불러오는 데 실패했습니다. 파일 경로를 다시 확인해주세요.",
+                    e
+                  );
                 }}
               />
 
               <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/60 to-transparent"></div>
 
               <div className="z-10 flex flex-col items-center justify-center text-center px-6 w-full h-full animate-fade-in">
-                {/* 메인 타이틀 변경 및 텍스트 그림자 추가 */}
+                {/* 메인 타이틀 변경 및 가독성을 위한 진한 검은색 텍스트 그림자(drop-shadow-2xl) 적용 */}
                 <h1
                   className="text-5xl font-black tracking-tighter mb-3 text-white drop-shadow-2xl"
-                  style={{ textShadow: "0px 4px 16px rgba(0,0,0,0.9)" }}
+                  style={{ textShadow: "0px 4px 20px rgba(0,0,0,0.95)" }}
                 >
                   가든 퀘스트
                 </h1>
