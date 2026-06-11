@@ -30,7 +30,7 @@ const MASTER_QR_CODE = `${BASE_URL}snoopy_master`;
 // =====================================================================
 // 📊 [수정 반영] 구글 애널리틱스(GA4) 측정 ID 입력 완료
 // =====================================================================
-const GA_MEASUREMENT_ID = "G-S70VVGYXCX"; 
+const GA_MEASUREMENT_ID = "G-S70VVGYXCX";
 
 // =====================================================================
 // 📸 [핵심] 카메라 권한 1회 승인 및 세션 유지 매니저
@@ -186,7 +186,7 @@ const QRScanner = ({ onScan, onError }) => {
   }, [isJsQRLoaded]);
 
   return (
-    <div className="w-full h-full relative bg-stone-900 flex items-center justify-center overflow-hidden">
+    <div className="w-full h-full relative bg-stone-900 flex items-center justify-center overflow-hidden rounded-3xl">
       <video
         ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover"
@@ -544,7 +544,9 @@ export default function App() {
   useEffect(() => {
     // 플레이스홀더 상태(ID가 안 바뀜)면 로딩하지 않음
     if (!GA_MEASUREMENT_ID || GA_MEASUREMENT_ID === "G-XXXXXXXXXX") {
-      console.warn("GA4 측정 ID가 비어있거나 'G-XXXXXXXXXX'입니다. 실제 ID로 교체해 주셔야 로킹이 가능합니다.");
+      console.warn(
+        "GA4 측정 ID가 비어있거나 'G-XXXXXXXXXX'입니다. 실제 ID로 교체해 주셔야 로킹이 가능합니다."
+      );
       return;
     }
 
@@ -752,15 +754,17 @@ export default function App() {
     return Array.from({ length: 40 }).map((_, i) => (
       <div
         key={i}
-        className={`confetti ${
+        className={`confetti absolute rounded-full ${
           colors[Math.floor(Math.random() * colors.length)]
         }`}
         style={{
           left: `${Math.random() * 100}%`,
+          top: `-${Math.random() * 20}px`,
           width: `${Math.random() * 6 + 6}px`,
           height: `${Math.random() * 12 + 6}px`,
-          animationDelay: `${Math.random() * 2}s`,
-          animationDuration: `${Math.random() * 2 + 2.5}s`,
+          animation: `fall ${Math.random() * 2 + 2.5}s linear ${
+            Math.random() * 2
+          }s infinite`,
         }}
       />
     ));
@@ -943,7 +947,7 @@ export default function App() {
                 코스 완주를 축하합니다! 🎉
               </h3>
               <p className="text-sm text-stone-500 mb-6 break-keep leading-relaxed">
-                더 나은 스누피 가든 탐험을 위해
+                더 나은 탐험을 위해
                 <br />
                 짧은 설문조사에 참여해 주시겠어요?
                 <br />
@@ -979,9 +983,7 @@ export default function App() {
         {/* Header (고정) */}
         {step !== "splash" && step !== "qr" && (
           <div className="bg-stone-900 p-4 text-center text-white relative flex justify-between items-center z-10 shrink-0">
-            <h1 className="text-lg font-bold tracking-tighter">
-              SNOOPY GARDEN QUEST
-            </h1>
+            <h1 className="text-lg font-bold tracking-tighter">가든 퀘스트</h1>
             {activeTheme && step !== "intro" && step !== "grandClear" && (
               <button
                 type="button"
@@ -1007,22 +1009,25 @@ export default function App() {
           {/* Step 0: 스플래시 */}
           {step === "splash" && (
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center overflow-hidden bg-stone-900">
+              {/* 스플래시 배경 이미지 변경 및 불투명도 조절 */}
               <img
-                src="/images/splash_bg.jpg"
-                alt="스플래시 배경"
-                className="absolute inset-0 w-full h-full object-cover opacity-60"
+                src="/images/explore_square.jpg"
+                alt="소설왕 스누피 광장 배경"
+                className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay"
                 onError={(e) => {
                   e.target.style.display = "none";
                 }}
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/40 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/60 to-transparent"></div>
 
               <div className="z-10 flex flex-col items-center justify-center text-center px-6 w-full h-full animate-fade-in">
-                <h1 className="text-5xl font-black tracking-tighter mb-3 text-white drop-shadow-lg">
-                  SNOOPY GARDEN
-                  <br />
-                  QUEST
+                {/* 메인 타이틀 변경 및 텍스트 그림자 추가 */}
+                <h1
+                  className="text-5xl font-black tracking-tighter mb-3 text-white drop-shadow-2xl"
+                  style={{ textShadow: "0px 4px 16px rgba(0,0,0,0.9)" }}
+                >
+                  가든 퀘스트
                 </h1>
                 <p className="text-emerald-300 text-xs tracking-[0.4em] mb-12 uppercase font-bold drop-shadow-md">
                   자연 속 위대한 모험의 시작
@@ -1061,7 +1066,7 @@ export default function App() {
                     Official Beagle Scout
                   </p>
                   <p className="text-sm font-bold text-yellow-900 leading-relaxed break-keep">
-                    스누피가든의 모든 미션을 완수했습니다!
+                    가든의 모든 미션을 완수했습니다!
                     <br />
                     배너를 터치하여 리워드를 다시 확인하세요!
                   </p>
@@ -1322,7 +1327,7 @@ export default function App() {
                 />
 
                 {/* 스캔 가이드라인 UI (장식용) */}
-                <div className="absolute inset-0 pointer-events-none border-[30px] border-stone-900/60 flex items-center justify-center z-10">
+                <div className="absolute inset-0 pointer-events-none border-[30px] border-stone-900/60 flex items-center justify-center z-10 rounded-3xl">
                   <ScanLine
                     className={`w-16 h-16 ${
                       qrErrorMsg ? "text-red-400" : "text-emerald-400"
@@ -1497,7 +1502,7 @@ export default function App() {
                   명예 대원 임명!
                 </h2>
                 <p className="text-yellow-100 text-sm mb-6 font-medium break-keep px-4 opacity-90">
-                  스누피가든의 모든 퀘스트를 완수한 당신을
+                  가든의 모든 퀘스트를 완수한 당신을
                   <br />
                   <span className="text-yellow-400 font-bold">
                     일급 비글 스카우트 대원
@@ -1563,6 +1568,10 @@ export default function App() {
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fall {
+          from { transform: translateY(-100vh) rotate(0deg); }
+          to { transform: translateY(100vh) rotate(360deg); }
         }
         .animate-fade-in {
           animation: fadeIn 0.4s ease-out forwards;
