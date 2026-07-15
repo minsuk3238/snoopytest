@@ -30,7 +30,7 @@ const MASTER_QR_CODE = `${BASE_URL}snoopy_master`;
 // =====================================================================
 // 📊 [GTM 변경 반영] 구글 태그 매니저(GTM) 컨테이너 ID 설정
 // =====================================================================
-const GTM_CONTAINER_ID = "GTM-XXXXXXX"; // 본인의 실제 GTM ID로 변경해주세요 (예: GTM-T123456)
+const GTM_CONTAINER_ID = "GTM-5LKS6MB7"; // 본인의 실제 GTM ID로 변경해주세요 (예: GTM-T123456)
 
 // =====================================================================
 // 📸 [핵심] 카메라 권한 1회 승인 및 세션 유지 매니저
@@ -569,9 +569,9 @@ export default function App() {
   // 📊 구글 태그 매니저(GTM) 동적 스크립트 및 dataLayer 삽입
   // =====================================================================
   useEffect(() => {
-    if (!GTM_CONTAINER_ID || GTM_CONTAINER_ID === "GTM-XXXXXXX") {
+    if (!GTM_CONTAINER_ID || GTM_CONTAINER_ID === "GTM-5LKS6MB7") {
       console.warn(
-        "GTM 컨테이너 ID가 비어있거나 'GTM-XXXXXXX'입니다. 실제 ID로 교체해 주세요."
+        "GTM 컨테이너 ID가 비어있거나 'GTM-5LKS6MB7'입니다. 실제 ID로 교체해 주세요."
       );
       return;
     }
@@ -604,18 +604,43 @@ export default function App() {
   }, []);
 
   // =====================================================================
-  // 📊 단계(Step) 이동 시 GTM 가상 페이지뷰 이벤트 전송
+  // 📊 GTM 화면 노출형 이벤트 (view_story, view_map, complete_course) 및 가상 페이지뷰 수집
   // =====================================================================
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.dataLayer = window.dataLayer || [];
+    if (typeof window === "undefined") return;
+
+    window.dataLayer = window.dataLayer || [];
+
+    // 기본 가상 페이지뷰
+    window.dataLayer.push({
+      event: "virtual_page_view",
+      page_title: `Quest_Step_${step}`,
+      page_path: `/${step}`,
+    });
+
+    if (!activeTheme) return;
+
+    if (step === "scene") {
+      // 📊 4. 스토리 팝업 노출 — view_story
       window.dataLayer.push({
-        event: "virtual_page_view",
-        page_title: `Quest_Step_${step}`,
-        page_path: `/${step}`,
+        event: "view_story",
+        story_name: activeTheme.title,
+        spot_name: activePath[progress]?.name || "",
+      });
+    } else if (step === "journey") {
+      // 📊 6. 리스트 화면 노출 — view_map
+      window.dataLayer.push({
+        event: "view_map",
+        story_name: activeTheme.title,
+      });
+    } else if (step === "complete") {
+      // 📊 9. 코스 완주 — complete_course
+      window.dataLayer.push({
+        event: "complete_course",
+        story_name: activeTheme.title,
       });
     }
-  }, [step]);
+  }, [step, activeThemeId, progress]);
 
   // =====================================================================
   // 🔗 [핵심 안정화] URL 파라미터를 통한 외부 카메라 스캔 자동 연동 로직
@@ -643,6 +668,15 @@ export default function App() {
           rawExpectedId &&
           (qrFromUrl === rawExpectedId || qrFromUrl === "snoopy_master")
         ) {
+          // 📊 3. QR 인증 완료 — scan_qrcode 이벤트 전송 (URL 파라미터 유입)
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: "scan_qrcode",
+            qrcode_id: qrFromUrl,
+            story_name: activeTheme?.title || "",
+            spot_name: activePath[progress]?.name || "",
+          });
+
           // 정답일 경우 자동으로 씬(Scene) 화면으로 이동
           setQrErrorMsg("");
           setScanFailCount(0);
@@ -700,6 +734,19 @@ export default function App() {
       scannedData.includes("snoopy_master") ||
       scanFailCount >= 3
     ) {
+      const qrcodeId = scannedData.includes("?key=")
+        ? scannedData.split("?key=")[1]
+        : scannedData || (scanFailCount >= 3 ? "bypass_by_fail" : "");
+
+      // 📊 3. QR 인증 완료 — scan_qrcode 이벤트 전송
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: "scan_qrcode",
+        qrcode_id: qrcodeId,
+        story_name: activeTheme?.title || "",
+        spot_name: activePath[progress]?.name || "",
+      });
+
       setQrErrorMsg("");
       setScanFailCount(0);
       setStep("scene");
@@ -885,12 +932,12 @@ export default function App() {
                   className="w-full h-56 bg-stone-100 relative flex flex-col items-center justify-center shrink-0 cursor-pointer group"
                   onClick={() => {
                     if (activePath[progress]?.img) {
-                      // 📊 GTM 이미지 클릭 이벤트 수집
+                      // 📊 1. 힌트 확인 — click_story_hint 이벤트 전송
                       window.dataLayer = window.dataLayer || [];
                       window.dataLayer.push({
-                        event: "click_image_area",
-                        image_type: "hint",
-                        location_name: activePath[progress]?.name,
+                        event: "click_story_hint",
+                        story_name: activeTheme?.title || "",
+                        spot_name: activePath[progress]?.name || "",
                       });
                       setZoomedImage(activePath[progress].img);
                     }
@@ -1245,9 +1292,20 @@ export default function App() {
                     return (
                       <div
                         key={idx}
+                        onClick={() => {
+                          if (!isFuture) {
+                            // 📊 7. 지도 리스트 클릭 — click_map_spot 이벤트 전송
+                            window.dataLayer = window.dataLayer || [];
+                            window.dataLayer.push({
+                              event: "click_map_spot",
+                              story_name: activeTheme?.title || "",
+                              spot_name: loc?.name || "",
+                            });
+                          }
+                        }}
                         className={`relative flex items-start gap-4 ${
                           isFuture ? "opacity-30" : "opacity-100"
-                        } transition-opacity`}
+                        } transition-opacity cursor-pointer`}
                       >
                         <div
                           className={`absolute -left-[31px] w-6 h-6 rounded-full flex items-center justify-center z-10 border-2 bg-white
@@ -1322,6 +1380,13 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => {
+                      // 📊 8. QR 스캔 클릭 — click_map_qrcode 이벤트 전송
+                      window.dataLayer = window.dataLayer || [];
+                      window.dataLayer.push({
+                        event: "click_map_qrcode",
+                        story_name: activeTheme?.title || "",
+                        spot_name: activePath[progress]?.name || "",
+                      });
                       handleScanQR();
                     }}
                     className="w-full bg-stone-900 text-white font-bold py-5 rounded-2xl shadow-xl tracking-widest text-sm hover:bg-stone-800 transition"
@@ -1350,7 +1415,16 @@ export default function App() {
                 <h2 className="text-xl font-bold mb-3">SCAN QR CODE</h2>
 
                 <button
-                  onClick={() => setShowHintModal(true)}
+                  onClick={() => {
+                    // 📊 1. 힌트 확인 — click_story_hint 이벤트 전송
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push({
+                      event: "click_story_hint",
+                      story_name: activeTheme?.title || "",
+                      spot_name: activePath[progress]?.name || "",
+                    });
+                    setShowHintModal(true);
+                  }}
                   className="text-emerald-400 text-sm font-bold bg-stone-800 px-6 py-2.5 rounded-full inline-flex items-center gap-2 border border-stone-700 hover:bg-stone-700 transition-colors shadow-md"
                 >
                   <MapPin className="w-4 h-4" /> 힌트 확인하기
@@ -1390,7 +1464,16 @@ export default function App() {
               <div className="flex flex-col gap-3 w-full z-10 shrink-0">
                 <button
                   type="button"
-                  onClick={() => setStep("journey")}
+                  onClick={() => {
+                    // 📊 2. 지도로 돌아가기 — click_story_map 이벤트 전송
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push({
+                      event: "click_story_map",
+                      story_name: activeTheme?.title || "",
+                      spot_name: activePath[progress]?.name || "",
+                    });
+                    setStep("journey");
+                  }}
                   className="w-full bg-transparent border border-stone-700 text-stone-400 font-bold py-4 rounded-2xl text-sm hover:bg-stone-800 hover:text-white transition-colors"
                 >
                   지도 화면으로 돌아가기
@@ -1451,7 +1534,16 @@ export default function App() {
               <div className="shrink-0 pt-2">
                 <button
                   type="button"
-                  onClick={handleGetStamp}
+                  onClick={(e) => {
+                    // 📊 5. 다음 이야기 클릭 — click_next_story 이벤트 전송
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push({
+                      event: "click_next_story",
+                      story_name: activeTheme?.title || "",
+                      spot_name: activePath[progress]?.name || "",
+                    });
+                    handleGetStamp(e);
+                  }}
                   className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-5 rounded-2xl shadow-lg text-sm tracking-widest transition-transform active:scale-95 flex items-center justify-center gap-2"
                 >
                   다음 이야기 찾기! <Star className="w-4 h-4" />
@@ -1565,7 +1657,7 @@ export default function App() {
                   <div className="mb-6 bg-stone-900/50 rounded-xl p-4 border border-yellow-500/20 flex items-start gap-3 shadow-sm text-left">
                     <Quote className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-sm font-bold text-yellow-50 leading-relaxed italic">
+                      <p className="text-sm font-bold text-yellow-55 leading-relaxed italic">
                         "숲속 하이킹은 즐거움과 영감을 줄 수 있습니다."
                       </p>
                       <span className="text-[10px] font-normal text-yellow-600 mt-2 block">
