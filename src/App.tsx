@@ -486,7 +486,6 @@ const getInitialState = () => {
       const parsed = JSON.parse(saved);
       // 🔥 안정화 로직: 로컬 스토리지 데이터 무결성 검증
       if (parsed && typeof parsed === "object") {
-        // activeThemeId가 유효한지 확인
         if (
           parsed.activeThemeId &&
           !themeData.find((t) => t.id === parsed.activeThemeId)
@@ -523,25 +522,15 @@ export default function App() {
   const [showResetModal, setShowResetModal] = useState(false);
   const [showHintModal, setShowHintModal] = useState(false);
 
-  // 🔍 이미지를 크게 보기 위한 상태값 추가
   const [zoomedImage, setZoomedImage] = useState(null);
-
-  // 설문조사 팝업창을 위한 상태값
   const [showSurveyModal, setShowSurveyModal] = useState(false);
-
-  // 스캔 실패 횟수 관리
   const [scanFailCount, setScanFailCount] = useState(0);
 
   const activeTheme = themeData.find((t) => t.id === activeThemeId) || null;
-
-  // URL 파라미터 중복 실행 방지 Ref
   const isUrlProcessed = useRef(false);
 
-  // =====================================================================
-  // 🔥 [핵심 안정화] 상태 이상 감지 및 복구 (빈 화면 방지)
-  // =====================================================================
+  // 🔥 [핵심 안정화] 상태 이상 감지 및 복구
   useEffect(() => {
-    // 테마가 필요한 스텝에서 테마 데이터나 경로 데이터가 없다면 에러 발생(흰 화면) 방지를 위해 리셋
     if (["journey", "scene", "complete"].includes(step)) {
       if (!activeTheme || activePath.length === 0) {
         console.warn("Invalid State Detected! Resetting to Intro...");
@@ -570,13 +559,11 @@ export default function App() {
   // =====================================================================
   useEffect(() => {
     if (!GTM_CONTAINER_ID || GTM_CONTAINER_ID === "GTM-5LKS6MB7") {
-      console.warn(
-        "GTM 컨테이너 ID가 비어있거나 'GTM-5LKS6MB7'입니다. 실제 ID로 교체해 주세요."
-      );
+      console.warn("GTM 컨테이너 ID가 비어있거나 올바르지 않습니다.");
       return;
     }
 
-    // 1. dataLayer 초기화 (GTM 스니펫보다 반드시 먼저 생성되어야 함)
+    // 1. dataLayer 초기화
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       "gtm.start": new Date().getTime(),
@@ -593,7 +580,7 @@ export default function App() {
       document.head.appendChild(script);
     }
 
-    // 3. GTM body (noscript) iframe 동적 삽입 (noscript 태그)
+    // 3. GTM body (noscript) iframe 동적 삽입
     const noscriptId = "gtm-noscript";
     if (!document.getElementById(noscriptId)) {
       const noscript = document.createElement("noscript");
@@ -646,18 +633,15 @@ export default function App() {
   // 🔗 [핵심 안정화] URL 파라미터를 통한 외부 카메라 스캔 자동 연동 로직
   // =====================================================================
   useEffect(() => {
-    // 이미 URL 처리를 끝냈다면 재실행 방지
     if (isUrlProcessed.current) return;
 
     const params = new URLSearchParams(window.location.search);
     const qrFromUrl = params.get("key");
 
     if (qrFromUrl) {
-      // 1. 끝없는 반복 실행을 막기 위해 파라미터를 URL에서 조용히 지웁니다.
       window.history.replaceState({}, document.title, window.location.pathname);
-      isUrlProcessed.current = true; // 처리 완료 마킹
+      isUrlProcessed.current = true;
 
-      // 2. 퀘스트를 진행 중일 때 정상 스캔 판별
       if (activePath.length > 0 && progress < activePath.length) {
         const currentExpectedQR = activePath[progress]?.qrCode;
         const rawExpectedId = currentExpectedQR
@@ -677,26 +661,23 @@ export default function App() {
             spot_name: activePath[progress]?.name || "",
           });
 
-          // 정답일 경우 자동으로 씬(Scene) 화면으로 이동
           setQrErrorMsg("");
           setScanFailCount(0);
           setStep("scene");
         } else {
-          // 오답일 경우 에러 메시지와 함께 스캔 화면으로 이동
           setStep("qr");
           setQrErrorMsg(
             "앗! 현재 위치의\n정답 QR코드가 아닌 것 같아요! 🐶\n(위치를 다시 확인해주세요)"
           );
         }
       } else {
-        // 🔥 예외 처리: 퀘스트를 선택하지 않았거나, 이미 완료했는데 딥링크로 들어온 경우
         setStep("intro");
         setTimeout(() => {
           alert("새로운 퀘스트 테마를 먼저 선택해주세요! 🏕️");
         }, 500);
       }
     }
-  }, [activePath, progress]); // 마운트 시 및 상태 복원 직후 실행됨
+  }, [activePath, progress]);
 
   const handleStartTheme = (theme) => {
     setActiveThemeId(theme.id);
@@ -719,7 +700,7 @@ export default function App() {
 
   const handleScanQR = () => {
     setQrErrorMsg("");
-    setScanFailCount(0); // QR 화면에 들어올 때 실패 횟수 초기화
+    setScanFailCount(0);
     setStep("qr");
   };
 
@@ -789,7 +770,6 @@ export default function App() {
         setJustGotGrandClear(false);
       }
       setStep("complete");
-
       setShowSurveyModal(true);
     } else {
       setProgress(nextProgress);
@@ -855,7 +835,6 @@ export default function App() {
   return (
     <div className="min-h-screen bg-stone-100 flex items-center justify-center p-4 font-sans text-stone-800 relative">
       <div className="max-w-md w-full bg-white rounded-3xl shadow-xl overflow-hidden relative flex flex-col h-[750px] max-h-[100dvh]">
-        {/* 🔍 이미지 전체화면 확대 모달창 */}
         {zoomedImage && (
           <div
             className="absolute inset-0 z-[100] bg-black/95 flex items-center justify-center animate-fade-in touch-none flex-col"
@@ -881,7 +860,6 @@ export default function App() {
           </div>
         )}
 
-        {/* 커스텀 초기화 경고 모달창 */}
         {showResetModal && (
           <div className="absolute inset-0 z-50 bg-stone-900/60 flex items-center justify-center p-6 animate-fade-in">
             <div className="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl">
@@ -916,7 +894,6 @@ export default function App() {
           </div>
         )}
 
-        {/* 💡 장소 힌트 팝업 모달창 */}
         {showHintModal && (
           <div className="absolute inset-0 z-50 bg-stone-900/80 flex items-center justify-center p-6 animate-fade-in">
             <div className="bg-white rounded-3xl overflow-hidden w-full max-w-sm shadow-2xl relative flex flex-col max-h-[85vh]">
@@ -978,7 +955,7 @@ export default function App() {
                     className="w-full aspect-[300/260] bg-stone-50 rounded-xl overflow-hidden relative border border-stone-200 flex items-center justify-center shadow-inner cursor-pointer group"
                     onClick={() => {
                       if (activePath[progress]?.mapImg) {
-                        // 📊 GTM 이미지 클릭 이벤트 수집
+                        // GTM 이미지 클릭 이벤트 수집
                         window.dataLayer = window.dataLayer || [];
                         window.dataLayer.push({
                           event: "click_image_area",
@@ -1026,7 +1003,6 @@ export default function App() {
           </div>
         )}
 
-        {/* 📋 코스 완료 설문조사 팝업 모달창 */}
         {showSurveyModal && (
           <div className="absolute inset-0 z-50 bg-stone-900/60 flex items-center justify-center p-6 animate-fade-in">
             <div className="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl relative">
@@ -1078,7 +1054,6 @@ export default function App() {
           </div>
         )}
 
-        {/* Header (고정) */}
         {step !== "splash" && step !== "qr" && (
           <div className="bg-stone-900 p-4 text-center text-white relative flex justify-between items-center z-10 shrink-0">
             <h1 className="text-lg font-bold tracking-tighter">가든 퀘스트</h1>
@@ -1104,10 +1079,8 @@ export default function App() {
         )}
 
         <div className="flex-1 overflow-hidden bg-stone-50 flex flex-col relative">
-          {/* Step 0: 스플래시 */}
           {step === "splash" && (
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center overflow-hidden bg-stone-900">
-              {/* 스플래시 배경 이미지 변경 및 불투명도 조절 */}
               <img
                 src="/images/explore_square.jpg"
                 alt="소설왕 스누피 광장 배경"
@@ -1116,11 +1089,8 @@ export default function App() {
                   e.target.style.display = "none";
                 }}
               />
-
               <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/60 to-transparent"></div>
-
               <div className="z-10 flex flex-col items-center justify-center text-center px-6 w-full h-full animate-fade-in">
-                {/* 메인 타이틀 변경 및 텍스트 그림자 추가 */}
                 <h1
                   className="text-5xl font-black tracking-tighter mb-3 text-white drop-shadow-2xl"
                   style={{ textShadow: "0px 4px 16px rgba(0,0,0,0.9)" }}
@@ -1130,7 +1100,6 @@ export default function App() {
                 <p className="text-emerald-300 text-xs tracking-[0.4em] mb-12 uppercase font-bold drop-shadow-md">
                   자연 속 위대한 모험의 시작
                 </p>
-
                 <button
                   type="button"
                   onClick={async () => {
@@ -1148,7 +1117,6 @@ export default function App() {
             </div>
           )}
 
-          {/* Step 1: 메인 화면 */}
           {step === "intro" && (
             <div className="p-6 animate-fade-in pb-12 flex-1 overflow-y-auto custom-scrollbar">
               {completedThemes.length === themeData.length ? (
@@ -1271,7 +1239,6 @@ export default function App() {
             </div>
           )}
 
-          {/* Step 2: 진행 지도 */}
           {step === "journey" && activeTheme && (
             <div className="p-6 animate-fade-in flex flex-col flex-1 h-full overflow-hidden">
               <div className="mb-4 shrink-0">
@@ -1398,7 +1365,6 @@ export default function App() {
             </div>
           )}
 
-          {/* Step 3: 실제 카메라 QR 스캔 화면 */}
           {step === "qr" && (
             <div className="p-6 flex-1 flex flex-col items-center justify-center text-center bg-stone-900 text-white h-full relative animate-fade-in">
               {qrErrorMsg && (
@@ -1413,7 +1379,6 @@ export default function App() {
               )}
               <div className="mb-6 z-10 shrink-0 mt-4 flex flex-col items-center">
                 <h2 className="text-xl font-bold mb-3">SCAN QR CODE</h2>
-
                 <button
                   onClick={() => {
                     // 📊 1. 힌트 확인 — click_story_hint 이벤트 전송
@@ -1431,7 +1396,6 @@ export default function App() {
                 </button>
               </div>
 
-              {/* 커스텀 카메라 스캐너 영역 */}
               <div
                 className={`w-full max-w-sm aspect-square bg-black rounded-3xl overflow-hidden mb-8 border-2 border-stone-600 shadow-[0_0_60px_rgba(16,185,129,0.15)] relative shrink-0
                 ${
@@ -1450,8 +1414,6 @@ export default function App() {
                     console.error("Camera Error:", error);
                   }}
                 />
-
-                {/* 스캔 가이드라인 UI (장식용) */}
                 <div className="absolute inset-0 pointer-events-none border-[30px] border-stone-900/60 flex items-center justify-center z-10 rounded-3xl">
                   <ScanLine
                     className={`w-16 h-16 ${
@@ -1482,7 +1444,6 @@ export default function App() {
             </div>
           )}
 
-          {/* Step 4: 장면 확인 및 리워드 */}
           {step === "scene" && (
             <div className="p-6 flex-1 flex flex-col animate-fade-in h-full overflow-hidden">
               <div className="flex-1 overflow-y-auto custom-scrollbar pr-1 pb-2">
@@ -1491,8 +1452,6 @@ export default function App() {
                     <MapPin className="w-3 h-3" />{" "}
                     {activePath[progress]?.name || "목적지"}
                   </span>
-
-                  {/* 📸 이미지 렌더링 영역 */}
                   <div className="w-full h-48 bg-stone-100 rounded-xl mb-5 overflow-hidden relative border border-stone-200 flex items-center justify-center">
                     {activePath[progress]?.img ? (
                       <img
@@ -1552,7 +1511,6 @@ export default function App() {
             </div>
           )}
 
-          {/* Step 5 & 6 */}
           {step === "complete" && activeTheme && (
             <div className="p-6 flex-1 flex flex-col items-center justify-center animate-fade-in h-full overflow-y-auto custom-scrollbar">
               <div className="w-28 h-28 bg-emerald-100 rounded-full flex items-center justify-center mb-8 relative shadow-inner shrink-0">
