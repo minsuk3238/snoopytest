@@ -558,18 +558,14 @@ export default function App() {
   // 📊 구글 태그 매니저(GTM) 동적 스크립트 및 dataLayer 삽입
   // =====================================================================
   useEffect(() => {
-    if (!GTM_CONTAINER_ID || GTM_CONTAINER_ID === "GTM-5LKS6MB7") {
-      console.warn("GTM 컨테이너 ID가 비어있거나 올바르지 않습니다.");
-      return;
-    }
-
+    // 둥 조건문을 아래와 같이 단순하게 한 줄로 고쳐줍니다! (오류 방지)
+    if (!GTM_CONTAINER_ID) return;
     // 1. dataLayer 초기화
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       "gtm.start": new Date().getTime(),
       event: "gtm.js",
     });
-
     // 2. GTM head 스크립트 태그 동적 삽입
     const scriptId = "gtm-script";
     if (!document.getElementById(scriptId)) {
@@ -579,7 +575,6 @@ export default function App() {
       script.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_CONTAINER_ID}`;
       document.head.appendChild(script);
     }
-
     // 3. GTM body (noscript) iframe 동적 삽입
     const noscriptId = "gtm-noscript";
     if (!document.getElementById(noscriptId)) {
