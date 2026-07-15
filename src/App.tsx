@@ -28,9 +28,9 @@ const BASE_URL = "https://snoopytest-mu.vercel.app/?key=";
 const MASTER_QR_CODE = `${BASE_URL}snoopy_master`;
 
 // =====================================================================
-// 📊 [수정 반영] 구글 애널리틱스(GA4) 측정 ID 입력 완료
+// 📊 [GTM 변경 반영] 구글 태그 매니저(GTM) 컨테이너 ID 설정
 // =====================================================================
-const GA_MEASUREMENT_ID = "G-S70VVGYXCX";
+const GTM_CONTAINER_ID = "GTM-XXXXXXX"; // 본인의 실제 GTM ID로 변경해주세요 (예: GTM-T123456)
 
 // =====================================================================
 // 📸 [핵심] 카메라 권한 1회 승인 및 세션 유지 매니저
@@ -566,49 +566,53 @@ export default function App() {
   }, [step, activeThemeId, activePath, progress, completedThemes, themeStates]);
 
   // =====================================================================
-  // 📊 구글 애널리틱스(GA4) 동적 스크립트 삽입 및 초기화
+  // 📊 구글 태그 매니저(GTM) 동적 스크립트 및 dataLayer 삽입
   // =====================================================================
   useEffect(() => {
-    if (!GA_MEASUREMENT_ID || GA_MEASUREMENT_ID === "G-XXXXXXXXXX") {
+    if (!GTM_CONTAINER_ID || GTM_CONTAINER_ID === "GTM-XXXXXXX") {
       console.warn(
-        "GA4 측정 ID가 비어있거나 'G-XXXXXXXXXX'입니다. 실제 ID로 교체해 주셔야 로킹이 가능합니다."
+        "GTM 컨테이너 ID가 비어있거나 'GTM-XXXXXXX'입니다. 실제 ID로 교체해 주세요."
       );
       return;
     }
 
-    if (!window.gtag) {
-      window.dataLayer = window.dataLayer || [];
-      window.gtag = function () {
-        window.dataLayer.push(arguments);
-      };
+    // 1. dataLayer 초기화 (GTM 스니펫보다 반드시 먼저 생성되어야 함)
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      "gtm.start": new Date().getTime(),
+      event: "gtm.js",
+    });
 
+    // 2. GTM head 스크립트 태그 동적 삽입
+    const scriptId = "gtm-script";
+    if (!document.getElementById(scriptId)) {
       const script = document.createElement("script");
+      script.id = scriptId;
       script.async = true;
-      script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+      script.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_CONTAINER_ID}`;
       document.head.appendChild(script);
+    }
 
-      window.gtag("js", new Date());
-      window.gtag("config", GA_MEASUREMENT_ID, {
-        send_page_view: false,
-      });
+    // 3. GTM body (noscript) iframe 동적 삽입 (noscript 태그)
+    const noscriptId = "gtm-noscript";
+    if (!document.getElementById(noscriptId)) {
+      const noscript = document.createElement("noscript");
+      noscript.id = noscriptId;
+      noscript.innerHTML = `<iframe src="https://www.googletagmanager.com/ns.html?id=${GTM_CONTAINER_ID}" height="0" width="0" style="display:none;visibility:hidden"></iframe>`;
+      document.body.insertBefore(noscript, document.body.firstChild);
     }
   }, []);
 
   // =====================================================================
-  // 📊 단계(Step) 이동 시 GA 가상 페이지 추적 전송
+  // 📊 단계(Step) 이동 시 GTM 가상 페이지뷰 이벤트 전송
   // =====================================================================
   useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      window.gtag &&
-      GA_MEASUREMENT_ID &&
-      GA_MEASUREMENT_ID !== "G-XXXXXXXXXX"
-    ) {
-      window.gtag("event", "page_view", {
+    if (typeof window !== "undefined") {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: "virtual_page_view",
         page_title: `Quest_Step_${step}`,
-        page_location: window.location.href,
         page_path: `/${step}`,
-        send_to: GA_MEASUREMENT_ID,
       });
     }
   }, [step]);
@@ -879,10 +883,18 @@ export default function App() {
               <div className="flex-1 overflow-y-auto custom-scrollbar">
                 <div
                   className="w-full h-56 bg-stone-100 relative flex flex-col items-center justify-center shrink-0 cursor-pointer group"
-                  onClick={() =>
-                    activePath[progress]?.img &&
-                    setZoomedImage(activePath[progress].img)
-                  }
+                  onClick={() => {
+                    if (activePath[progress]?.img) {
+                      // 📊 GTM 이미지 클릭 이벤트 수집
+                      window.dataLayer = window.dataLayer || [];
+                      window.dataLayer.push({
+                        event: "click_image_area",
+                        image_type: "hint",
+                        location_name: activePath[progress]?.name,
+                      });
+                      setZoomedImage(activePath[progress].img);
+                    }
+                  }}
                 >
                   {activePath[progress]?.img ? (
                     <>
@@ -917,10 +929,18 @@ export default function App() {
 
                   <div
                     className="w-full aspect-[300/260] bg-stone-50 rounded-xl overflow-hidden relative border border-stone-200 flex items-center justify-center shadow-inner cursor-pointer group"
-                    onClick={() =>
-                      activePath[progress]?.mapImg &&
-                      setZoomedImage(activePath[progress].mapImg)
-                    }
+                    onClick={() => {
+                      if (activePath[progress]?.mapImg) {
+                        // 📊 GTM 이미지 클릭 이벤트 수집
+                        window.dataLayer = window.dataLayer || [];
+                        window.dataLayer.push({
+                          event: "click_image_area",
+                          image_type: "map",
+                          location_name: activePath[progress]?.name,
+                        });
+                        setZoomedImage(activePath[progress].mapImg);
+                      }
+                    }}
                   >
                     {activePath[progress]?.mapImg ? (
                       <>
